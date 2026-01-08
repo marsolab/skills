@@ -11,12 +11,14 @@ Comprehensive guide to API authentication, authorization, and secrets management
 **Avoid for:** User authentication (no identity), frontend clients (exposure risk)
 
 **Format:**
+
 ```
 Authorization: Bearer sk_live_51H8v7xKJ2v3x7x7x7x7x7x7x
 X-API-Key: your-api-key-here
 ```
 
 **Implementation:**
+
 ```python
 def authenticate_api_key(request):
     api_key = request.headers.get('X-API-Key')
@@ -31,6 +33,7 @@ def authenticate_api_key(request):
 ```
 
 **Best practices:**
+
 - Hash keys in database (never store plaintext)
 - Support key rotation (multiple active keys)
 - Scope keys to specific resources/actions
@@ -116,6 +119,7 @@ Authorization code flow without client secret:
 ```
 
 **Why PKCE?**
+
 - No client secret (can't be secured in mobile/SPA)
 - Protects against authorization code interception
 - Required for mobile and single-page applications
@@ -142,6 +146,7 @@ Response:
 ```
 
 **Token refresh:**
+
 ```
 POST /token
 {
@@ -157,11 +162,13 @@ POST /token
 OAuth 2.0 + identity layer
 
 **Tokens returned:**
+
 - **access_token:** API access
 - **refresh_token:** Get new access tokens
 - **id_token:** JWT with user identity
 
 **ID Token structure:**
+
 ```json
 {
   "iss": "https://auth.example.com",
@@ -179,6 +186,7 @@ OAuth 2.0 + identity layer
 ```
 
 **Standard claims:**
+
 - `sub`: Subject (user ID)
 - `name`: Full name
 - `email`: Email address
@@ -190,6 +198,7 @@ OAuth 2.0 + identity layer
 - `iat`: Issued at time
 
 **Discovery endpoint:**
+
 ```
 GET /.well-known/openid-configuration
 
@@ -210,6 +219,7 @@ Response:
 **Structure:** `header.payload.signature` (base64url encoded)
 
 **Header:**
+
 ```json
 {
   "alg": "RS256",
@@ -219,6 +229,7 @@ Response:
 ```
 
 **Payload:**
+
 ```json
 {
   "sub": "user_123",
@@ -235,6 +246,7 @@ Response:
 **Validation steps:**
 
 1. **Verify signature:**
+
    ```python
    import jwt
    
@@ -251,18 +263,21 @@ Response:
    ```
 
 2. **Check expiration:**
+
    ```python
    if decoded['exp'] < time.time():
        return 401, "Token expired"
    ```
 
 3. **Validate claims:**
+
    ```python
    if decoded['aud'] != "https://api.example.com":
        return 401, "Invalid audience"
    ```
 
 **Best practices:**
+
 - Use RS256 (asymmetric) not HS256 (symmetric) for public APIs
 - Short expiration (15-60 minutes)
 - Include necessary claims only (minimize size)
@@ -276,6 +291,7 @@ Response:
 **Model:** User → Roles → Permissions → Resources
 
 **Example:**
+
 ```yaml
 roles:
   admin:
@@ -306,6 +322,7 @@ users:
 ```
 
 **Enforcement:**
+
 ```python
 def check_permission(user, permission):
     for role in user.roles:
@@ -320,11 +337,13 @@ def create_post(request):
 ```
 
 **Pros:**
+
 - Simple to understand
 - Easy to manage
 - Scales well for most applications
 
 **Cons:**
+
 - Coarse-grained (role-level, not resource-level)
 - Role explosion in complex systems
 - Hard to handle exceptions
@@ -334,6 +353,7 @@ def create_post(request):
 **Model:** User attributes + Resource attributes + Environment → Decision
 
 **Policy example:**
+
 ```python
 # Allow if user's department matches resource owner's department
 policy = {
@@ -351,6 +371,7 @@ policy = {
 **Attributes:**
 
 **User attributes:**
+
 - `user.id`
 - `user.role`
 - `user.department`
@@ -358,22 +379,26 @@ policy = {
 - `user.clearance_level`
 
 **Resource attributes:**
+
 - `resource.type`
 - `resource.owner`
 - `resource.classification`
 - `resource.created_at`
 
 **Environment attributes:**
+
 - `environment.time`
 - `environment.ip_address`
 - `environment.device_type`
 
 **Pros:**
+
 - Fine-grained control
 - Flexible policies
 - Context-aware authorization
 
 **Cons:**
+
 - Complex to implement
 - Harder to debug
 - Performance overhead
@@ -381,16 +406,19 @@ policy = {
 ### Multi-Level Authorization
 
 **Layer 1: API Gateway (coarse-grained)**
+
 - Validate JWT token
 - Check high-level permissions (user has any access)
 - Rate limiting per user
 
 **Layer 2: Service (fine-grained)**
+
 - Check resource-level permissions
 - Verify user can access this specific resource
 - Apply business rules
 
 **Layer 3: Database (defense in depth)**
+
 - Row-level security
 - Prevent data leaks even if service compromised
 
@@ -451,6 +479,7 @@ Client → API Gateway → Service
 5. **Rate limit** per user/API key
 
 **Headers forwarded to service:**
+
 ```
 X-User-ID: user_123
 X-User-Email: user@example.com
@@ -470,6 +499,7 @@ X-User-Permissions: posts:create,posts:read
 ### Principles
 
 **Never commit secrets to Git:**
+
 ```bash
 # Use git-secrets to prevent leaks
 git secrets --install
@@ -477,17 +507,20 @@ git secrets --register-aws
 ```
 
 **Rotate secrets regularly:**
+
 - High-value secrets: 90 days
 - API keys: 180 days
 - Database passwords: 90 days
 - Certificates: Before expiration
 
 **Least privilege access:**
+
 - Service accounts for applications
 - Role-based access for humans
 - Time-limited access where possible
 
 **Audit secret access:**
+
 - Who accessed what secret when
 - Alert on unusual access patterns
 - Automatic rotation on suspected compromise
@@ -497,6 +530,7 @@ git secrets --register-aws
 #### HashiCorp Vault
 
 **Features:**
+
 - Dynamic secrets (generated on-demand)
 - Encryption as a service
 - Lease management
@@ -504,6 +538,7 @@ git secrets --register-aws
 - Multi-cloud support
 
 **Usage:**
+
 ```bash
 # Write secret
 vault kv put secret/database/config \
@@ -518,6 +553,7 @@ vault read database/creds/readonly
 ```
 
 **Dynamic secrets:**
+
 ```bash
 # Vault generates temporary credentials
 GET /database/creds/app-readonly
@@ -535,6 +571,7 @@ Response:
 #### AWS Secrets Manager
 
 **Features:**
+
 - AWS-native integration
 - Automatic rotation
 - RDS integration
@@ -542,6 +579,7 @@ Response:
 - Fine-grained IAM policies
 
 **Usage:**
+
 ```python
 import boto3
 
@@ -561,6 +599,7 @@ client.rotate_secret(
 #### Azure Key Vault
 
 **Features:**
+
 - Azure-native integration
 - HSM-backed keys
 - Certificate management
@@ -568,6 +607,7 @@ client.rotate_secret(
 - Soft delete and purge protection
 
 **Usage:**
+
 ```python
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential

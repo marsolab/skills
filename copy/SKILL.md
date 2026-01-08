@@ -1,7 +1,7 @@
 ---
 name: copy
 description: Professional copywriter for SaaS and startups. Expert in landing page copy, positioning, messaging, conversion optimization, and voice-of-customer research. Use when writing compelling copy for SaaS products, landing pages, marketing materials, or when you need help with product positioning and messaging strategy.
-version: 1.1.0
+version: 1.2.0
 tags:
   - copywriting
   - saas
@@ -319,6 +319,108 @@ And then they test reality. Because reality always has a punchline.
 
 ---
 
+## Hormozi Value Framework
+
+Alex Hormozi treats copywriting as engineering the perception of value. Without an irresistible offer, good writing alone won't convert.
+
+### The Value Equation
+
+```
+Value = (Dream Outcome × Perceived Likelihood of Achievement)
+        ÷ (Time Delay × Effort & Sacrifice)
+```
+
+The goal of your copy is to maximize perceived value and minimize perceived cost.
+
+**Apply to every section:**
+- **Dream Outcome** — Speak to the specific result customers deeply want (e.g., "$100K revenue increase", not "better marketing")
+- **Perceived Likelihood** — Back the promise with proof: testimonials, case studies, authority signals, guarantees
+- **Time Delay** — Stress speed to result (e.g., "90-day plan" vs "months of effort")
+- **Effort & Sacrifice** — Reduce friction: show how little effort the customer must exert
+
+### Core Copy Philosophy
+
+**Sell the Outcome, Not the Features**
+
+People don't care about features — they care about transformation. Your copy should articulate:
+- Where the visitor is now
+- The pain they feel
+- The after-state when they take action
+
+This drives the emotional hook.
+
+**"The Pain Is the Pitch"**
+
+Lead with the pain — describe the exact moment someone feels the problem (not vague generalities). This makes your message felt before it's believed.
+
+### Headline Strategy
+
+Headlines do 80% of the conversion work. If people aren't intrigued immediately, nothing else matters.
+
+**Headline Formula:**
+```
+Get [Specific Result] in [Timeframe] With Less [Pain/Effort]
+```
+
+**Requirements:**
+- Short
+- Clear
+- Outcome-oriented
+- Undeniably valuable and specific
+
+### Offer Design = Copy
+
+Copy isn't separate from offer design — they're the same system. What marketers call "good copy" is actually a good offer expressed well.
+
+**Offer Engineering:**
+- Include stacked value elements (bonuses, guarantees, support)
+- Break your offer into distinct benefits rather than one vague promise
+- Price should anchor to value delivered, not cost incurred
+
+### Landing Page Application
+
+**Hero Section:**
+- Dream outcome + perceived likelihood + low friction
+- Above the fold = outcome + proof signal
+
+**Proof & Credibility:**
+- Social proof, quantified results, specific use cases
+- All increase perceived likelihood of achievement
+
+**Pain Breakdown:**
+- Illustrate the felt experience of the visitor's problem
+- Not abstract description — emotional specificity
+
+**Offer Stack (Value Stacking):**
+- Instead of one deliverable, present components that each deliver value
+- Primary benefit + bonuses + guarantee
+
+**Timing & Scarcity:**
+- Position the timeline concretely ("Join before X to guarantee start in Q1")
+- Reduces perceived delay
+
+### Copy Techniques
+
+**Direct, no-fluff hooks:**
+- Use very specific benefits
+- Avoid generic claims ("best", "top", "great")
+- Short hooks with numbers or concrete contrasts
+
+**Speak in client language:**
+- Talk about the exact pains and desires your audience uses themselves
+- Not jargon — resonates because it feels like someone finally gets them
+
+### Key Takeaways
+
+- Copy is offer articulation. If your offer isn't genuinely compelling under the value equation, no words will fix it
+- Emotional specificity and pain narrative kill generic language
+- Headlines carry massive conversion weight — treat them as the first hypothesis to test
+- Use the value equation as a heuristic: make value feel greater than cost on every element
+
+**Primary Source:** [$100M Offers — Alex Hormozi](https://acquisition.com/books/100m-offers)
+
+---
+
 ## Reference Library
 
 ### Positioning, Messaging & Narrative
@@ -430,6 +532,7 @@ Foundational texts for deep understanding:
 
 | Book | Why It Matters |
 |------|----------------|
+| [$100M Offers - Alex Hormozi](https://acquisition.com/books/100m-offers) | Value engineering for irresistible offers - shapes copy profoundly |
 | **Breakthrough Advertising** - Eugene Schwartz | Market awareness levels - foundational copywriting theory |
 | [Alchemy - Rory Sutherland](https://www.penguin.co.uk/books/443284/alchemy-by-rory-sutherland/9780753556503) | Behavioral magic with British seasoning |
 | [Thinking Fast and Slow - Daniel Kahneman](https://www.penguinrandomhouse.com/books/205508/thinking-fast-and-slow-by-daniel-kahneman/) | System 1 vs 2 thinking - mandatory reading |

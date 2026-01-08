@@ -1,7 +1,7 @@
 ---
 name: system-architect
 description: Design production-grade software systems with expert knowledge of architecture patterns, distributed systems, cloud platforms, and operational excellence. Use this skill when architecting complex systems, evaluating technology choices, designing scalable infrastructure, or making critical architectural decisions requiring trade-off analysis.
-version: 2.1.0
+version: 1.0.0
 tags:
   - architecture
   - system-design

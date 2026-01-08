@@ -1,7 +1,7 @@
 ---
 name: idiomatic-go
 description: Write production-ready Go backends, CLIs, and APIs following modern best practices from top tier tech companies. Use this skill when creating or reviewing Go code for (1) backend services and APIs, (2) command-line tools, (3) code requiring proper error handling, concurrency, or testing patterns, (4) any Go development requiring adherence to established style guidelines. Includes comprehensive linting configuration and detailed style guide.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # Go Development
@@ -9,6 +9,10 @@ version: 1.0.0
 Write Go code that is readable, maintainable, and production-ready using battle-tested patterns from major production codebases.
 
 ## Quick Decision Trees
+
+### MCP
+
+Always use Context7 MCP to fetch the latest documentation.
 
 ### Libraries
 

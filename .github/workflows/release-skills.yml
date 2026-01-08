@@ -1,0 +1,148 @@
+name: Release Skills
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      skill_folder:
+        description: 'Skill folder to release (e.g., go, python)'
+        required: false
+        type: string
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      skills: ${{ steps.changes.outputs.skills }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed skill folders
+        id: changes
+        run: |
+          # If manual trigger with skill_folder specified, use that
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.skill_folder }}" ]; then
+            SKILL_FOLDER="${{ github.event.inputs.skill_folder }}"
+            if [ -d "$SKILL_FOLDER" ] && [ -f "$SKILL_FOLDER/CHANGELOG.md" ]; then
+              echo "skills=$(jq -nc --arg skill "$SKILL_FOLDER" '[{"skill": $skill}]')" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "Error: Skill folder '$SKILL_FOLDER' not found or missing CHANGELOG.md"
+              exit 1
+            fi
+          fi
+
+          # Otherwise, detect changed folders using git diff
+          CHANGED_FOLDERS=$(git diff --name-only HEAD~1 HEAD | cut -d'/' -f1 | sort -u)
+          
+          SKILLS=()
+          for folder in $CHANGED_FOLDERS; do
+            # Skip hidden folders and special directories
+            if [[ "$folder" =~ ^\. ]] || [ "$folder" = "README.md" ] || [ "$folder" = "" ]; then
+              continue
+            fi
+            
+            # Check if folder exists, is a directory, and has CHANGELOG.md
+            if [ -d "$folder" ] && [ -f "$folder/CHANGELOG.md" ]; then
+              SKILLS+=("$folder")
+            fi
+          done
+          
+          if [ ${#SKILLS[@]} -eq 0 ]; then
+            echo "No skill folders with changes detected"
+            echo "skills=[]" >> $GITHUB_OUTPUT
+          else
+            # Create JSON array for matrix
+            SKILLS_JSON=$(printf '%s\n' "${SKILLS[@]}" | jq -R . | jq -s . | jq -c 'map({skill: .})')
+            echo "Detected changed skills: ${SKILLS[@]}"
+            echo "skills=$SKILLS_JSON" >> $GITHUB_OUTPUT
+          fi
+
+  release:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.skills != '[]'
+    strategy:
+      matrix:
+        skill: ${{ fromJson(needs.detect-changes.outputs.skills) }}
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse version from CHANGELOG.md
+        id: version
+        run: |
+          CHANGELOG="${{ matrix.skill.skill }}/CHANGELOG.md"
+          
+          if [ ! -f "$CHANGELOG" ]; then
+            echo "Error: CHANGELOG.md not found in ${{ matrix.skill.skill }}/"
+            exit 1
+          fi
+          
+          # Extract version using regex: ## v?(\d+\.\d+\.\d+)
+          VERSION=$(grep -E "^## v?[0-9]+\.[0-9]+\.[0-9]+" "$CHANGELOG" | head -1 | sed -E 's/^## v?([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+          
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not parse version from $CHANGELOG"
+            echo "Expected format: ## v1.0.0 or ## 1.0.0"
+            exit 1
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Parsed version: $VERSION"
+
+      - name: Create .skill archive
+        id: archive
+        run: |
+          SKILL_NAME="${{ matrix.skill.skill }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Create archive with skill name
+          ARCHIVE_NAME="${SKILL_NAME}.skill"
+          
+          # Create zip archive with folder contents (not the folder itself)
+          cd "$SKILL_NAME"
+          zip -r "../${ARCHIVE_NAME}" . -q
+          cd ..
+          
+          echo "archive_path=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
+          echo "Created archive: ${ARCHIVE_NAME}"
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          SKILL_NAME="${{ matrix.skill.skill }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          TAG="${SKILL_NAME}-v${VERSION}"
+          
+          # Check if tag exists
+          git fetch --tags --quiet || true
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag $TAG already exists, skipping release"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag $TAG does not exist, will create release"
+          fi
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists != 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ matrix.skill.skill }}-v${{ steps.version.outputs.version }}
+          name: ${{ matrix.skill.skill }} v${{ steps.version.outputs.version }}
+          body: |
+            Release of ${{ matrix.skill.skill }} skill v${{ steps.version.outputs.version }}
+            
+            See CHANGELOG.md in the skill folder for details.
+          files: ${{ steps.archive.outputs.archive_path }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

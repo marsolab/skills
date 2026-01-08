@@ -18,12 +18,14 @@ The goal of your copy is to **maximize perceived value** and **minimize perceive
 **Apply to every section:**
 
 **Dream Outcome**
+
 - Speak to the specific result customers deeply want
 - Not: "Better marketing"
 - Yes: "$100K revenue increase in 90 days"
 - Make it vivid and specific
 
 **Perceived Likelihood**
+
 - Back the promise with proof
 - Testimonials with specific results
 - Case studies with numbers
@@ -31,12 +33,14 @@ The goal of your copy is to **maximize perceived value** and **minimize perceive
 - Guarantees reduce risk
 
 **Time Delay**
+
 - Stress speed to result
 - Not: "Eventually you'll see results"
 - Yes: "See your first lead within 24 hours"
 - Shorter time = higher value
 
 **Effort & Sacrifice**
+
 - Reduce perceived friction
 - "5-minute setup" vs "Complex onboarding"
 - "No credit card required" vs "Payment upfront"
@@ -52,6 +56,7 @@ People don't care about features—they care about transformation.
 **Good:** "Go from 10 leads/month to 100 leads/month"
 
 Your copy should articulate:
+
 1. **Where the visitor is now** (struggling with X)
 2. **The pain they feel** (wasting 3 hours/day)
 3. **The after-state** (done in 5 minutes)
@@ -78,6 +83,7 @@ Get [Specific Result] in [Timeframe] With Less [Pain/Effort]
 ```
 
 **Examples:**
+
 - "Get 100 Qualified Leads in 30 Days Without Cold Calling"
 - "Cut Support Tickets by 50% in One Week (No New Hires)"
 - "Go From 10K to 100K Visitors in 6 Months (Without Paid Ads)"
@@ -93,6 +99,7 @@ Get [Specific Result] in [Timeframe] With Less [Pain/Effort]
 #### Headline Types
 
 **Before-After-Bridge:**
+
 ```
 Before: Spending hours on reports
 After: 5-minute dashboards
@@ -100,6 +107,7 @@ Bridge: Our automated analytics
 ```
 
 **Problem-Agitate-Solve:**
+
 ```
 Problem: Manual data entry wastes 10 hours/week
 Agitate: That's 520 hours/year you could spend on growth
@@ -107,12 +115,14 @@ Solve: AutoSync eliminates data entry completely
 ```
 
 **Question-Answer:**
+
 ```
 Question: Tired of chasing invoices?
 Answer: Get paid in 3 days, automatically
 ```
 
 **How-To:**
+
 ```
 How to 10x Your Content Output Without Hiring Writers
 ```
@@ -124,6 +134,7 @@ Copy isn't separate from offer design—they're the same system. What marketers 
 #### Offer Engineering
 
 **1. Stack value elements:**
+
 ```
 Main product: $997
 + Bonus 1: Template library ($297 value)
@@ -138,11 +149,13 @@ Your investment today: $497
 
 Don't: "Complete marketing solution"
 Do:
+
 - Landing page templates (save 20 hours)
 - Email sequences (proven 15% conversion)
 - Analytics dashboard (see ROI instantly)
 
 **3. Price anchored to value delivered:**
+
 ```
 If this saves you 10 hours/week at $100/hour,
 that's $1,000/week value = $52,000/year
@@ -156,6 +169,7 @@ Payback period: < 1 week
 #### Hero Section
 
 **Formula:**
+
 ```
 Headline: [Specific Outcome in Specific Timeframe]
 Subhead: [How it works + For whom]
@@ -164,6 +178,7 @@ Proof: [Trust signal]
 ```
 
 **Example:**
+
 ```
 Headline: Turn 3-Hour Reports Into 5-Minute Dashboards
 Subhead: Automated analytics for SaaS companies growing past $1M ARR
@@ -176,16 +191,19 @@ Proof: Trusted by 2,500+ SaaS companies
 All elements increase **perceived likelihood of achievement**:
 
 **Social proof:**
+
 - Specific results: "Increased conversion 47% in 30 days"
 - Attributed testimonials: Name, photo, company, role
 - Video testimonials: Highest credibility
 
 **Quantified results:**
+
 - "2,500+ customers"
 - "10M+ data points analyzed"
 - "$50M+ in revenue tracked"
 
 **Authority signals:**
+
 - Press mentions (Forbes, TechCrunch)
 - Certifications (SOC 2, ISO)
 - Awards (G2 Leader, Inc 5000)
@@ -238,6 +256,7 @@ Position the timeline concretely to reduce **perceived delay**:
 **Strong:** "Join before Jan 15 to start in Q1"
 
 **Legitimate scarcity:**
+
 - Cohort-based: "Next cohort starts Feb 1 (10 spots left)"
 - Seasonal: "Black Friday pricing ends Monday"
 - Limited capacity: "We onboard 5 new clients/month"
@@ -249,15 +268,18 @@ Position the timeline concretely to reduce **perceived delay**:
 ### Direct, No-Fluff Hooks
 
 **Use very specific benefits:**
+
 - Not: "Grow your business"
 - Yes: "Add $50K MRR in 90 days"
 
 **Avoid generic claims:**
+
 - "Best," "top," "great," "amazing" = meaningless without proof
 - "Leading" = everyone claims it
 - "Revolutionary" = overused and vague
 
 **Short hooks with numbers or concrete contrasts:**
+
 - "10x your content output"
 - "Cut support costs 50%"
 - "$100K to $1M in 12 months"
@@ -267,11 +289,13 @@ Position the timeline concretely to reduce **perceived delay**:
 **Talk about the exact pains and desires your audience uses themselves.**
 
 **Don't use jargon:**
+
 - "Leverage our synergistic ecosystem"
 - "Paradigm-shifting innovation"
 - "Next-generation platform"
 
 **Do use their words (from VOC):**
+
 - "I'm drowning in support tickets" → Use "drowning" in copy
 - "I just want it to work" → Use "just works" in positioning
 - "Spending my weekends catching up" → Reference weekends
@@ -356,6 +380,7 @@ And then they **test reality**. Because reality always has a punchline.
 ### 5-Second Test
 
 Show the page for 5 seconds. Can they answer:
+
 - What is this?
 - Who is it for?
 - What's the main benefit?
@@ -365,6 +390,7 @@ If not, hero section fails.
 ### Mom Test
 
 Ask 10 target customers (not your mom):
+
 - "What does this page sell?" (clarity test)
 - "Who do you think this is for?" (targeting test)
 - "Would you click the CTA? Why or why not?" (motivation test)
@@ -374,11 +400,13 @@ Don't ask: "Do you like this?" (opinion is worthless)
 ### Before-After Comparison
 
 **Before messaging:**
+
 - Conversion rate: 1.2%
 - Avg time on page: 28 seconds
 - Bounce rate: 74%
 
 **After messaging:**
+
 - Conversion rate: 2.8%
 - Avg time on page: 51 seconds
 - Bounce rate: 61%
@@ -388,24 +416,31 @@ Numbers don't lie. Trust the data.
 ## Common Mistakes
 
 ### 1. Writing for yourself, not the customer
+
 **Fix:** Use VOC verbatim. Copy their words.
 
 ### 2. Being clever instead of clear
+
 **Fix:** If your mom doesn't get it in 3 seconds, it's too clever.
 
 ### 3. Listing features without benefits
+
 **Fix:** Feature → So what? → Benefit. Repeat for every feature.
 
 ### 4. No proof to back claims
+
 **Fix:** Every claim needs evidence (testimonial, case study, data).
 
 ### 5. Too many CTAs
+
 **Fix:** One primary CTA per section. Guide, don't confuse.
 
 ### 6. Writing without research
+
 **Fix:** Do VOC first. Always. No exceptions.
 
 ### 7. Not testing
+
 **Fix:** Form hypothesis, A/B test, measure, learn.
 
 ## Key Takeaways

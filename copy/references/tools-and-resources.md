@@ -73,17 +73,20 @@ Curated collection of tools, resources, and references for professional copywrit
 ### Typography Heuristics
 
 **Font selection:**
+
 - One strong display face for headings
 - One neutral workhorse for body
 - Limit to 2-3 fonts maximum
 
 **Readability:**
+
 - Optimize for x-height and readability
 - Body text: 16px minimum
 - Line height: 1.5 for body, 1.2 for headlines
 - Line length: 45-75 characters
 
 **Common pairings:**
+
 - Montserrat (headings) + Open Sans (body)
 - Playfair Display (headings) + Source Sans (body)
 - Raleway (headings) + Lato (body)
@@ -178,12 +181,14 @@ Reference collections for landing pages and design:
 ### Pre-Launch Checklist
 
 **Strategy:**
+
 - [ ] ICP clearly defined
 - [ ] Value proposition tested with 10 target customers
 - [ ] Primary pain validated through VOC research
 - [ ] Main objections identified and addressed
 
 **Content:**
+
 - [ ] Hero passes 3-second test
 - [ ] Benefits before features throughout
 - [ ] Social proof with attribution
@@ -191,6 +196,7 @@ Reference collections for landing pages and design:
 - [ ] One clear primary CTA
 
 **Design:**
+
 - [ ] Mobile responsive (tested on real devices)
 - [ ] Page speed < 3 seconds
 - [ ] Contrast ratio meets WCAG AA
@@ -198,6 +204,7 @@ Reference collections for landing pages and design:
 - [ ] CTAs highly visible
 
 **Technical:**
+
 - [ ] Analytics tracking verified
 - [ ] Event tracking configured
 - [ ] Heatmaps installed
@@ -205,6 +212,7 @@ Reference collections for landing pages and design:
 - [ ] All links functional
 
 **SEO:**
+
 - [ ] Title tag optimized
 - [ ] Meta description compelling
 - [ ] OG tags for social sharing
@@ -214,6 +222,7 @@ Reference collections for landing pages and design:
 ### A/B Test Checklist
 
 **Before Test:**
+
 - [ ] Clear hypothesis documented
 - [ ] Success metric defined
 - [ ] Sample size calculated
@@ -221,12 +230,14 @@ Reference collections for landing pages and design:
 - [ ] Test duration planned (min 1-2 weeks)
 
 **During Test:**
+
 - [ ] Monitor for technical issues
 - [ ] Don't peek at results early
 - [ ] Track external factors (holidays, promotions)
 - [ ] Document any changes to control
 
 **After Test:**
+
 - [ ] Statistical significance reached
 - [ ] Secondary metrics checked
 - [ ] Segment analysis performed
@@ -236,28 +247,33 @@ Reference collections for landing pages and design:
 ### Conversion Audit Checklist
 
 **Positioning:**
+
 - [ ] Value proposition clear in 3 seconds
 - [ ] Target audience obvious
 - [ ] Differentiation from competitors stated
 
 **Message clarity:**
+
 - [ ] Jargon-free language
 - [ ] Benefits stated upfront
 - [ ] Specific, not vague claims
 
 **Trust & credibility:**
+
 - [ ] Social proof present
 - [ ] Testimonials with attribution
 - [ ] Security signals visible
 - [ ] Press mentions if available
 
 **User journey:**
+
 - [ ] Logical content flow
 - [ ] Clear next steps
 - [ ] Objections addressed before CTA
 - [ ] Multiple CTA opportunities
 
 **Friction points:**
+
 - [ ] Form fields minimized
 - [ ] Pricing transparent
 - [ ] No dead ends

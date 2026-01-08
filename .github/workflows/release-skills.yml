@@ -28,11 +28,11 @@ jobs:
           # If manual trigger with skill_folder specified, use that
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.skill_folder }}" ]; then
             SKILL_FOLDER="${{ github.event.inputs.skill_folder }}"
-            if [ -d "$SKILL_FOLDER" ] && [ -f "$SKILL_FOLDER/CHANGELOG.md" ]; then
+            if [ -d "$SKILL_FOLDER" ] && [ -f "$SKILL_FOLDER/SKILL.md" ]; then
               echo "skills=$(jq -nc --arg skill "$SKILL_FOLDER" '[{"skill": $skill}]')" >> $GITHUB_OUTPUT
               exit 0
             else
-              echo "Error: Skill folder '$SKILL_FOLDER' not found or missing CHANGELOG.md"
+              echo "Error: Skill folder '$SKILL_FOLDER' not found or missing SKILL.md"
               exit 1
             fi
           fi
@@ -47,8 +47,8 @@ jobs:
               continue
             fi
             
-            # Check if folder exists, is a directory, and has CHANGELOG.md
-            if [ -d "$folder" ] && [ -f "$folder/CHANGELOG.md" ]; then
+            # Check if folder exists, is a directory, and has SKILL.md
+            if [ -d "$folder" ] && [ -f "$folder/SKILL.md" ]; then
               SKILLS+=("$folder")
             fi
           done
@@ -75,22 +75,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Parse version from CHANGELOG.md
+      - name: Parse version from SKILL.md
         id: version
         run: |
-          CHANGELOG="${{ matrix.skill.skill }}/CHANGELOG.md"
+          SKILL_FILE="${{ matrix.skill.skill }}/SKILL.md"
           
-          if [ ! -f "$CHANGELOG" ]; then
-            echo "Error: CHANGELOG.md not found in ${{ matrix.skill.skill }}/"
+          if [ ! -f "$SKILL_FILE" ]; then
+            echo "Error: SKILL.md not found in ${{ matrix.skill.skill }}/"
             exit 1
           fi
           
-          # Extract version using regex: ## v?(\d+\.\d+\.\d+)
-          VERSION=$(grep -E "^## v?[0-9]+\.[0-9]+\.[0-9]+" "$CHANGELOG" | head -1 | sed -E 's/^## v?([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+          # Extract version from YAML frontmatter: version: 1.0.0
+          VERSION=$(grep -E "^version:" "$SKILL_FILE" | head -1 | sed -E 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
           
           if [ -z "$VERSION" ]; then
-            echo "Error: Could not parse version from $CHANGELOG"
-            echo "Expected format: ## v1.0.0 or ## 1.0.0"
+            echo "Error: Could not parse version from $SKILL_FILE"
+            echo "Expected format in YAML frontmatter: version: 1.0.0"
             exit 1
           fi
           
@@ -140,7 +140,7 @@ jobs:
           body: |
             Release of ${{ matrix.skill.skill }} skill v${{ steps.version.outputs.version }}
             
-            See CHANGELOG.md in the skill folder for details.
+            See SKILL.md in the skill folder for details.
           files: ${{ steps.archive.outputs.archive_path }}
           draft: false
           prerelease: ${{ contains(steps.version.outputs.version, '-') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}

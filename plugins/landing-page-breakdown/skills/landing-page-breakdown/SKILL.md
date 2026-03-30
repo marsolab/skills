@@ -1,6 +1,7 @@
 ---
 name: landing-page-breakdown
 description: Comprehensive landing page design analysis for extracting typography, color palette, spacing systems, visual elements, and conversion optimization insights. Use when a user provides a landing page URL for design analysis, wants to understand what makes a page effective, needs to extract design specifications, or wants to learn from high-converting landing pages.
+version: 1.0.0
 ---
 
 # Landing Page Breakdown

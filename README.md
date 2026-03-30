@@ -15,8 +15,8 @@ coding agents.
 Then install individual plugins:
 
 ```shell
-/plugin install idiomatic-go@marsolab-skills
-/plugin install system-architect@marsolab-skills
+/plugin install go-dev@marsolab-skills
+/plugin install sys-arch@marsolab-skills
 ```
 
 ### OpenAI Codex
@@ -29,21 +29,21 @@ automatically.
 
 | Plugin | Category | Description |
 |--------|----------|-------------|
-| [apple-development][1] | Development | Swift, SwiftUI, HIG |
+| [apple-dev][1] | Development | Swift, SwiftUI, HIG |
 | [copy][2] | Writing | SaaS copywriting |
-| [idiomatic-go][3] | Development | Go backends, CLIs |
+| [go-dev][3] | Development | Go backends, CLIs |
 | [landing-page-breakdown][4] | Design | Page analysis |
 | [multi-agent-config][5] | DevOps | Multi-agent configs |
-| [system-architect][6] | Architecture | System design |
-| [web-frontend-stack][7] | Development | Modern web apps |
+| [sys-arch][6] | Architecture | System design |
+| [front-dev][7] | Development | Modern web apps |
 
-[1]: plugins/apple-development/skills/apple-development/SKILL.md
+[1]: plugins/apple-dev/skills/apple-dev/SKILL.md
 [2]: plugins/copy/skills/copy/SKILL.md
-[3]: plugins/idiomatic-go/skills/idiomatic-go/SKILL.md
+[3]: plugins/go-dev/skills/go-dev/SKILL.md
 [4]: plugins/landing-page-breakdown/skills/landing-page-breakdown/SKILL.md
 [5]: plugins/multi-agent-config/skills/multi-agent-config/SKILL.md
-[6]: plugins/system-architect/skills/system-architect/SKILL.md
-[7]: plugins/web-frontend-stack/skills/web-frontend-stack/SKILL.md
+[6]: plugins/sys-arch/skills/sys-arch/SKILL.md
+[7]: plugins/front-dev/skills/front-dev/SKILL.md
 
 ## Adding a New Plugin
 

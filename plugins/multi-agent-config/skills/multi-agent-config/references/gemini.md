@@ -27,7 +27,7 @@ Based on similar agent platforms, Gemini likely supports:
 
 ### Subagents / Agents
 
-**Expected location**: TBD  
+**Expected location**: TBD
 **Format**: TBD
 
 ## Translation Notes
@@ -51,14 +51,15 @@ Based on similar agent platforms, Gemini likely supports:
 ## Research Needed
 
 To complete this reference, we need to:
+
 1. Identify Gemini's configuration file locations
-2. Understand Gemini's format for:
-   - Custom instructions
-   - Skills/tools definitions
-   - MCP server configuration
-   - Agent/subagent configuration
-3. Document Gemini-specific features
-4. Create translation mappings
+1. Understand Gemini's format for:
+    - Custom instructions
+    - Skills/tools definitions
+    - MCP server configuration
+    - Agent/subagent configuration
+1. Document Gemini-specific features
+1. Create translation mappings
 
 ## Resources Needed
 
@@ -69,6 +70,7 @@ To complete this reference, we need to:
 ## Placeholder Notes
 
 This reference should be updated when:
+
 - Gemini Code Agent documentation is available
 - Example configurations can be examined
 - Gemini's architecture is better understood

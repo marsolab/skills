@@ -1,0 +1,11 @@
+{
+  "name": "front-dev",
+  "version": "1.0.0",
+  "description": "Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI. Use this skill when (1) creating new frontend projects or components, (2) building landing pages, dashboards, or web apps, (3) setting up Astro with islands architecture, (4) implementing React/Preact components with proper patterns, (5) styling with Tailwind v4 and Shadcn UI, (6) optimizing frontend performance and accessibility, (7) implementing state management, (8) setting up testing strategies, (9) configuring build tooling with Bun, (10) implementing security best practices, (11) setting up forms with validation, (12) building data tables and complex UI patterns. Covers architecture, performance, accessibility, testing, security, and developer experience.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Front Dev",
+    "shortDescription": "Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI.",
+    "category": "Development"
+  }
+}

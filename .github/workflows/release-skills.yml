@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       plugin_folder:
-        description: 'Plugin folder name under plugins/ (e.g., idiomatic-go, copy)'
+        description: 'Plugin folder name under plugins/ (e.g., go-dev, copy)'
         required: false
         type: string
 

@@ -1,6 +1,7 @@
 # Claude Code Configuration Reference
 
-Complete reference for Claude Code configuration structure, file locations, and formats.
+Complete reference for Claude Code configuration structure, file locations, and
+formats.
 
 ## Configuration File
 
@@ -32,9 +33,10 @@ Complete reference for Claude Code configuration structure, file locations, and 
 ### Subagents
 
 **Locations** (in precedence order):
+
 1. `.claude/agents/` - Project-level subagents (highest priority)
-2. `~/.claude/agents/` - User-level subagents
-3. Plugin agents (from plugins)
+1. `~/.claude/agents/` - User-level subagents
+1. Plugin agents (from plugins)
 
 **Format**: Each subagent is a Markdown file with YAML frontmatter:
 
@@ -55,6 +57,7 @@ and approach to solving problems.
 ```
 
 **Built-in subagents**:
+
 - `general-purpose` - Complex multi-step tasks with Sonnet
 - `plan` - Research mode with Read/Grep/Glob/Bash
 - `explore` - Fast read-only codebase search with Haiku
@@ -62,8 +65,9 @@ and approach to solving problems.
 ### Skills
 
 **Locations**:
+
 - `.claude/skills/` - Project-level
-- `~/.claude/skills/` - User-level  
+- `~/.claude/skills/` - User-level
 - Plugin skills (from plugins)
 
 **Format**: Follows Agent Skills standard (same as Codex):
@@ -80,7 +84,8 @@ Instructions for using this skill.
 ```
 
 **Structure**:
-```
+
+```text
 skill-name/
 ├── SKILL.md (required)
 ├── scripts/ (optional)
@@ -109,7 +114,8 @@ skill-name/
 **Location**: `.claude/plugins/`
 
 **Plugin structure**:
-```
+
+```text
 plugin-name/
 ├── manifest.json
 ├── agents/ (optional)
@@ -122,6 +128,7 @@ plugin-name/
 ```
 
 **manifest.json**:
+
 ```json
 {
   "name": "plugin-name",
@@ -148,6 +155,7 @@ export default async function (context) {
 ```
 
 **Hook types**:
+
 - `pre-edit.ts` - Before applying edits
 - `post-edit.ts` - After edits applied
 - `pre-command.ts` - Before running commands
@@ -196,6 +204,7 @@ Format output according to these guidelines.
 ### Key Differences
 
 **Claude Code-specific features**:
+
 - JSON configuration format
 - Subagent architecture with separate context windows
 - Plugin system with agents/skills/hooks
@@ -205,5 +214,6 @@ Format output according to these guidelines.
 - Resume capability for subagents
 
 **Subagent vs Skill distinction**:
+
 - **Subagents**: Separate AI instances with own context, can delegate tasks
 - **Skills**: Instructions/resources loaded into existing context

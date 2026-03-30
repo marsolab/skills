@@ -10,8 +10,8 @@
   },
   "plugins": [
     {
-      "name": "apple-development",
-      "source": "./plugins/apple-development",
+      "name": "apple-dev",
+      "source": "./plugins/apple-dev",
       "description": "Comprehensive macOS and iOS development expertise covering Swift best practices, SwiftUI design patterns, Human Interface Guidelines, Apple frameworks, and performance optimization. Use when developing native Apple applications, implementing SwiftUI interfaces, working with Apple frameworks (Foundation, UIKit, AppKit, Core Data, CloudKit, etc.), optimizing app performance, following HIG principles, or writing production-quality Swift code for iOS, macOS, watchOS, or tvOS platforms.",
       "version": "1.0.0",
       "keywords": [],
@@ -35,8 +35,16 @@
       "category": "writing"
     },
     {
-      "name": "idiomatic-go",
-      "source": "./plugins/idiomatic-go",
+      "name": "front-dev",
+      "source": "./plugins/front-dev",
+      "description": "Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI. Use this skill when (1) creating new frontend projects or components, (2) building landing pages, dashboards, or web apps, (3) setting up Astro with islands architecture, (4) implementing React/Preact components with proper patterns, (5) styling with Tailwind v4 and Shadcn UI, (6) optimizing frontend performance and accessibility, (7) implementing state management, (8) setting up testing strategies, (9) configuring build tooling with Bun, (10) implementing security best practices, (11) setting up forms with validation, (12) building data tables and complex UI patterns. Covers architecture, performance, accessibility, testing, security, and developer experience.",
+      "version": "1.0.0",
+      "keywords": [],
+      "category": "development"
+    },
+    {
+      "name": "go-dev",
+      "source": "./plugins/go-dev",
       "description": "Write production-ready Go backends, CLIs, and APIs following modern best practices from top tier tech companies. Use this skill when creating or reviewing Go code for (1) backend services and APIs, (2) command-line tools, (3) code requiring proper error handling, concurrency, or testing patterns, (4) any Go development requiring adherence to established style guidelines. Includes comprehensive linting configuration and detailed style guide.",
       "version": "1.0.1",
       "keywords": [],
@@ -59,8 +67,8 @@
       "category": "devops"
     },
     {
-      "name": "system-architect",
-      "source": "./plugins/system-architect",
+      "name": "sys-arch",
+      "source": "./plugins/sys-arch",
       "description": "Design production-grade software systems with expert knowledge of architecture patterns, distributed systems, cloud platforms, and operational excellence. Use this skill when architecting complex systems, evaluating technology choices, designing scalable infrastructure, or making critical architectural decisions requiring trade-off analysis.",
       "version": "1.0.0",
       "keywords": [
@@ -74,14 +82,6 @@
         "infrastructure"
       ],
       "category": "architecture"
-    },
-    {
-      "name": "web-frontend-stack",
-      "source": "./plugins/web-frontend-stack",
-      "description": "Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI. Use this skill when (1) creating new frontend projects or components, (2) building landing pages, dashboards, or web apps, (3) setting up Astro with islands architecture, (4) implementing React/Preact components with proper patterns, (5) styling with Tailwind v4 and Shadcn UI, (6) optimizing frontend performance and accessibility, (7) implementing state management, (8) setting up testing strategies, (9) configuring build tooling with Bun, (10) implementing security best practices, (11) setting up forms with validation, (12) building data tables and complex UI patterns. Covers architecture, performance, accessibility, testing, security, and developer experience.",
-      "version": "1.0.0",
-      "keywords": [],
-      "category": "development"
     }
   ]
 }

@@ -1,19 +1,22 @@
 # Copywriting Frameworks and Methodology
 
-Essential frameworks, formulas, and methodologies for conversion-focused copywriting.
+Essential frameworks, formulas, and methodologies for conversion-focused
+copywriting.
 
 ## Hormozi Value Framework
 
-Alex Hormozi treats copywriting as engineering the perception of value. Without an irresistible offer, good writing alone won't convert.
+Alex Hormozi treats copywriting as engineering the perception of value. Without
+an irresistible offer, good writing alone won't convert.
 
 ### The Value Equation
 
-```
+```text
 Value = (Dream Outcome × Perceived Likelihood of Achievement)
         ÷ (Time Delay × Effort & Sacrifice)
 ```
 
-The goal of your copy is to **maximize perceived value** and **minimize perceived cost**.
+The goal of your copy is to **maximize perceived value** and **minimize
+perceived cost**.
 
 **Apply to every section:**
 
@@ -58,27 +61,30 @@ People don't care about features—they care about transformation.
 Your copy should articulate:
 
 1. **Where the visitor is now** (struggling with X)
-2. **The pain they feel** (wasting 3 hours/day)
-3. **The after-state** (done in 5 minutes)
+1. **The pain they feel** (wasting 3 hours/day)
+1. **The after-state** (done in 5 minutes)
 
 This drives the emotional hook.
 
 #### "The Pain Is the Pitch"
 
-Lead with the pain—describe the exact moment someone feels the problem (not vague generalities).
+Lead with the pain—describe the exact moment someone feels the problem (not
+vague generalities).
 
 **Vague:** "Marketing is hard"
-**Specific:** "You spend 3 hours crafting the perfect email campaign, hit send, and get 2% open rates. Again."
+**Specific:** "You spend 3 hours crafting the perfect email campaign, hit send,
+and get 2% open rates. Again."
 
 This makes your message **felt before it's believed**.
 
 ### Headline Strategy
 
-Headlines do 80% of the conversion work. If people aren't intrigued immediately, nothing else matters.
+Headlines do 80% of the conversion work. If people aren't intrigued immediately,
+nothing else matters.
 
 #### Headline Formula
 
-```
+```text
 Get [Specific Result] in [Timeframe] With Less [Pain/Effort]
 ```
 
@@ -100,7 +106,7 @@ Get [Specific Result] in [Timeframe] With Less [Pain/Effort]
 
 **Before-After-Bridge:**
 
-```
+```text
 Before: Spending hours on reports
 After: 5-minute dashboards
 Bridge: Our automated analytics
@@ -108,7 +114,7 @@ Bridge: Our automated analytics
 
 **Problem-Agitate-Solve:**
 
-```
+```text
 Problem: Manual data entry wastes 10 hours/week
 Agitate: That's 520 hours/year you could spend on growth
 Solve: AutoSync eliminates data entry completely
@@ -116,26 +122,27 @@ Solve: AutoSync eliminates data entry completely
 
 **Question-Answer:**
 
-```
+```text
 Question: Tired of chasing invoices?
 Answer: Get paid in 3 days, automatically
 ```
 
 **How-To:**
 
-```
+```text
 How to 10x Your Content Output Without Hiring Writers
 ```
 
 ### Offer Design = Copy
 
-Copy isn't separate from offer design—they're the same system. What marketers call "good copy" is actually a **good offer expressed well**.
+Copy isn't separate from offer design—they're the same system. What marketers
+call "good copy" is actually a **good offer expressed well**.
 
 #### Offer Engineering
 
 **1. Stack value elements:**
 
-```
+```text
 Main product: $997
 + Bonus 1: Template library ($297 value)
 + Bonus 2: 1-on-1 coaching call ($500 value)
@@ -156,7 +163,7 @@ Do:
 
 **3. Price anchored to value delivered:**
 
-```
+```text
 If this saves you 10 hours/week at $100/hour,
 that's $1,000/week value = $52,000/year
 
@@ -170,7 +177,7 @@ Payback period: < 1 week
 
 **Formula:**
 
-```
+```text
 Headline: [Specific Outcome in Specific Timeframe]
 Subhead: [How it works + For whom]
 CTA: [Action-oriented benefit]
@@ -179,7 +186,7 @@ Proof: [Trust signal]
 
 **Example:**
 
-```
+```text
 Headline: Turn 3-Hour Reports Into 5-Minute Dashboards
 Subhead: Automated analytics for SaaS companies growing past $1M ARR
 CTA: Start Your Free Trial
@@ -216,7 +223,8 @@ Illustrate the **felt experience** of the visitor's problem.
 "Reporting is time-consuming and difficult"
 
 **Emotional specificity:**
-"It's 4 PM on Friday. You've spent 3 hours pulling data from 5 different tools. The charts still don't match. Your weekend just vanished."
+"It's 4 PM on Friday. You've spent 3 hours pulling data from 5 different tools.
+The charts still don't match. Your weekend just vanished."
 
 This is where prospects nod along thinking "YES, that's exactly what I feel."
 
@@ -224,7 +232,7 @@ This is where prospects nod along thinking "YES, that's exactly what I feel."
 
 Instead of one deliverable, present components that each deliver value:
 
-```
+```text
 What You Get:
 
 ✓ Automated Dashboard Builder
@@ -328,7 +336,7 @@ Address objections **before** they become reasons to leave.
 
 Each element of your page should naturally lead to the next:
 
-```
+```text
 Headline → intrigues
 Subhead → clarifies
 Problem → resonates
@@ -349,29 +357,29 @@ Professionals think in systems, not tactics.
 ### Key Questions
 
 1. **What belief must change for a user to act?**
-   - From: "This is too expensive"
-   - To: "This pays for itself immediately"
+    - From: "This is too expensive"
+    - To: "This pays for itself immediately"
 
-2. **What proof supports that belief shift?**
-   - ROI calculator
-   - Case study showing 10x return
-   - Money-back guarantee
+1. **What proof supports that belief shift?**
+    - ROI calculator
+    - Case study showing 10x return
+    - Money-back guarantee
 
-3. **What friction exists in the journey?**
-   - Long signup form
-   - Unclear pricing
-   - No human support option
+1. **What friction exists in the journey?**
+    - Long signup form
+    - Unclear pricing
+    - No human support option
 
-4. **What signals show trust and safety?**
-   - Security badges
-   - Customer logos
-   - Transparent pricing
-   - Real testimonials
+1. **What signals show trust and safety?**
+    - Security badges
+    - Customer logos
+    - Transparent pricing
+    - Real testimonials
 
-5. **What story are we telling?**
-   - Hero's journey: Struggle → Discovery → Transformation
-   - Not: "We have a product"
-   - Yes: "We help people like you overcome X"
+1. **What story are we telling?**
+    - Hero's journey: Struggle → Discovery → Transformation
+    - Not: "We have a product"
+    - Yes: "We help people like you overcome X"
 
 And then they **test reality**. Because reality always has a punchline.
 
@@ -445,19 +453,23 @@ Numbers don't lie. Trust the data.
 
 ## Key Takeaways
 
-1. **Copy is offer articulation.** If your offer isn't genuinely compelling under the value equation, no words will fix it.
+1. **Copy is offer articulation.** If your offer isn't genuinely compelling
+  under the value equation, no words will fix it.
 
-2. **Emotional specificity and pain narrative kill generic language.** Make them feel it before you sell it.
+1. **Emotional specificity and pain narrative kill generic language.** Make them
+  feel it before you sell it.
 
-3. **Headlines carry massive conversion weight.** Treat them as the first hypothesis to test.
+1. **Headlines carry massive conversion weight.** Treat them as the first
+  hypothesis to test.
 
-4. **Use the value equation as a heuristic:** Make value feel greater than cost on every element.
+1. **Use the value equation as a heuristic:** Make value feel greater than cost
+  on every element.
 
-5. **Speak their language.** Harvest copy from customers, don't invent it.
+1. **Speak their language.** Harvest copy from customers, don't invent it.
 
-6. **Test everything.** Intuition is not a strategy.
+1. **Test everything.** Intuition is not a strategy.
 
-7. **Document learnings.** Build institutional knowledge, not goldfish memory.
+1. **Document learnings.** Build institutional knowledge, not goldfish memory.
 
 ---
 

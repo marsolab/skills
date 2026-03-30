@@ -5,13 +5,17 @@ description: "Manage multi-agent AI code configurations across platforms (OpenAI
 
 # Multi-Agent Configuration Manager
 
-Manage and sync AI code agent configurations across OpenAI Codex, Claude Code, Cursor, and Gemini.
+Manage and sync AI code agent configurations across OpenAI Codex, Claude Code,
+Cursor, and Gemini.
 
 ## Overview
 
-This skill enables you to maintain consistent AI agent configurations across multiple platforms. It handles translation between different configuration formats (TOML ↔ JSON), directory structures, and platform-specific conventions.
+This skill enables you to maintain consistent AI agent configurations across
+multiple platforms. It handles translation between different configuration
+formats (TOML ↔ JSON), directory structures, and platform-specific conventions.
 
 **Supported platforms:**
+
 - OpenAI Codex (config.toml, AGENTS.md, skills)
 - Claude Code (config.json, .claude/, subagents, hooks)
 - Cursor (.cursorrules, partial support)
@@ -26,6 +30,7 @@ python scripts/init_project.py /path/to/project
 ```
 
 This creates:
+
 - `.agent-config/` - Shared source of truth
 - `.codex/` - Codex-specific structure
 - `.claude/` - Claude Code-specific structure
@@ -49,12 +54,14 @@ python scripts/sync_config.py --mcp-only --to codex
 
 ### 1. Initialize Multi-Agent Project
 
-**When to use:** Starting a new project that will be used with multiple AI code agents.
+**When to use:** Starting a new project that will be used with multiple AI code
+agents.
 
 **Process:**
+
 1. Run the initialization script
-2. Edit shared configuration files
-3. Sync to target platforms
+1. Edit shared configuration files
+1. Sync to target platforms
 
 **Example:**
 
@@ -73,9 +80,11 @@ python scripts/sync_config.py --to all
 
 ### 2. Sync Configurations
 
-**When to use:** After editing shared configs or when switching between agent platforms.
+**When to use:** After editing shared configs or when switching between agent
+platforms.
 
 **What gets synced:**
+
 - MCP server configurations
 - Custom instructions/rules
 - Skills (Agent Skills standard)
@@ -101,9 +110,10 @@ python scripts/sync_config.py --agents-only
 ### 3. Add MCP Servers
 
 **Process:**
+
 1. Edit `.agent-config/mcp-servers.json`
-2. Add server configuration
-3. Sync to platforms
+1. Add server configuration
+1. Sync to platforms
 
 **Example MCP server config:**
 
@@ -124,9 +134,10 @@ python scripts/sync_config.py --agents-only
 ### 4. Add Skills
 
 **Process:**
+
 1. Create skill in `.agent-config/skills/`
-2. Follow Agent Skills standard
-3. Sync to platforms
+1. Follow Agent Skills standard
+1. Sync to platforms
 
 **Example:**
 
@@ -152,9 +163,11 @@ python scripts/sync_config.py --skills-only
 
 ### 5. Translate Configurations
 
-**When to use:** Migrating from one platform to another or understanding config differences.
+**When to use:** Migrating from one platform to another or understanding config
+differences.
 
 **Platform reference docs:**
+
 - `references/codex.md` - Codex configuration format
 - `references/claude-code.md` - Claude Code configuration
 - `references/cursor.md` - Cursor format (partial)
@@ -179,9 +192,11 @@ save_json(claude_mcp, '.claude/config.json')
 
 ### 6. Migrate to Docker MCP Gateway (Recommended)
 
-**When to use:** Want centralized MCP management with better security and isolation.
+**When to use:** Want centralized MCP management with better security and
+isolation.
 
 **Benefits:**
+
 - ✅ Centralized configuration across all AI clients
 - ✅ Secure secrets management (no API keys in config files)
 - ✅ Container isolation for each MCP server
@@ -216,9 +231,11 @@ docker mcp config write 'servers:
 docker mcp tools ls
 ```
 
-**Result:** All your AI clients now use a single gateway instead of individual MCP servers.
+**Result:** All your AI clients now use a single gateway instead of individual
+MCP servers.
 
 **Before (traditional):**
+
 ```toml
 # Codex config - managing individual servers
 [mcp_servers.context7]
@@ -233,6 +250,7 @@ env = { GITHUB_TOKEN = "exposed-in-config" }
 ```
 
 **After (Docker MCP Gateway):**
+
 ```toml
 # Codex config - single gateway
 [mcp_servers.docker-gateway]
@@ -241,6 +259,7 @@ args = ["mcp", "gateway", "run"]
 ```
 
 All MCP configuration now managed through Docker MCP CLI:
+
 ```bash
 docker mcp server ls              # List enabled servers
 docker mcp secret ls              # List secrets (secure)
@@ -321,6 +340,7 @@ docker mcp tools call read_file '{"path": "README.md"}'
 ```
 
 **Benefits of Docker MCP Gateway:**
+
 - All AI clients (Codex, Claude Code, Cursor) use the same MCP configuration
 - API keys stored securely in Docker Desktop, not in config files
 - Each MCP server runs in an isolated container
@@ -362,8 +382,9 @@ docker mcp gateway run --port 8080 --transport streaming
 ## Reference Documentation
 
 For detailed platform formats and translations:
+
 - `references/codex.md` - OpenAI Codex configuration
-- `references/claude-code.md` - Claude Code configuration  
+- `references/claude-code.md` - Claude Code configuration
 - `references/cursor.md` - Cursor configuration (partial)
 - `references/gemini.md` - Gemini configuration (placeholder)
 - `references/docker-mcp-gateway.md` - Docker MCP Gateway (recommended)

@@ -61,15 +61,17 @@ Custom commands can be defined in Cursor settings.
 ## Research Needed
 
 To complete this reference, we need to research:
+
 1. Full Cursor settings.json structure
-2. MCP server configuration in Cursor
-3. Skills/Subagents support and format
-4. Commands configuration
-5. Any Cursor-specific features
+1. MCP server configuration in Cursor
+1. Skills/Subagents support and format
+1. Commands configuration
+1. Any Cursor-specific features
 
 ## Placeholder Notes
 
 This is a placeholder reference. When completing:
+
 - Search Cursor documentation for configuration details
 - Check Cursor GitHub discussions/issues
 - Examine actual Cursor project files

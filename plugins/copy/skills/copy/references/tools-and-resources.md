@@ -1,6 +1,7 @@
 # Tools and Resources
 
-Curated collection of tools, resources, and references for professional copywriting.
+Curated collection of tools, resources, and references for professional
+copywriting.
 
 ## Recommended Tool Stack
 
@@ -283,7 +284,7 @@ Reference collections for landing pages and design:
 
 ### PAS Framework (Problem-Agitate-Solve)
 
-```
+```text
 Problem: State the pain clearly
 Agitate: Make them feel it more intensely
 Solve: Present your solution
@@ -291,7 +292,7 @@ Solve: Present your solution
 
 ### AIDA Framework
 
-```
+```text
 Attention: Grab with compelling headline
 Interest: Build with relevant benefits
 Desire: Create with social proof and outcomes
@@ -300,7 +301,7 @@ Action: Close with clear CTA
 
 ### FAB Framework (Features-Advantages-Benefits)
 
-```
+```text
 Feature: What it is
 Advantage: What it does
 Benefit: What it means for them
@@ -308,7 +309,7 @@ Benefit: What it means for them
 
 ### 4 Ps Framework
 
-```
+```text
 Promise: What you'll deliver
 Picture: Paint the after-state
 Proof: Back it with evidence
@@ -341,4 +342,5 @@ Push: Call to action
 
 ---
 
-Remember: Tools are enablers, not substitutes for strategy. Start with research, positioning, and message clarity before investing in expensive tools.
+Remember: Tools are enablers, not substitutes for strategy. Start with research,
+positioning, and message clarity before investing in expensive tools.

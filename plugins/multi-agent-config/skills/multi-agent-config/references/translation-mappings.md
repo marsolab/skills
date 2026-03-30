@@ -1,6 +1,7 @@
 # Cross-Platform Translation Mappings
 
-This reference shows how to translate configurations between different AI code agent platforms.
+This reference shows how to translate configurations between different AI code
+agent platforms.
 
 ## Conceptual Mappings
 
@@ -15,6 +16,7 @@ This reference shows how to translate configurations between different AI code a
 | **Docker MCP Gateway** | N/A | N/A | No custom instructions (MCP servers only) |
 
 **Translation strategy**:
+
 - Merge hierarchical AGENTS.md files into single file for Claude Code/Cursor
 - Split single file into root + optional overrides for Codex
 - Docker MCP Gateway doesn't use custom instructions
@@ -30,6 +32,7 @@ This reference shows how to translate configurations between different AI code a
 | **Docker MCP Gateway** | `~/.docker/mcp/` | YAML | Centralized gateway with `docker-mcp.yaml`, `registry.yaml`, `config.yaml` |
 
 **Translation strategy**:
+
 ```python
 # Traditional MCP (Codex/Claude Code) → Docker MCP Gateway
 # Instead of configuring individual servers in each client,
@@ -81,6 +84,7 @@ args = ["mcp", "gateway", "run"]
 | **Gemini** | TBD | TBD | Research needed |
 
 **Translation strategy**:
+
 - Agent Skills format is compatible between Codex and Claude Code
 - Direct copy when moving skills between these platforms
 - May need format conversion for Cursor/Gemini
@@ -94,8 +98,11 @@ args = ["mcp", "gateway", "run"]
 | **Cursor** | Subagents? | TBD | TBD |
 | **Gemini** | TBD | TBD | TBD |
 
-**Translation strategy**: 
-- **Codex → Claude Code**: Convert skills to subagents when they represent delegation
+**Translation strategy**:
+
+- **Codex → Claude Code**: Convert skills to subagents when they represent
+  delegation
+
   ```markdown
   # Codex skill that acts like a subagent
   ---
@@ -103,7 +110,7 @@ args = ["mcp", "gateway", "run"]
   description: Use proactively for code review
   ---
   Instructions...
-  
+
   # Becomes Claude Code subagent ↓
   ---
   name: code-reviewer
@@ -128,15 +135,17 @@ args = ["mcp", "gateway", "run"]
 | **Gemini** | ❓ Unknown | TBD | TBD |
 
 **Translation strategy**:
+
 - Hooks are Claude Code-specific
 - Cannot translate to Codex (no equivalent)
-- Include hooks when syncing TO Claude Code from other platforms (create templates)
+- Include hooks when syncing TO Claude Code from other platforms (create
+  templates)
 
 ## File Structure Mappings
 
 ### Project Structure Comparison
 
-```
+```text
 # Codex Project
 project/
 ├── .codex/
@@ -147,7 +156,7 @@ project/
 ├── AGENTS.md
 └── AGENTS.override.md (optional)
 
-# Claude Code Project  
+# Claude Code Project
 project/
 ├── .claude/
 │   ├── agents/
@@ -177,6 +186,7 @@ project/
 ### 1. Initialize Multi-Platform Project
 
 Create directory structure for all platforms:
+
 ```bash
 project/
 ├── .codex/
@@ -193,16 +203,19 @@ project/
 ### 2. Sync Direction Strategies
 
 **Strategy A: Single Source of Truth**
+
 - Maintain configs in one platform
 - Sync one-way to others
 - Example: Codex → Claude Code → Cursor
 
 **Strategy B: Shared Source**
+
 - Maintain platform-agnostic configs in `.agent-config/`
 - Generate platform-specific configs from shared source
 - Best for teams using multiple platforms
 
 **Strategy C: Bidirectional Sync**
+
 - Changes in any platform sync to others
 - Requires conflict resolution
 - Most complex but most flexible
@@ -229,6 +242,7 @@ def toml_mcp_to_json(toml_config):
 ### Skill Translation
 
 Skills using Agent Skills standard can be copied directly between:
+
 - Codex ↔ Claude Code
 - Codex → Cursor (if supported)
 
@@ -249,17 +263,21 @@ def merge_agents_md_to_rules(agents_files):
 ### Why Use Docker MCP Gateway
 
 **Benefits over traditional MCP server configuration**:
+
 1. **Centralized configuration** - Configure once, use from all AI clients
-2. **Secure secrets** - API keys stored in Docker Desktop secrets, not config files
-3. **Container isolation** - Each MCP server runs in isolated Docker container
-4. **No dependency management** - No need for npx, uvx, or python environments
-5. **OAuth support** - Built-in OAuth flows for GitHub, Google, etc.
-6. **Unified access control** - Manage which servers and tools are available globally
+1. **Secure secrets** - API keys stored in Docker Desktop secrets, not config
+  files
+1. **Container isolation** - Each MCP server runs in isolated Docker container
+1. **No dependency management** - No need for npx, uvx, or python environments
+1. **OAuth support** - Built-in OAuth flows for GitHub, Google, etc.
+1. **Unified access control** - Manage which servers and tools are available
+  globally
 
 ### Traditional MCP vs Docker MCP Gateway
 
 **Traditional approach (per-client configuration)**:
-```
+
+```text
 AI Client 1 (Codex)     AI Client 2 (Claude Code)     AI Client 3 (Cursor)
       ↓                           ↓                            ↓
   MCP Server 1              MCP Server 1                 MCP Server 1
@@ -269,7 +287,8 @@ AI Client 1 (Codex)     AI Client 2 (Claude Code)     AI Client 3 (Cursor)
 ```
 
 **Docker MCP Gateway approach**:
-```
+
+```text
 AI Client 1 (Codex) ──┐
 AI Client 2 (Claude) ─┤──→ Docker MCP Gateway ──→ MCP Servers (containers)
 AI Client 3 (Cursor) ─┘                              ↓
@@ -279,6 +298,7 @@ AI Client 3 (Cursor) ─┘                              ↓
 ### Migration Workflow
 
 **Step 1: Identify current MCP servers**
+
 ```bash
 # Extract from Codex config
 grep -A 5 "\[mcp_servers\." ~/.codex/config.toml
@@ -288,6 +308,7 @@ jq '.mcpServers' ~/.claude/config.json
 ```
 
 **Step 2: Initialize Docker MCP**
+
 ```bash
 # Install Docker Desktop if not already installed
 # Enable MCP Toolkit in Docker Desktop settings
@@ -300,6 +321,7 @@ docker mcp catalog show docker-mcp
 ```
 
 **Step 3: Enable servers in Docker MCP**
+
 ```bash
 # Enable servers (no more per-client config!)
 docker mcp server enable context7 github filesystem
@@ -310,6 +332,7 @@ docker mcp secret create github-token "ghp_token"
 ```
 
 **Step 4: Configure servers**
+
 ```bash
 # Server-specific configuration
 docker mcp config write 'servers:
@@ -329,6 +352,7 @@ docker mcp config write 'servers:
 **Step 5: Update client configurations**
 
 **Codex** - Replace all MCP servers with gateway:
+
 ```toml
 # Before (multiple servers)
 [mcp_servers.context7]
@@ -346,6 +370,7 @@ args = ["mcp", "gateway", "run"]
 ```
 
 **Claude Code** - Replace all MCP servers with gateway:
+
 ```json
 {
   "mcpServers": {
@@ -360,6 +385,7 @@ args = ["mcp", "gateway", "run"]
 ### Docker MCP Gateway Configuration Files
 
 **~/.docker/mcp/docker-mcp.yaml** - Server catalog:
+
 ```yaml
 servers:
   context7:
@@ -371,6 +397,7 @@ servers:
 ```
 
 **~/.docker/mcp/registry.yaml** - Enabled servers:
+
 ```yaml
 enabled:
   - context7
@@ -379,6 +406,7 @@ enabled:
 ```
 
 **~/.docker/mcp/config.yaml** - Server configuration:
+
 ```yaml
 servers:
   context7:
@@ -398,6 +426,7 @@ servers:
 The skill can help manage Docker MCP Gateway configurations:
 
 **Initialize project with Docker MCP Gateway**:
+
 ```bash
 # Initialize multi-agent project
 python scripts/init_project.py ~/my-project
@@ -413,6 +442,7 @@ python scripts/sync_config.py --to all --docker-mcp
 ```
 
 **Sync Docker MCP Gateway to clients**:
+
 ```bash
 # This updates all client configs to use Docker MCP Gateway
 # instead of individual MCP servers
@@ -437,6 +467,7 @@ command = "/path/to/local/mcp-server"
 ### Docker MCP Gateway with Different Transports
 
 **stdio (default)** - One gateway per client:
+
 ```bash
 # Each client starts its own gateway process
 command = "docker"
@@ -444,6 +475,7 @@ args = ["mcp", "gateway", "run"]
 ```
 
 **SSE (Server-Sent Events)** - Shared gateway:
+
 ```bash
 # Start gateway once
 docker mcp gateway run --port 8080 --transport sse
@@ -454,6 +486,7 @@ url = "http://localhost:8080"
 ```
 
 **streaming** - High-performance shared gateway:
+
 ```bash
 # Start gateway with streaming transport
 docker mcp gateway run --port 8080 --transport streaming

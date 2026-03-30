@@ -1,6 +1,7 @@
 # OpenAI Codex Configuration Reference
 
-Complete reference for Codex configuration structure, file locations, and formats.
+Complete reference for Codex configuration structure, file locations, and
+formats.
 
 ## Configuration File
 
@@ -36,12 +37,13 @@ http_headers = { "X-Static" = "value" }
 ### Skills
 
 **Locations** (in precedence order):
+
 1. `$CWD/.codex/skills` - Current working directory (REPO scope)
-2. `$CWD/../.codex/skills` - Parent folder in git repo (REPO scope)
-3. `$REPO_ROOT/.codex/skills` - Repository root (REPO scope)
-4. `$CODEX_HOME/skills` - User-level (`~/.codex/skills`) (USER scope)
-5. `/etc/codex/skills` - Admin/system-level (ADMIN scope)
-6. Built-in system skills (SYSTEM scope)
+1. `$CWD/../.codex/skills` - Parent folder in git repo (REPO scope)
+1. `$REPO_ROOT/.codex/skills` - Repository root (REPO scope)
+1. `$CODEX_HOME/skills` - User-level (`~/.codex/skills`) (USER scope)
+1. `/etc/codex/skills` - Admin/system-level (ADMIN scope)
+1. Built-in system skills (SYSTEM scope)
 
 **Format**: Each skill is a folder containing `SKILL.md`:
 
@@ -63,7 +65,8 @@ Instructions here...
 ```
 
 **Structure**:
-```
+
+```text
 skill-name/
 ├── SKILL.md (required)
 ├── scripts/ (optional)
@@ -74,13 +77,15 @@ skill-name/
 ### AGENTS.md (Custom Instructions)
 
 **Discovery order**:
+
 1. **Global scope**: `~/.codex/AGENTS.override.md` or `~/.codex/AGENTS.md`
-2. **Project scope**: Walk from repo root to CWD, checking each directory for:
-   - `AGENTS.override.md`
-   - `AGENTS.md`
-   - Fallback filenames from `project_doc_fallback_filenames` config
+1. **Project scope**: Walk from repo root to CWD, checking each directory for:
+    - `AGENTS.override.md`
+    - `AGENTS.md`
+    - Fallback filenames from `project_doc_fallback_filenames` config
 
 **Configuration**:
+
 ```toml
 project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]
 project_doc_max_bytes = 32768  # Default: 32 KiB
@@ -165,6 +170,7 @@ exclude_tmpdir_env_var = false
 ### Key Differences
 
 **Codex-specific features**:
+
 - TOML configuration format
 - Hierarchical AGENTS.md discovery
 - Skill-based architecture (no separate subagent concept)

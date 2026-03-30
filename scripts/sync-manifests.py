@@ -21,23 +21,23 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 CATEGORIES: dict[str, str] = {
-    "apple-development": "development",
+    "apple-dev": "development",
     "copy": "writing",
-    "idiomatic-go": "development",
+    "go-dev": "development",
     "landing-page-breakdown": "design",
     "multi-agent-config": "devops",
-    "system-architect": "architecture",
-    "web-frontend-stack": "development",
+    "sys-arch": "architecture",
+    "front-dev": "development",
 }
 
 DISPLAY_NAMES: dict[str, str] = {
-    "apple-development": "Apple Development",
+    "apple-dev": "Apple Dev",
     "copy": "SaaS Copywriting",
-    "idiomatic-go": "Idiomatic Go",
+    "go-dev": "Go Dev",
     "landing-page-breakdown": "Landing Page Breakdown",
     "multi-agent-config": "Multi-Agent Config",
-    "system-architect": "System Architect",
-    "web-frontend-stack": "Web Frontend Stack",
+    "sys-arch": "Sys Arch",
+    "front-dev": "Front Dev",
 }
 
 CATEGORY_DISPLAY: dict[str, str] = {

@@ -74,8 +74,8 @@ marked as prereleases.
 ## Conventions
 
 - Plugin directory names must match the SKILL.md
-  `name` field (e.g., `plugins/idiomatic-go/` for
-  `name: idiomatic-go`)
+  `name` field (e.g., `plugins/go-dev/` for
+  `name: go-dev`)
 - Use kebab-case for all plugin and skill names
 - SKILL.md files without a `version` field default
   to `1.0.0`

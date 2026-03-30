@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "apple-development",
+      "name": "apple-dev",
       "source": {
         "source": "local",
-        "path": "./plugins/apple-development"
+        "path": "./plugins/apple-dev"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -29,10 +29,22 @@
       "category": "Writing"
     },
     {
-      "name": "idiomatic-go",
+      "name": "front-dev",
       "source": {
         "source": "local",
-        "path": "./plugins/idiomatic-go"
+        "path": "./plugins/front-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-dev"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -65,28 +77,16 @@
       "category": "DevOps"
     },
     {
-      "name": "system-architect",
+      "name": "sys-arch",
       "source": {
         "source": "local",
-        "path": "./plugins/system-architect"
+        "path": "./plugins/sys-arch"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
       "category": "Architecture"
-    },
-    {
-      "name": "web-frontend-stack",
-      "source": {
-        "source": "local",
-        "path": "./plugins/web-frontend-stack"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Development"
     }
   ]
 }

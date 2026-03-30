@@ -1,21 +1,24 @@
 # Docker MCP Gateway Reference
 
-Complete reference for Docker MCP Gateway configuration and usage with AI code agents.
+Complete reference for Docker MCP Gateway configuration and usage with AI code
+agents.
 
 ## Overview
 
 Docker MCP Gateway is a CLI plugin and gateway service that:
+
 - Runs MCP servers as isolated Docker containers
 - Provides a unified interface for AI clients to access multiple MCP servers
 - Handles secrets, OAuth flows, and server lifecycle management
 - Supports multiple transports (stdio, SSE, streaming)
 - Integrates with Docker Desktop's secrets management
 
-**Repository**: https://github.com/docker/mcp-gateway
+**Repository**: <https://github.com/docker/mcp-gateway>
 
 ## Installation
 
 ### Prerequisites
+
 - Docker Desktop (with MCP Toolkit feature enabled)
 
 ### Installation as Docker CLI Plugin
@@ -38,6 +41,7 @@ make docker-mcp
 **Location**: `~/.docker/mcp/`
 
 **Files**:
+
 - `docker-mcp.yaml` - Server catalog defining available MCP servers
 - `registry.yaml` - Registry of enabled servers
 - `config.yaml` - Configuration per server
@@ -58,7 +62,7 @@ servers:
         api_key:
           type: string
           description: "API key for Context7"
-  
+
   filesystem:
     image: docker.io/modelcontextprotocol/filesystem:latest
     description: "Filesystem access MCP"
@@ -91,13 +95,13 @@ servers:
   context7:
     env:
       CONTEXT7_API_KEY: secret://context7-key
-  
+
   filesystem:
     config:
       allowed_paths:
         - /home/user/projects
         - /home/user/documents
-  
+
   github:
     oauth:
       provider: github
@@ -118,7 +122,7 @@ servers:
       - write_file
     disabled_tools:
       - delete_file
-  
+
   github:
     # Omit to enable all tools
 ```
@@ -267,12 +271,14 @@ docker mcp gateway run --port 8080 --transport sse
 ```
 
 **Codex config.toml**:
+
 ```toml
 [mcp_servers.docker-gateway]
 url = "http://localhost:8080"
 ```
 
 **Claude Code config.json**:
+
 ```json
 {
   "mcpServers": {
@@ -289,6 +295,7 @@ url = "http://localhost:8080"
 Run separate gateway instances per client using stdio transport:
 
 **Codex**:
+
 ```toml
 [mcp_servers.docker-gateway]
 command = "docker"
@@ -296,6 +303,7 @@ args = ["mcp", "gateway", "run"]
 ```
 
 **Claude Code**:
+
 ```json
 {
   "mcpServers": {
@@ -343,13 +351,15 @@ docker mcp gateway run --profile frontend
 
 - `CLAUDE_CONFIG_DIR` - Override Claude Code config directory
 - `CURSOR_CONFIG_DIR` - Override Cursor config directory (if supported)
-- `DOCKER_MCP_CONFIG_DIR` - Override Docker MCP config directory (default: ~/.docker/mcp/)
+- `DOCKER_MCP_CONFIG_DIR` - Override Docker MCP config directory (default:
+  ~/.docker/mcp/)
 
 ## Docker MCP Gateway vs Traditional MCP
 
 ### Traditional MCP Server Configuration
 
 **Claude Code (traditional)**:
+
 ```json
 {
   "mcpServers": {
@@ -371,6 +381,7 @@ docker mcp gateway run --profile frontend
 ### Docker MCP Gateway Approach
 
 **Enable servers in Docker MCP**:
+
 ```bash
 docker mcp server enable context7 filesystem
 docker mcp secret create context7-key "your-key"
@@ -381,6 +392,7 @@ docker mcp config write 'servers:
 ```
 
 **Claude Code (gateway)**:
+
 ```json
 {
   "mcpServers": {
@@ -393,6 +405,7 @@ docker mcp config write 'servers:
 ```
 
 **Benefits**:
+
 - ✅ Centralized secrets management
 - ✅ Consistent configuration across all clients
 - ✅ Container isolation for security
@@ -404,7 +417,8 @@ docker mcp config write 'servers:
 
 ### Secrets Management
 
-Secrets are stored in Docker Desktop's secure secrets store, not in config files:
+Secrets are stored in Docker Desktop's secure secrets store, not in config
+files:
 
 ```bash
 # Store API key securely
@@ -420,6 +434,7 @@ docker mcp config write 'servers:
 ### Container Isolation
 
 Each MCP server runs in an isolated Docker container with:
+
 - Limited host access
 - Controlled network permissions
 - Defined volume mounts
@@ -459,6 +474,7 @@ docker mcp server inspect --health context7
 ### Common Issues
 
 **Server won't start**:
+
 ```bash
 # Check if server is enabled
 docker mcp server ls
@@ -471,6 +487,7 @@ docker mcp server inspect <server-name>
 ```
 
 **Tools not available**:
+
 ```bash
 # List available tools
 docker mcp tools ls
@@ -480,6 +497,7 @@ docker mcp config read | grep disabled_tools
 ```
 
 **Secret not found**:
+
 ```bash
 # List secrets
 docker mcp secret ls
@@ -536,6 +554,7 @@ docker mcp config write 'servers:
 Replace individual MCP server entries with single gateway entry:
 
 **Before (Claude Code)**:
+
 ```json
 {
   "mcpServers": {
@@ -547,6 +566,7 @@ Replace individual MCP server entries with single gateway entry:
 ```
 
 **After (Claude Code)**:
+
 ```json
 {
   "mcpServers": {
@@ -560,13 +580,16 @@ Replace individual MCP server entries with single gateway entry:
 
 ## Best Practices
 
-1. **Use Docker MCP Gateway for production** - Better isolation and secrets management
-2. **Enable only needed servers** - Reduces attack surface and improves performance
-3. **Store secrets in Docker Desktop** - Never commit API keys to config files
-4. **Use profiles for different contexts** - Frontend vs backend vs data science
-5. **Monitor gateway logs** - Track usage and troubleshoot issues
-6. **Keep servers updated** - Regularly update catalog and server images
-7. **Use streaming transport for multiple clients** - More efficient than starting multiple gateway instances
+1. **Use Docker MCP Gateway for production** - Better isolation and secrets
+  management
+1. **Enable only needed servers** - Reduces attack surface and improves
+  performance
+1. **Store secrets in Docker Desktop** - Never commit API keys to config files
+1. **Use profiles for different contexts** - Frontend vs backend vs data science
+1. **Monitor gateway logs** - Track usage and troubleshoot issues
+1. **Keep servers updated** - Regularly update catalog and server images
+1. **Use streaming transport for multiple clients** - More efficient than
+  starting multiple gateway instances
 
 ## Resources
 

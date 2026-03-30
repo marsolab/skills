@@ -1,0 +1,87 @@
+{
+  "name": "marsolab-skills",
+  "owner": {
+    "name": "marsolab"
+  },
+  "metadata": {
+    "description": "Curated skills for AI coding agents by marsolab",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "apple-development",
+      "source": "./plugins/apple-development",
+      "description": "Comprehensive macOS and iOS development expertise covering Swift best practices, SwiftUI design patterns, Human Interface Guidelines, Apple frameworks, and performance optimization. Use when developing native Apple applications, implementing SwiftUI interfaces, working with Apple frameworks (Foundation, UIKit, AppKit, Core Data, CloudKit, etc.), optimizing app performance, following HIG principles, or writing production-quality Swift code for iOS, macOS, watchOS, or tvOS platforms.",
+      "version": "1.0.0",
+      "keywords": [],
+      "category": "development"
+    },
+    {
+      "name": "copy",
+      "source": "./plugins/copy",
+      "description": "Professional copywriter for SaaS and startups. Expert in landing page copy, positioning, messaging, conversion optimization, and voice-of-customer research. Use when writing compelling copy for SaaS products, landing pages, marketing materials, or when you need help with product positioning and messaging strategy.",
+      "version": "1.0.0",
+      "keywords": [
+        "copywriting",
+        "saas",
+        "startup",
+        "landing-page",
+        "conversion",
+        "marketing",
+        "positioning",
+        "messaging"
+      ],
+      "category": "writing"
+    },
+    {
+      "name": "idiomatic-go",
+      "source": "./plugins/idiomatic-go",
+      "description": "Write production-ready Go backends, CLIs, and APIs following modern best practices from top tier tech companies. Use this skill when creating or reviewing Go code for (1) backend services and APIs, (2) command-line tools, (3) code requiring proper error handling, concurrency, or testing patterns, (4) any Go development requiring adherence to established style guidelines. Includes comprehensive linting configuration and detailed style guide.",
+      "version": "1.0.1",
+      "keywords": [],
+      "category": "development"
+    },
+    {
+      "name": "landing-page-breakdown",
+      "source": "./plugins/landing-page-breakdown",
+      "description": "Comprehensive landing page design analysis for extracting typography, color palette, spacing systems, visual elements, and conversion optimization insights. Use when a user provides a landing page URL for design analysis, wants to understand what makes a page effective, needs to extract design specifications, or wants to learn from high-converting landing pages.",
+      "version": "1.0.0",
+      "keywords": [],
+      "category": "design"
+    },
+    {
+      "name": "multi-agent-config",
+      "source": "./plugins/multi-agent-config",
+      "description": "Manage multi-agent AI code configurations across platforms (OpenAI Codex, Claude Code, Cursor, Gemini). Use when: (1) initializing new multi-agent projects, (2) syncing configurations (MCP servers, skills, rules, subagents) across platforms, (3) translating configurations between different agent platforms, (4) migrating from one agent platform to another, or (5) maintaining consistent agent configurations across development teams using different tools.",
+      "version": "1.0.0",
+      "keywords": [],
+      "category": "devops"
+    },
+    {
+      "name": "system-architect",
+      "source": "./plugins/system-architect",
+      "description": "Design production-grade software systems with expert knowledge of architecture patterns, distributed systems, cloud platforms, and operational excellence. Use this skill when architecting complex systems, evaluating technology choices, designing scalable infrastructure, or making critical architectural decisions requiring trade-off analysis.",
+      "version": "1.0.0",
+      "keywords": [
+        "architecture",
+        "system-design",
+        "distributed-systems",
+        "microservices",
+        "cloud",
+        "scalability",
+        "observability",
+        "infrastructure"
+      ],
+      "category": "architecture"
+    },
+    {
+      "name": "web-frontend-stack",
+      "source": "./plugins/web-frontend-stack",
+      "description": "Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI. Use this skill when (1) creating new frontend projects or components, (2) building landing pages, dashboards, or web apps, (3) setting up Astro with islands architecture, (4) implementing React/Preact components with proper patterns, (5) styling with Tailwind v4 and Shadcn UI, (6) optimizing frontend performance and accessibility, (7) implementing state management, (8) setting up testing strategies, (9) configuring build tooling with Bun, (10) implementing security best practices, (11) setting up forms with validation, (12) building data tables and complex UI patterns. Covers architecture, performance, accessibility, testing, security, and developer experience.",
+      "version": "1.0.0",
+      "keywords": [],
+      "category": "development"
+    }
+  ]
+}

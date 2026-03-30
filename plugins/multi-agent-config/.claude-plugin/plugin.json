@@ -1,0 +1,5 @@
+{
+  "name": "multi-agent-config",
+  "description": "Manage multi-agent AI code configurations across platforms (OpenAI Codex, Claude Code, Cursor, Gemini). Use when: (1) initializing new multi-agent projects, (2) syncing configurations (MCP servers, skills, rules, subagents) across platforms, (3) translating configurations between different agent platforms, (4) migrating from one agent platform to another, or (5) maintaining consistent agent configurations across development teams using different tools.",
+  "version": "1.0.0"
+}

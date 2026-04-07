@@ -681,6 +681,89 @@ export default defineConfig({
 });
 ```
 
+### Browser Selection Strategy
+
+Choose the right browser engine for your testing needs:
+
+| Browser | Use Case | Speed | Install |
+|---------|----------|-------|---------|
+| Chromium | Default, full compatibility | Baseline | `bunx playwright install chromium` |
+| Firefox | Cross-browser validation | Similar | `bunx playwright install firefox` |
+| WebKit | Safari compatibility | Similar | `bunx playwright install webkit` |
+| Lightpanda | Fast headless CI, scraping | 11x faster | See below |
+
+**Ask the user which browser(s) they want** when setting up Playwright. Default
+to Chromium for full compatibility. Recommend Lightpanda for CI pipelines where
+speed matters and visual regression is not needed.
+
+### Lightpanda: Fast Headless Browser
+
+Lightpanda is a Zig-based headless browser engine — 11x faster than Chrome, 9x
+less memory. CDP-compatible with Playwright and Puppeteer.
+
+#### Install Lightpanda
+
+```bash
+# Binary install
+curl -fsSL https://pkg.lightpanda.io/install.sh | bash
+
+# Or Docker
+docker run -p 9222:9222 lightpanda/browser:nightly
+```
+
+#### Start Lightpanda CDP Server
+
+```bash
+lightpanda serve --host 127.0.0.1 --port 9222
+```
+
+#### Playwright Integration
+
+```typescript
+// playwright.config.ts — add Lightpanda as a project
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  projects: [
+    // Standard browsers
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+
+    // Lightpanda — fast headless (no rendering, no screenshots)
+    {
+      name: 'lightpanda',
+      use: {
+        connectOverCDP: 'http://127.0.0.1:9222',
+      },
+    },
+  ],
+});
+```
+
+```typescript
+// Or connect programmatically in a test/script
+import { chromium } from '@playwright/test';
+
+const browser = await chromium.connectOverCDP('http://127.0.0.1:9222');
+const context = await browser.newContext();
+const page = await context.newPage();
+await page.goto('https://example.com');
+```
+
+#### When to Use Lightpanda
+
+- CI pipelines where speed matters (11x faster)
+- Web scraping and data extraction
+- AI agent browser automation
+- Smoke tests and functional tests
+
+#### When NOT to Use Lightpanda
+
+- Visual regression testing (no rendering engine for screenshots)
+- Tests that check CSS layout, colors, or visual appearance
+- Tests requiring browser-specific UI features (devtools, extensions)
+
 ### E2E Test Examples
 
 ```typescript

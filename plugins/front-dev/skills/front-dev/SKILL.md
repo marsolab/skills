@@ -1,7 +1,27 @@
 ---
 name: front-dev
-description: Build production-ready web applications using Bun, Astro, React, Tailwind CSS v4, and Shadcn UI. Use this skill when (1) creating new frontend projects or components, (2) building landing pages, dashboards, or web apps, (3) setting up Astro with islands architecture, (4) implementing React/Preact components with proper patterns, (5) styling with Tailwind v4 and Shadcn UI, (6) optimizing frontend performance and accessibility, (7) implementing state management, (8) setting up testing strategies, (9) configuring build tooling with Bun, (10) implementing security best practices, (11) setting up forms with validation, (12) building data tables and complex UI patterns. Covers architecture, performance, accessibility, testing, security, and developer experience.
-version: 1.0.0
+description: >-
+  Frontend web development with Bun, Astro, React, Preact, Tailwind CSS v4,
+  and Shadcn UI. ALWAYS use this skill when the user's task involves frontend
+  or web UI work — building websites, web apps, landing pages, dashboards,
+  components, or pages. This includes: Astro islands architecture, React or
+  Preact components, Tailwind styling, Shadcn UI setup, frontend testing with
+  Playwright and Lightpanda, accessibility, web performance, forms, data tables,
+  static sites, SSR, View Transitions, content collections, MDX, deployment to
+  Vercel/Netlify/Cloudflare, or any task mentioning .astro/.tsx/.jsx files,
+  CSS utilities, or frontend build tooling. Even if the user just says "build
+  me a page" or "create a website" — use this skill.
+version: 1.1.0
+tags:
+  - frontend
+  - web
+  - astro
+  - react
+  - tailwind
+  - bun
+  - shadcn
+  - testing
+  - deployment
 ---
 
 # Web Frontend Stack
@@ -38,273 +58,270 @@ use them together:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Master Decision Tree
+## Workflow: New Project
 
-### 1. Project Type → Astro Configuration
+Follow these steps when creating a new frontend project from scratch.
 
-```bash
-What are you building? (Astro is always the base)
-│
-├── Content-heavy site (blog, docs, marketing)?
-│   └── Astro static (default) + Tailwind
-│       ├── Pure Astro components for static content
-│       ├── Content Collections + Zod for structured content
-│       ├── Add React islands only for interactive widgets
-│       └── Preact islands for bundle-critical pages
-│
-├── Web application (dashboard, SaaS, admin)?
-│   └── Astro + React islands + Shadcn UI
-│       ├── SEO critical? → Astro SSR adapter
-│       ├── Heavy interactivity? → More React islands
-│       ├── Real-time data? → Preact Signals in islands
-│       └── Forms-heavy? → Shadcn Form + react-hook-form
-│
-├── E-commerce?
-│   └── Astro + React islands for interactivity
-│       ├── Product pages → Static Astro (fast LCP)
-│       ├── Cart/checkout → React island (client:load)
-│       ├── Product filtering → Preact Signals (fine-grained)
-│       └── Search → React island (client:idle)
-│
-├── Landing page / Marketing?
-│   └── Astro static + minimal islands
-│       ├── Hero, features, testimonials → Pure Astro
-│       ├── Contact form → React island (client:visible)
-│       ├── Newsletter signup → Preact island (~3KB)
-│       └── Analytics → client:idle or Partytown
-│
-├── Documentation site?
-│   └── Astro + Content Collections + MDX
-│       ├── Markdown/MDX for content
-│       ├── Zod schemas for frontmatter validation
-│       ├── Interactive code examples → React islands
-│       └── Search → React island (client:idle)
-│
-└── Internal tool / Dashboard?
-    └── Astro + React islands + Shadcn UI (heavy)
-        ├── Data tables → Shadcn DataTable + TanStack Table
-        ├── Forms → Shadcn Form + react-hook-form + Zod
-        ├── Command palette → Shadcn Command (cmdk)
-        └── Charts → Recharts or Chart.js in React islands
-```
+### Step 1: Check for Agentation
 
-### 2. Island Framework Decision: React vs Preact
+Before writing any frontend code, check if the user has
+[Agentation](https://www.agentation.com) installed — a visual feedback tool that
+lets you click elements on the page and generate structured context for AI
+agents.
+
+1. Look for `"agentation"` in `package.json` devDependencies
+2. If NOT found, propose to the user:
+
+> Agentation provides visual feedback for AI-assisted frontend development —
+> you click elements, add notes, and I get precise selectors and context.
+> Want me to install it?
+
+If they agree:
 
 ```bash
-For each interactive island, choose framework:
-│
-├── Need Shadcn UI components?
-│   └── React (Shadcn built for React)
-│
-├── Complex state management needed?
-│   └── React (React Query, Zustand ecosystem)
-│
-├── Bundle size critical (<50KB total page JS)?
-│   └── Preact (~3KB vs React ~40KB)
-│       └── Savings: ~37KB gzipped per island
-│
-├── High-frequency updates (live data, animations)?
-│   └── Preact Signals (fine-grained reactivity)
-│       └── Bypasses VDOM diffing for targeted DOM updates
-│
-├── Simple widget (counter, toggle, form)?
-│   └── Preact (smaller, sufficient for simple UI)
-│
-├── Using React-specific libraries?
-│   ├── Has Preact alternative? → Preact
-│   │   ├── React Router → preact-router / wouter
-│   │   ├── Redux → @preact/signals
-│   │   └── React Query → Works via preact/compat
-│   └── No alternative? → React
-│
-├── Web Component output needed?
-│   └── Preact (smaller, easier to wrap)
-│       └── Use preact-custom-element
-│
-└── Default for general islands?
-    ├── With Shadcn → React
-    └── Without Shadcn → Preact (smaller bundle)
+bun add -d agentation
+# Also install the Claude Code skill for setup automation:
+npx skills add benjitaylor/agentation
 ```
 
-### 3. Mixing React and Preact Islands
+Add to the dev-only layout wrapper:
 
-```html
-Can I use both React and Preact in the same Astro project?
+```tsx
+import { Agentation } from 'agentation';
 
-YES! Astro supports multiple frameworks simultaneously.
-│
-├── Add both integrations:
-│   bunx astro add react
-│   bunx astro add preact
-│
-├── File convention (recommended):
-│   ├── *.tsx → React components
-│   └── *.preact.tsx → Preact components
-│
-├── Or use explicit client directives:
-│   <ReactComponent client:load />
-│   <PreactComponent client:visible />
-│
-├── Common pattern:
-│   ├── Complex UI (forms, tables) → React + Shadcn
-│   ├── Simple widgets → Preact (smaller)
-│   ├── Performance-critical → Preact Signals
-│   └── Static content → Astro (no island)
-│
-└── Caution:
-    └── Each framework adds to bundle
-        └── Don't add both if only using one
+// Only render in development
+{import.meta.env.DEV && <Agentation />}
 ```
 
-### 4. Runtime Decision: Bun vs Node
-
-```go
-Use Bun when:
-├── Greenfield project (no legacy constraints)
-├── Serverless/CLI (fast cold starts ~μs)
-├── Dev speed priority (10x faster installs)
-├── TypeScript-first (native support, no tsc)
-├── All-in-one tooling (bundler, test runner, package manager)
-└── HTTP server (2x faster than Node for simple cases)
-
-Stay with Node when:
-├── Critical native addon dependencies (node-gyp)
-├── Production stability paramount (Bun still maturing)
-├── Team unfamiliar with Bun
-├── Specific Node-only APIs required
-└── Monitoring tools require Node (some APMs)
-
-Hybrid approach (recommended for new projects):
-├── Bun for dev/build → Fast DX
-├── Test with both runtimes in CI
-└── Deploy with Bun or Node based on stability needs
-```
-
-### 5. State Management Decision
-
-```typescript
-What kind of state? (In React/Preact islands)
-│
-├── UI State (form inputs, toggles, modals)
-│   └── useState / useReducer (local)
-│       └── Keep close to where used
-│
-├── Derived State (computed from other state)
-│   └── useMemo / computed signals
-│       └── DON'T duplicate in state
-│
-├── Server State (API data)
-│   ├── Simple one-time fetch? → useFetch hook
-│   ├── Caching/revalidation? → React Query / SWR
-│   └── Preact? → React Query via compat or signals
-│
-├── Global UI State (theme, sidebar, toast)
-│   ├── Few consumers (<5)? → React Context
-│   ├── Many consumers? → Zustand (no provider)
-│   └── Preact? → @preact/signals (best choice)
-│
-├── Form State
-│   ├── Simple form (<5 fields)? → useState
-│   └── Complex validation? → react-hook-form + Zod
-│
-├── URL State (filters, pagination)
-│   └── Astro: Use query params, read in frontmatter
-│   └── Islands: nuqs / URLSearchParams
-│
-└── Cross-island State
-    ├── Astro nanostores (works with any framework)
-    ├── Custom events (DOM-based)
-    └── URL params (most portable)
-```
-
-### 6. Hydration Strategy Decision (Astro Islands)
-
-```text
-When should island hydrate?
-│
-├── User interaction required immediately?
-│   └── client:load
-│       └── Examples: navbar dropdown, auth UI, critical CTAs
-│
-├── Enhances but not critical?
-│   └── client:idle
-│       └── Examples: analytics, chat widget, tooltips
-│
-├── Below the fold / not immediately visible?
-│   └── client:visible
-│       └── Examples: comments, related posts, footer widgets
-│
-├── Only on certain devices?
-│   └── client:media="(min-width: 768px)"
-│       └── Examples: desktop-only features
-│
-├── Uses browser-only APIs (no SSR possible)?
-│   └── client:only="react"
-│       └── Examples: WebGL, canvas, localStorage on init
-│
-└── Static content, no JS needed?
-    └── No directive (default)
-        └── Renders to HTML, ships zero JS
-```
-
-### 7. Testing Strategy Decision
-
-```text
-What to test?
-│
-├── Business logic (utils, hooks)?
-│   └── Unit tests: bun test / Vitest
-│
-├── Component behavior (React/Preact)?
-│   └── Component tests: Testing Library
-│       ├── @testing-library/react or /preact
-│       └── Mock API with MSW
-│
-├── Astro pages integration?
-│   └── Build + serve + test with Playwright
-│
-├── User flows (critical paths)?
-│   └── E2E tests: Playwright
-│
-└── Accessibility?
-    ├── Automated: jest-axe, axe-core
-    └── Manual: Screen reader, keyboard
-```
-
-## Quick Start
-
-### New Astro + React + Tailwind + Shadcn Project
+### Step 2: Scaffold the Project
 
 ```bash
 # Initialize Astro project
 bun create astro@latest my-project
 cd my-project
 
-# Add React integration (for islands)
-bunx astro add react
-
-# Add Tailwind CSS v4
-bunx astro add tailwind
+# Add integrations
+bunx astro add react     # React islands
+bunx astro add tailwind  # Tailwind CSS v4
 
 # Initialize Shadcn UI
 bunx shadcn@latest init
-
-# Add commonly used Shadcn components
 bunx shadcn@latest add button card form input dialog
 
 # Start dev server
 bun run dev
 ```
 
-### Astro Page with React Islands
+### Step 3: Configure Logging
+
+Set up LogTape for structured logging across all runtimes. See
+[references/bun.md](references/bun.md) for full patterns.
+
+```bash
+bun add @logtape/logtape
+```
+
+```typescript
+import { configure, getConsoleSink } from '@logtape/logtape';
+
+await configure({
+  sinks: { console: getConsoleSink() },
+  loggers: [{ category: ['myapp'], lowestLevel: 'info', sinks: ['console'] }],
+});
+```
+
+### Step 4: Set Up Testing
+
+Set up Playwright for E2E testing. **Ask the user which browser(s) they want:**
+
+| Browser | Best For | Speed |
+|---------|----------|-------|
+| Chromium | Default, full compat | Baseline |
+| Firefox | Cross-browser | Similar |
+| WebKit | Safari compat | Similar |
+| Lightpanda | Fast CI, headless | 11x faster |
+
+See [references/testing.md](references/testing.md) for full Playwright config,
+Lightpanda setup, and component testing patterns.
+
+```bash
+bun add -d @playwright/test
+bunx playwright install chromium  # or user's chosen browser
+```
+
+### Step 5: First Dev Run
+
+```bash
+bun run dev
+# Open http://localhost:4321
+```
+
+## Workflow: Existing Project
+
+When working on an existing frontend project:
+
+1. **Detect the stack** — read `astro.config.mjs`, `package.json`,
+   `tsconfig.json` to understand what's already configured
+2. **Check for Agentation** — same as Step 1 above. If missing, propose it.
+3. **Route to the right reference** based on the task:
+   - Building pages/routing → [references/astro.md](references/astro.md)
+   - React/Preact components → [references/react.md](references/react.md) or
+     [references/preact.md](references/preact.md)
+   - Styling/theming → [references/tailwind.md](references/tailwind.md)
+   - Forms/tables/UI → [references/shadcn.md](references/shadcn.md)
+   - Testing → [references/testing.md](references/testing.md)
+   - Deploying → [references/deployment.md](references/deployment.md)
+
+## Project Type Decision
+
+| Building | Astro Config | Key Integrations |
+|----------|-------------|-----------------|
+| Content site (blog, docs) | Static (default) | Content Collections, MDX, Tailwind |
+| Web app (dashboard, SaaS) | SSR or hybrid | React islands, Shadcn UI, React Query |
+| E-commerce | Hybrid | Static product pages, React cart island |
+| Landing page | Static | Minimal islands, Tailwind, Astro components |
+| Documentation | Static | Content Collections, MDX, search island |
+| Internal tool | SSR | React islands (heavy), Shadcn DataTable, Forms |
+
+## Island Framework: React vs Preact
+
+| Need | Choose | Why |
+|------|--------|-----|
+| Shadcn UI components | React | Shadcn is built for React |
+| Complex state (React Query, Zustand) | React | Ecosystem support |
+| Bundle size critical (<50KB page JS) | Preact | ~3KB vs ~40KB |
+| High-frequency updates (live data) | Preact + Signals | Fine-grained reactivity |
+| Simple widget (counter, toggle, form) | Preact | Smaller, sufficient |
+| Web Component output | Preact | Smaller, easier to wrap |
+| Default (no specific need) | Preact without Shadcn, React with Shadcn | |
+
+Both can coexist in the same Astro project:
+
+```bash
+bunx astro add react preact
+```
+
+File convention: `*.tsx` for React, `*.preact.tsx` for Preact (or use folders).
+
+## Hydration Strategy
+
+| Directive | When | Use Case |
+|-----------|------|----------|
+| (none) | Never | Static content — zero JS |
+| `client:load` | Page load | Critical interactivity (nav, auth) |
+| `client:idle` | Browser idle | Non-critical features (analytics, chat) |
+| `client:visible` | In viewport | Below-fold content (comments, footer) |
+| `client:media` | Media match | Responsive features (desktop-only) |
+| `client:only` | Page load, no SSR | Browser-only APIs (WebGL, canvas) |
+
+## State Management
+
+| State Type | Solution |
+|-----------|----------|
+| UI state (form, toggle) | `useState` / `useReducer` |
+| Derived state | `useMemo` / computed signals |
+| Server state (API data) | React Query / SWR |
+| Global UI (theme, sidebar) | Zustand (React) or `@preact/signals` (Preact) |
+| Form state (complex) | `react-hook-form` + Zod |
+| URL state (filters, pagination) | Query params / `nuqs` |
+| Cross-island state | Astro nanostores or custom events |
+
+## Testing Strategy
+
+| Layer | Tool | What to Test | Count |
+|-------|------|-------------|-------|
+| Unit | `bun test` / Vitest | Utils, hooks, pure functions | Many |
+| Component | Testing Library | React/Preact interactions | Some |
+| Integration | Testing Library + MSW | Features with mocked APIs | Some |
+| E2E | Playwright | Critical user flows | Few |
+
+See [references/testing.md](references/testing.md) for full setup, browser
+selection, Lightpanda integration, and MSW patterns.
+
+## Tool Integration: Agentation
+
+[Agentation](https://www.agentation.com) provides visual feedback for AI-
+assisted frontend development. It renders a toolbar in the bottom-right corner
+during development — click any element to annotate it and generate structured
+context with CSS selectors and positions.
+
+**Detection**: Check `package.json` for `"agentation"` in devDependencies.
+
+**If not installed**, propose to the user:
+```bash
+bun add -d agentation
+npx skills add benjitaylor/agentation
+```
+
+**Setup** in Astro layout:
+```tsx
+import { Agentation } from 'agentation';
+
+// Dev-only — renders toolbar for visual annotation
+{import.meta.env.DEV && <Agentation />}
+```
+
+**MCP Integration**: Agentation has an MCP server that lets Claude Code access
+annotations directly in real-time without manual copy-pasting. Recommend the
+user set this up for the best experience.
+
+**Requirements**: React 18+, desktop browsers only.
+
+## Tool Integration: LogTape
+
+[LogTape](https://logtape.org) is the preferred logging library — zero
+dependencies, 5.3KB, works across Node.js, Deno, Bun, browsers, and edge
+functions. ~2x faster than Pino with nested categories and lazy evaluation.
+
+```bash
+bun add @logtape/logtape
+```
+
+Key advantages over Pino:
+- **Multi-runtime**: One logger for server + client + edge
+- **Library-friendly**: Libraries log without configuring; apps configure sinks
+- **Lazy evaluation**: Templates only interpolated if level is enabled
+- **Integrations**: Express, Fastify, Hono, OpenTelemetry, Sentry
+
+See [references/bun.md](references/bun.md) for full LogTape patterns, request
+logging middleware, and OpenTelemetry integration.
+
+## Tool Integration: Lightpanda
+
+[Lightpanda](https://lightpanda.io) is a Zig-based headless browser — 11x
+faster than Chrome, 9x less memory. CDP-compatible with Playwright.
+
+```bash
+# Install
+curl -fsSL https://pkg.lightpanda.io/install.sh | bash
+# Or Docker: docker run -p 9222:9222 lightpanda/browser:nightly
+
+# Connect from Playwright
+lightpanda serve --host 127.0.0.1 --port 9222
+```
+
+Use for: fast CI tests, web scraping, AI browser automation.
+Not for: visual regression, screenshot testing, CSS layout checks.
+
+See [references/testing.md](references/testing.md) for full Playwright +
+Lightpanda configuration.
+
+## Architecture Principles
+
+1. **Astro-First** — Every page starts static, add islands only when needed
+2. **Mobile-First** — Base styles for mobile, responsive variants for larger
+3. **Accessibility-First** — Semantic HTML, keyboard nav, ARIA when needed
+4. **Performance Budget** — <100KB JS per page, LCP <2.5s, CLS <0.1
+
+## Quick Start: Page with Islands
 
 ```astro
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';           // Static
-import Counter from '../components/Counter';           // React
-import Comments from '../components/Comments';         // React
+import Hero from '../components/Hero.astro';
+import Counter from '../components/Counter';
+import Comments from '../components/Comments';
 ---
 
 <Layout title="Home">
@@ -314,37 +331,22 @@ import Comments from '../components/Comments';         // React
 </Layout>
 ```
 
-## Architecture Principles
-
-1. **Astro-First** — Every page starts static, add islands only when needed
-1. **Mobile-First** — Base styles for mobile, responsive variants for larger
-1. **Accessibility-First** — Semantic HTML, keyboard nav, ARIA when needed
-1. **Performance Budget** — <100KB JS per page, LCP <2.5s, CLS <0.1
-
-## Hydration Quick Reference
-
-| Directive | When | Use Case |
-|-----------|------|----------|
-| (none) | Never | Static content |
-| `client:load` | Page load | Critical interactivity |
-| `client:idle` | Browser idle | Non-critical features |
-| `client:visible` | In viewport | Below-fold content |
-| `client:media` | Media match | Responsive features |
-| `client:only` | Page load | No SSR (browser APIs) |
-
 ## Reference Files
 
-| Topic | Reference |
-|-------|-----------|
-| Bun runtime, scaling, security | [references/bun.md](references/bun.md) |
-| Astro architecture, content, SSR | [references/astro.md](references/astro.md) |
-| React patterns, hooks, performance | [references/react.md](references/react.md) |
-| Preact, signals, migration | [references/preact.md](references/preact.md) |
-| Tailwind v4, theming, queries | [references/tailwind.md](references/tailwind.md) |
-| Shadcn UI, forms, tables | [references/shadcn.md](references/shadcn.md) |
-| Testing strategies | [references/testing.md](references/testing.md) |
-| Security best practices | [references/security.md](references/security.md) |
-| Accessibility guide | [references/accessibility.md](references/accessibility.md) |
+Consult these based on what you're working on:
+
+| When you need to... | Read |
+|---------------------|------|
+| Build Astro pages, routing, content collections, View Transitions, error pages, SSR, MDX | [references/astro.md](references/astro.md) |
+| Write React components, hooks, state management, React Query, error boundaries | [references/react.md](references/react.md) |
+| Use Preact, Signals, fine-grained reactivity, Web Components | [references/preact.md](references/preact.md) |
+| Style with Tailwind v4, `@theme`, container queries, CVA variants, dark mode | [references/tailwind.md](references/tailwind.md) |
+| Use Shadcn UI forms, data tables, dialogs, command palette | [references/shadcn.md](references/shadcn.md) |
+| Set up Bun server, LogTape logging, bundling, TypeScript config | [references/bun.md](references/bun.md) |
+| Configure testing: Playwright, Lightpanda, Vitest, Testing Library, MSW, E2E | [references/testing.md](references/testing.md) |
+| Deploy to Vercel, Netlify, Cloudflare, Docker, static hosting | [references/deployment.md](references/deployment.md) |
+| Implement security: XSS prevention, CSRF, CSP, auth, rate limiting | [references/security.md](references/security.md) |
+| Add accessibility: ARIA, focus management, keyboard nav, screen readers | [references/accessibility.md](references/accessibility.md) |
 
 ## Common Pitfalls
 
@@ -354,5 +356,7 @@ import Comments from '../components/Comments';         // React
 | Astro | `client:load` everywhere | Use `idle`/`visible` for non-critical |
 | React | React libs for simple widgets | Use Preact for small islands |
 | Preact | Mixing signals with useState | Signals outside components |
-| Tailwind | Hardcoded colors | Use semantic tokens |
-| Shadcn | Not customizing | Own the code, modify freely |
+| Tailwind | Hardcoded colors | Use semantic tokens via `@theme` |
+| Shadcn | Not customizing components | Own the code, modify freely |
+| Testing | Only testing in Chromium | Add Firefox/WebKit, consider Lightpanda for CI |
+| Deploy | Not testing production build | Always `bun run preview` before deploying |

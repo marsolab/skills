@@ -455,7 +455,7 @@ Run the following command to create a new project:
 
 ```bash
 bun create astro@latest
-```html
+```
 
 ## Video Tutorial
 
@@ -756,6 +756,125 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 };
+```
+
+## View Transitions
+
+Astro's built-in View Transitions API provides smooth animated page navigation
+without a client-side router.
+
+### Enable View Transitions
+
+```astro
+---
+// src/layouts/BaseLayout.astro
+import { ViewTransitions } from 'astro:transitions';
+---
+<html lang="en">
+  <head>
+    <ViewTransitions />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+```
+
+### Transition Directives
+
+```astro
+<!-- Named transitions — matching elements animate between pages -->
+<h1 transition:name="title">{title}</h1>
+<img transition:name={`hero-${slug}`} src={image} alt={title} />
+
+<!-- Animation types -->
+<div transition:animate="slide">Slides in from the side</div>
+<div transition:animate="fade">Fades in (default)</div>
+<div transition:animate="none">No animation</div>
+
+<!-- Persist islands across navigation (keeps component state) -->
+<Counter client:load transition:persist />
+
+<!-- Persist with explicit name (when same component appears differently) -->
+<AudioPlayer client:load transition:persist="player" />
+```
+
+### Lifecycle Events
+
+```typescript
+// Listen for navigation events
+document.addEventListener('astro:before-preparation', (event) => {
+  // Before new page is fetched — cancel with event.preventDefault()
+});
+
+document.addEventListener('astro:after-preparation', () => {
+  // New page fetched, before DOM swap
+});
+
+document.addEventListener('astro:before-swap', (event) => {
+  // Before DOM is updated — customize swap with event.newDocument
+});
+
+document.addEventListener('astro:after-swap', () => {
+  // DOM updated, before animations complete
+  // Re-initialize third-party scripts here
+});
+
+document.addEventListener('astro:page-load', () => {
+  // Page fully loaded — runs on initial load AND every navigation
+  // Use this instead of DOMContentLoaded for View Transitions
+});
+```
+
+### Fallback Control
+
+```astro
+---
+import { ViewTransitions } from 'astro:transitions';
+---
+<!-- fallback: 'animate' (default), 'swap', 'none' -->
+<ViewTransitions fallback="swap" />
+```
+
+## Error Pages
+
+### Custom 404 Page
+
+```astro
+---
+// src/pages/404.astro
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+<BaseLayout title="Page Not Found">
+  <div class="flex flex-col items-center justify-center min-h-[60vh]">
+    <h1 class="text-6xl font-bold">404</h1>
+    <p class="text-xl text-muted-foreground mt-4">Page not found</p>
+    <a href="/" class="mt-8 text-primary underline hover:no-underline">
+      Go home
+    </a>
+  </div>
+</BaseLayout>
+```
+
+### Custom 500 Page (SSR Only)
+
+```astro
+---
+// src/pages/500.astro
+// Only used with output: 'server' or 'hybrid'
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Server Error</title>
+  </head>
+  <body>
+    <h1>500 — Server Error</h1>
+    <p>Something went wrong. Please try again later.</p>
+    <a href="/">Go home</a>
+  </body>
+</html>
 ```
 
 ## Image Optimization

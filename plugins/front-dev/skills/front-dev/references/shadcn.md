@@ -76,7 +76,7 @@ bunx shadcn@latest add --all
 
 ```tsx
 // components/ContactForm.tsx
-'use client';
+// No 'use client' needed — Astro uses client:* directives for hydration
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

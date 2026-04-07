@@ -181,12 +181,12 @@ export function createUserService(deps: Dependencies) {
 // In production
 import { createPgDatabase } from './infra/postgres';
 import { createRedisCache } from './infra/redis';
-import { createPinoLogger } from './infra/pino';
+import { createLogTapeLogger } from './infra/logtape';
 
 const deps: Dependencies = {
   db: createPgDatabase(process.env.DATABASE_URL!),
   cache: createRedisCache(process.env.REDIS_URL!),
-  logger: createPinoLogger(),
+  logger: createLogTapeLogger(),
 };
 
 const userService = createUserService(deps);
@@ -494,58 +494,83 @@ console.log('Environment:', safeEnv);
 
 ## Observability
 
-### Structured Logging with Pino
+### Structured Logging with LogTape
+
+LogTape is a zero-dependency, multi-runtime logging library (5.3KB). Works
+across Node.js, Deno, Bun, browsers, and edge functions. ~2x faster than Pino,
+with nested categories and lazy evaluation.
+
+```bash
+bun add @logtape/logtape
+```
 
 ```typescript
-// logger.ts
-import pino from 'pino';
+// logger.ts — Application entry point configures sinks
+import { configure, getConsoleSink, getLogger } from '@logtape/logtape';
 
-export const logger = pino({
-  level: process.env.LOG_LEVEL || 'info',
-  formatters: {
-    level: (label) => ({ level: label }),
-    bindings: (bindings) => ({
-      pid: bindings.pid,
-      host: bindings.hostname,
-      service: 'my-app',
-      version: process.env.npm_package_version,
-    }),
+// Configure once at app startup
+await configure({
+  sinks: {
+    console: getConsoleSink(),
   },
-  timestamp: pino.stdTimeFunctions.isoTime,
-  // Add request ID to all logs
-  mixin() {
-    return { requestId: getRequestId() };
-  },
+  loggers: [
+    {
+      category: ['myapp'],
+      lowestLevel: 'info',
+      sinks: ['console'],
+    },
+    {
+      // Verbose logging for specific subsystem
+      category: ['myapp', 'db'],
+      lowestLevel: 'debug',
+      sinks: ['console'],
+    },
+  ],
 });
 
+// Get loggers by nested category
+const logger = getLogger(['myapp']);
+const dbLogger = getLogger(['myapp', 'db']);
+
+// Structured logging with lazy evaluation — template is only
+// interpolated if the log level is enabled
+logger.info('Server started on port {port}', { port: 3000 });
+dbLogger.debug('Query executed in {duration}ms', { duration: 42 });
+```
+
+```typescript
 // Request logging middleware
 export function requestLogger(req: Request, start: number) {
   const duration = Date.now() - start;
   const url = new URL(req.url);
+  const logger = getLogger(['myapp', 'http']);
 
-  logger.info({
-    type: 'request',
+  logger.info('{method} {path} completed in {duration}ms', {
     method: req.method,
     path: url.pathname,
     query: url.search,
     userAgent: req.headers.get('user-agent'),
     duration,
-    status: 200, // Update with actual status
-  }, `${req.method} ${url.pathname}`);
+  });
 }
 
-// Error logging
+// Error logging with context
 export function logError(error: Error, context?: Record<string, unknown>) {
-  logger.error({
-    type: 'error',
-    error: {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    },
+  const logger = getLogger(['myapp', 'error']);
+  logger.error('Unhandled error: {message}', {
+    message: error.message,
+    stack: error.stack,
     ...context,
-  }, error.message);
+  });
 }
+```
+
+```typescript
+// For libraries: just use getLogger, never configure
+// If the consuming app doesn't configure LogTape, no logs are produced
+import { getLogger } from '@logtape/logtape';
+const logger = getLogger(['my-library', 'http']);
+logger.debug('Request to {url}', { url });
 ```
 
 ### OpenTelemetry Integration

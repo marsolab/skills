@@ -89,6 +89,18 @@ def write_json(path: Path, obj: dict | list, *, check: bool) -> bool:
     return True
 
 
+def discover_hooks(plugin_dir_name: str) -> list[str]:
+    """Return relative paths to hook scripts for a plugin."""
+    hooks_dir = REPO_ROOT / "plugins" / plugin_dir_name / "hooks"
+    if not hooks_dir.is_dir():
+        return []
+    return sorted(
+        f"hooks/{p.name}"
+        for p in hooks_dir.iterdir()
+        if p.is_file() and p.suffix == ".sh"
+    )
+
+
 def discover_plugins() -> list[tuple[str, dict]]:
     """Return sorted (plugin_dir_name, frontmatter) pairs."""
     plugins: list[tuple[str, dict]] = []
@@ -119,7 +131,10 @@ def main() -> int:
         short_desc = short_description(desc)
 
         # Per-plugin: Claude Code
-        claude_plugin = {"name": name, "description": desc, "version": ver}
+        claude_plugin: dict = {"name": name, "description": desc, "version": ver}
+        hooks = discover_hooks(plugin_dir)
+        if hooks:
+            claude_plugin["hooks"] = hooks
         p = REPO_ROOT / "plugins" / plugin_dir / ".claude-plugin" / "plugin.json"
         if write_json(p, claude_plugin, check=check):
             drift = True

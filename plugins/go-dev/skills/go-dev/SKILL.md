@@ -1,7 +1,15 @@
 ---
 name: go-dev
-description: Write production-ready Go backends, CLIs, and APIs following modern best practices from top tier tech companies. Use this skill when creating or reviewing Go code for (1) backend services and APIs, (2) command-line tools, (3) code requiring proper error handling, concurrency, or testing patterns, (4) any Go development requiring adherence to established style guidelines. Includes comprehensive linting configuration and detailed style guide.
-version: 1.0.1
+description: Write production-ready Go backends, CLIs, APIs, and database-driven services following modern best practices. Use this skill when creating or reviewing Go code for (1) backend services and APIs, (2) command-line tools, (3) database access with sqlc, (4) code requiring proper error handling, concurrency, generics, or testing patterns, (5) any Go development requiring adherence to established style guidelines. Includes comprehensive linting configuration, detailed style guide, and Claude Code hooks for automated testing and linting. Make sure to use this skill whenever the user mentions Go, Golang, backend services in Go, CLI tools in Go, or wants to write any Go code — even if they don't explicitly reference best practices.
+version: 1.1.0
+tags:
+  - go
+  - golang
+  - backend
+  - cli
+  - api
+  - sqlc
+  - database
 ---
 
 # Go Development
@@ -9,177 +17,145 @@ version: 1.0.1
 Write Go code that is readable, maintainable, and production-ready using
 battle-tested patterns from major production codebases.
 
-## Quick Decision Trees
+For comprehensive coverage of all idioms, patterns, and pitfalls, read
+`references/go-styleguide.md`. This file focuses on quick decisions and
+workflows.
 
-### MCP
+## MCP
 
 Always use Context7 MCP to fetch the latest documentation.
 
-### Libraries
+## Libraries
 
-- Prefer to use libraries that are well-maintained and have a large community.
-- Prefer zero-dependency libraries.
-- Prefer libraries that are present in the awesome-go list.
-- For HTTP services, use [Chi](https://github.com/go-chi/chi) for routing.
-- For logging, use slog.Logger for logging.
-- For configuration use flags or environment variables.
+- Prefer well-maintained, zero-dependency libraries from the awesome-go list.
+- HTTP routing: [Chi](https://github.com/go-chi/chi).
+- Logging: `log/slog` (structured, leveled, stdlib since Go 1.21).
+- Configuration: flags or environment variables — no external config frameworks.
+- Database access: [sqlc](https://sqlc.dev/) for typesafe SQL code generation.
+- Migrations: [goose](https://github.com/pressly/goose).
+- Testing: stdlib `testing` package. Avoid third-party assertion libraries.
 
-### Linters
+## Linters
 
-- golangci-lint is the best linter for Go. It is a comprehensive linter that
-  checks for many issues in the code.
-- It is a good idea to run golangci-lint on every commit.
-- It is a good idea to run golangci-lint on every pull request.
-- It is a good idea to run golangci-lint on every code review.
-- It is a good idea to run golangci-lint on every code review.
+Run `golangci-lint` on every commit and pull request. Use the bundled
+`.golangci.yml` config:
 
-### Formatting
+```bash
+# Setup linting for a project
+scripts/setup_golangci_lint.sh /path/to/project
 
-- goimports is the best formatter for Go. It is a simple formatter that formats
-  the code according to the Go language specification.
-- It is a good idea to run goimports on every commit.
-- It is a good idea to run goimports on every pull request.
-- It is a good idea to run goimports on every code review.
-- It is a good idea to run goimports on every code review.
+# Run all linters
+golangci-lint run ./...
 
-### Testing
-
-- Table-driven tests should follow the pattern of:
-
-```go
-func TestProcess(t *testing.T) {
-    type testCase struct {
-        // Fields for the test case.
-    }
-
-    tests := map[string]testCase{
-        "name": {
-            // Test case fields.
-        },
-        // More test cases.
-    }
-
-    for name, tc := range tests {
-        t.Run(name, func(t *testing.T) {
-            // Test code.
-        })
-    }
-}
+# Auto-fix
+golangci-lint run --fix ./...
 ```
 
-- Integration tests should be skipped if the environment variables are not set.
+Run `goimports` before committing to keep imports formatted.
+
+## Quick Decision Trees
+
+### When to use generics?
+
+Use generics (Go 1.18+) when:
+
+- Writing data structures (trees, caches, pools) that work across types.
+- Utility functions that operate on slices, maps, or channels of any type.
+- Type constraints reduce duplication without sacrificing readability.
+
+Avoid generics when:
+
+- A concrete type or `any` suffices.
+- The function body would need type assertions anyway.
+- It makes the code harder to read for marginal DRY benefit.
 
 ```go
-func TestIntegration(t *testing.T) {
-    if os.Getenv("INTEGRATION_TESTS") == "" {
-        t.Skip("skipping integration tests")
+// GOOD: generic utility
+func Map[T, U any](s []T, f func(T) U) []U {
+    result := make([]U, len(s))
+    for i, v := range s {
+        result[i] = f(v)
     }
-    // Test code.
+    return result
 }
-```
 
-- Test helpers should call `t.Helper()` so failure line numbers point to the
-  actual test.
+// GOOD: constrained type
+type Number interface {
+    ~int | ~int64 | ~float64
+}
 
-```go
-func TestHelper(t *testing.T) {
-    t.Helper()
-    // Test code.
+func Sum[T Number](nums []T) T {
+    var total T
+    for _, n := range nums {
+        total += n
+    }
+    return total
 }
 ```
 
 ### When to use interfaces?
 
-**Define interfaces at consumption site, not implementation:**
+Define interfaces at the consumption site, not the implementation:
 
 ```go
-// GOOD: Consumer defines what it needs
+// GOOD: consumer defines what it needs
 package storage
 
 type Store interface {
     Get(key string) ([]byte, error)
 }
 
-// BAD: Implementation forces interface on consumers
+// BAD: implementation forces interface on consumers
 package postgres
 
 type PostgresStore interface { ... }
 ```
 
-**Interface size:**
+Interface size: 1 method is perfect, 2-3 if cohesive, 4+ consider splitting.
+Larger interfaces are acceptable for SaaS/enterprise products; keep them small
+for libraries.
 
-- 1 method: Perfect (Reader, Writer, Stringer)
-- 2-3 methods: Good if cohesive
-- 4+ methods: Consider splitting or using concrete types
-- It is ok to have big interfaces for saas products or enterprice software
-  products. For libraries, it is better to have small interfaces.
-
-**Accept interfaces, return concrete types:**
-
-```go
-// GOOD
-func Process(r io.Reader) (*Result, error)
-
-// BAD: Forces caller to deal with interface
-func Process(r io.Reader) (io.Reader, error)
-```
+Accept interfaces, return concrete types.
 
 ### How to handle errors?
 
-**Decision tree:**
-
-1. Can I handle this error completely here? → Log and continue
-1. Does caller need programmatic access? → Use `%w` wrapping
-1. Should I hide implementation details? → Use `%v` wrapping
-1. Is this a library? → Never log, always return
+1. Can I handle this completely here? → Log and continue.
+2. Does caller need programmatic access? → `%w` wrapping.
+3. Should I hide implementation details? → `%v` wrapping.
+4. Is this a library? → Never log, always return.
 
 ```go
-// Handle completely
-if err != nil {
-    log.Printf("retrying with defaults: %v", err)
-    return useDefaults(), nil
-}
-
-// Caller needs access (use %w)
+// Wrap with context
 if err != nil {
     return fmt.Errorf("connect to database: %w", err)
 }
+```
 
-// Hide details (use %v)
-if err != nil {
-    return fmt.Errorf("service unavailable: %v", err)
+Error strings: lowercase, no punctuation, no "failed to" prefix. Handle each
+error exactly once — log OR return, never both.
+
+Use `errors.Join` (Go 1.20+) to combine multiple independent errors:
+
+```go
+var errs []error
+for _, item := range items {
+    if err := process(item); err != nil {
+        errs = append(errs, err)
+    }
+}
+if err := errors.Join(errs...); err != nil {
+    return fmt.Errorf("processing batch: %w", err)
 }
 ```
 
-**Error string format:**
-
-- Lowercase, no punctuation
-- Avoid "failed to" or "error" prefix
-- Add context: `"operation: %w"`
-
 ### When to use concurrency?
 
-**Leave concurrency to the caller unless:**
+Leave concurrency to the caller unless building a server/daemon, worker pool,
+or managing background operations.
 
-- You're building a server/daemon that must handle concurrent requests
-- You're implementing a worker pool pattern
-- You're managing background operations (cleanup, metrics)
-
-```go
-// GOOD: Synchronous by default
-func Fetch(url string) (*Response, error)
-
-// Caller decides concurrency
-go fetch(url)
-
-// BAD: Forces async on everyone
-func FetchAsync(url string) <-chan *Response
-```
-
-**Before launching a goroutine, know when it will stop:**
+Before launching a goroutine, know when it will stop:
 
 ```go
-// GOOD: Clear lifecycle
 ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 defer cancel()
 
@@ -187,7 +163,7 @@ go func() {
     for {
         select {
         case <-ctx.Done():
-            return // goroutine stops here
+            return
         case work := <-ch:
             process(work)
         }
@@ -195,91 +171,144 @@ go func() {
 }()
 ```
 
-### Context as first parameter?
+Context as first parameter. Always.
 
-**Always use context when:**
+### Iterators (Go 1.23+)
 
-- Making external calls (HTTP, DB, RPC)
-- Operations may be cancelled
-- Deadlines matter
-- Need to pass request-scoped values
+Use `iter.Seq` and `iter.Seq2` for lazy iteration:
 
 ```go
-// GOOD
-func Query(ctx context.Context, sql string) (*Rows, error)
+// Iterator that yields values
+func FilterPositive(nums []int) iter.Seq[int] {
+    return func(yield func(int) bool) {
+        for _, n := range nums {
+            if n > 0 {
+                if !yield(n) {
+                    return
+                }
+            }
+        }
+    }
+}
 
-// BAD: Can't be cancelled
-func Query(sql string) (*Rows, error)
+// Consuming an iterator
+for v := range FilterPositive(data) {
+    fmt.Println(v)
+}
+```
+
+Use range-over-int (Go 1.22+): `for i := range n` instead of
+`for i := 0; i < n; i++`.
+
+### Structured logging with slog
+
+Use `log/slog` for all logging. Pass the logger as a dependency, never as a
+package-level global:
+
+```go
+type Server struct {
+    logger *slog.Logger
+}
+
+func NewServer(logger *slog.Logger) *Server {
+    return &Server{logger: logger}
+}
+
+func (s *Server) HandleRequest(ctx context.Context, req *Request) {
+    s.logger.InfoContext(ctx, "handling request",
+        slog.String("method", req.Method),
+        slog.String("path", req.Path),
+    )
+}
+```
+
+Use `slog.With` to add common attributes. Use `LogValuer` for expensive
+values that should only be computed when the log level is enabled.
+
+## Testing
+
+Table-driven tests with `map[string]testCase` for descriptive names:
+
+```go
+func TestProcess(t *testing.T) {
+    type testCase struct {
+        input   string
+        want    string
+        wantErr bool
+    }
+
+    tests := map[string]testCase{
+        "valid input": {
+            input: "hello",
+            want:  "HELLO",
+        },
+        "empty input returns error": {
+            input:   "",
+            wantErr: true,
+        },
+    }
+
+    for name, tc := range tests {
+        t.Run(name, func(t *testing.T) {
+            got, err := Process(tc.input)
+            if (err != nil) != tc.wantErr {
+                t.Fatalf("Process() error = %v, wantErr %v", err, tc.wantErr)
+            }
+            if got != tc.want {
+                t.Errorf("Process() = %q, want %q", got, tc.want)
+            }
+        })
+    }
+}
+```
+
+Test helpers call `t.Helper()` so failure line numbers point to the actual test.
+
+Integration tests skip when environment is not set:
+
+```go
+func TestIntegration(t *testing.T) {
+    if os.Getenv("INTEGRATION_TESTS") == "" {
+        t.Skip("skipping integration tests")
+    }
+}
 ```
 
 ## Common Workflows
 
 ### Creating a new HTTP service
 
-**1. Project structure:**
+**Project structure:**
 
 ```text
 myservice/
-├── cmd/
-│   └── server/
-│       └── main.go          # Binary entrypoint
+├── cmd/server/main.go
 ├── internal/
-│   ├── handler/             # HTTP handlers
-│   │   ├── handler.go
-│   │   └── handler_test.go
-│   ├── service/             # Business logic
-│   │   ├── service.go
-│   │   └── service_test.go
-│   └── storage/             # Data layer
-│       ├── postgres.go
-│       └── postgres_test.go
+│   ├── handler/
+│   ├── service/
+│   └── storage/
+├── db/
+│   ├── migrations/
+│   └── queries/
 ├── go.mod
-├── go.sum
 ├── Makefile
 └── .golangci.yml
 ```
 
-**2. Initialize project:**
-
-```bash
-mkdir -p myservice/{cmd/server,internal/{handler,service,storage}}
-cd myservice
-go mod init github.com/yourorg/myservice
-
-# Setup linting
-/path/to/scripts/setup_golangci_lint.sh .
-```
-
-**3. Main.go pattern:**
+**main.go pattern — flags, graceful shutdown:**
 
 ```go
-package main
-
-import (
-    "context"
-    "flag"
-    "log"
-    "net/http"
-    "os"
-    "os/signal"
-    "time"
-)
-
 func main() {
-    // Flags only in main
     addr := flag.String("addr", ":8080", "listen address")
-    timeout := flag.Duration("timeout", 30*time.Second, "request timeout")
     flag.Parse()
 
-    // Initialize dependencies
     srv := &http.Server{
         Addr:         *addr,
         Handler:      setupRoutes(),
-        ReadTimeout:  *timeout,
-        WriteTimeout: *timeout,
+        ReadTimeout:  30 * time.Second,
+        WriteTimeout: 30 * time.Second,
     }
 
-    // Graceful shutdown
     go func() {
         sigint := make(chan os.Signal, 1)
         signal.Notify(sigint, os.Interrupt)
@@ -287,10 +316,7 @@ func main() {
 
         ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
         defer cancel()
-
-        if err := srv.Shutdown(ctx); err != nil {
-            log.Printf("shutdown error: %v", err)
-        }
+        srv.Shutdown(ctx)
     }()
 
     log.Printf("listening on %s", *addr)
@@ -300,242 +326,124 @@ func main() {
 }
 ```
 
-**4. Handler pattern:**
+### Working with SQL databases using sqlc
+
+sqlc generates typesafe Go code from SQL queries. Write SQL, get Go.
+
+**1. Install and configure:**
+
+```yaml
+# sqlc.yaml
+version: "2"
+sql:
+  - schema: "db/migrations"
+    queries: "db/queries"
+    engine: "postgresql"
+    gen:
+      go:
+        package: "db"
+        out: "internal/db"
+        emit_json_tags: true
+        emit_interface: true
+```
+
+**2. Write migrations (with goose):**
+
+```sql
+-- db/migrations/001_create_users.sql
+-- +goose Up
+CREATE TABLE users (
+    id    BIGSERIAL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    name  TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- +goose Down
+DROP TABLE users;
+```
+
+**3. Write queries with annotations:**
+
+```sql
+-- db/queries/users.sql
+
+-- name: GetUser :one
+SELECT id, email, name, created_at
+FROM users
+WHERE id = $1;
+
+-- name: ListUsers :many
+SELECT id, email, name, created_at
+FROM users
+ORDER BY created_at DESC;
+
+-- name: CreateUser :one
+INSERT INTO users (email, name)
+VALUES ($1, $2)
+RETURNING id, email, name, created_at;
+
+-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1;
+```
+
+**4. Generate and use:**
+
+```bash
+sqlc generate
+```
 
 ```go
-package handler
-
-import (
-    "encoding/json"
-    "net/http"
-)
-
-type Handler struct {
-    service Service
-}
-
-func New(svc Service) *Handler {
-    return &Handler{service: svc}
-}
-
-func (h *Handler) HandleGet(w http.ResponseWriter, r *http.Request) {
-    ctx := r.Context()
-
-    // Extract params
-    id := r.URL.Query().Get("id")
-    if id == "" {
-        http.Error(w, "missing id", http.StatusBadRequest)
-        return
-    }
-
-    // Call service
-    result, err := h.service.Get(ctx, id)
-    if err != nil {
-        // Log and return appropriate status
-        http.Error(w, "internal error", http.StatusInternalServerError)
-        return
-    }
-
-    // Respond
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(result)
+// internal/db/ now contains typesafe Go code
+func (s *Service) GetUser(ctx context.Context, id int64) (db.User, error) {
+    return s.queries.GetUser(ctx, id)
 }
 ```
 
-### Creating a CLI tool
+**5. Testing with sqlc:**
 
-**1. Structure:**
+Enable `emit_interface: true` in sqlc.yaml to get a `Querier` interface for
+mocking in unit tests. Use a real database for integration tests.
+
+### Creating a CLI tool
 
 ```text
 mycli/
-├── main.go              # Flag parsing and dispatch
-├── internal/
-│   └── command/
-│       ├── run.go       # Command implementations
-│       └── run_test.go
+├── main.go
+├── internal/command/
 ├── go.mod
 └── .golangci.yml
 ```
 
-**2. Main.go with subcommands:**
+Use `flag.NewFlagSet` for subcommands. Write errors to stderr, exit non-zero
+on failure.
 
-```go
-package main
+## Quick Reference
 
-import (
-    "flag"
-    "fmt"
-    "os"
-)
+**Naming:** packages lowercase/singular, no `Get` prefix on getters, acronyms
+consistent case (`URL` not `Url`), constants in mixedCaps.
 
-func main() {
-    if len(os.Args) < 2 {
-        fmt.Fprintf(os.Stderr, "usage: %s <command> [flags]\n", os.Args[0])
-        os.Exit(1)
-    }
+**Structure:** return early with guard clauses, success path left-aligned,
+imports grouped: stdlib → external → internal.
 
-    switch os.Args[1] {
-    case "process":
-        processCmd := flag.NewFlagSet("process", flag.ExitOnError)
-        input := processCmd.String("input", "", "input file")
-        processCmd.Parse(os.Args[2:])
+**Critical pitfalls:** loop variable capture in closures, nil interface vs nil
+value in interface, defer in loops (wrap in closure), map writes to nil map.
 
-        if err := runProcess(*input); err != nil {
-            fmt.Fprintf(os.Stderr, "error: %v\n", err)
-            os.Exit(1)
-        }
-
-    default:
-        fmt.Fprintf(os.Stderr, "unknown command: %s\n", os.Args[1])
-        os.Exit(1)
-    }
-}
-```
-
-### Adding comprehensive tests
-
-**1. Table-driven test pattern:**
-
-```go
-func TestProcess(t *testing.T) {
-    tests := []struct {
-        name    string
-        input   string
-        want    string
-        wantErr bool
-    }{
-        {
-            name:    "valid input",
-            input:   "hello",
-            want:    "HELLO",
-            wantErr: false,
-        },
-        {
-            name:    "empty input",
-            input:   "",
-            want:    "",
-            wantErr: true,
-        },
-    }
-
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            got, err := Process(tt.input)
-            if (err != nil) != tt.wantErr {
-                t.Errorf("Process() error = %v, wantErr %v", err, tt.wantErr)
-                return
-            }
-            if got != tt.want {
-                t.Errorf("Process() = %v, want %v", got, tt.want)
-            }
-        })
-    }
-}
-```
-
-**2. Test helper pattern:**
-
-```go
-func TestHandler(t *testing.T) {
-    h := setupHandler(t)  // Helper creates handler
-
-    req := newRequest(t, "GET", "/api/test")  // Helper creates request
-    rr := httptest.NewRecorder()
-
-    h.ServeHTTP(rr, req)
-
-    assertStatus(t, rr.Code, http.StatusOK)  // Helper asserts
-    assertBody(t, rr.Body.String(), "expected")
-}
-
-func setupHandler(t *testing.T) http.Handler {
-    t.Helper()  // Marks this as test helper
-    // Setup code
-}
-```
-
-## Detailed Reference
-
-For comprehensive coverage of all Go idioms, patterns, and best practices:
-
-**Read `references/go-styleguide.md` for:**
-
-- Complete naming conventions (packages, variables, interfaces, constants)
-- Code organization principles (when to create packages, file structure)
-- Error handling patterns (wrapping, checking, panics)
-- Concurrency patterns (goroutines, channels, context, waitgroups)
-- Interface design (when/where to define, sizes, embedded interfaces)
-- Testing patterns (table-driven, subtests, helpers, mocks)
-- Performance considerations (allocations, profiling, benchmarks)
-- Critical pitfalls to avoid (loop variables, nil interfaces, defer in loops)
+For the full reference on all patterns, see `references/go-styleguide.md`.
 
 ## Linting Setup
 
-**Run the setup script:**
+Run the setup script to configure golangci-lint for a project:
 
 ```bash
 scripts/setup_golangci_lint.sh /path/to/your/project
 ```
 
-This configures comprehensive linting including:
-
-- Error checking (errcheck, errorlint)
-- Security analysis (gosec)
-- Style enforcement (revive, gocritic)
-- Performance checks (prealloc, perfsprint)
-- Code quality (gocyclo, gocognit, staticcheck)
-
-**Common commands:**
+This copies the bundled `.golangci.yml` and optionally installs a pre-commit
+hook. Common commands:
 
 ```bash
-# Run all linters
-golangci-lint run
-
-# Auto-fix issues
-golangci-lint run --fix
-
-# Lint specific paths
-golangci-lint run ./internal/...
+golangci-lint run ./...         # run all linters
+golangci-lint run --fix ./...   # auto-fix issues
+golangci-lint run ./internal/...# lint specific paths
 ```
-
-## Quick Reference Cheatsheet
-
-**Naming:**
-
-- Packages: lowercase, singular, no underscores
-- Getters: `obj.Owner()` not `obj.GetOwner()`
-- Acronyms: consistent case (`URL` or `url`, never `Url`)
-
-**Error handling:**
-
-- Check immediately after call
-- Wrap with context: `fmt.Errorf("operation: %w", err)`
-- Handle exactly once: log OR return, not both
-- Never panic in libraries
-
-**Concurrency:**
-
-- Context as first parameter
-- Know when every goroutine stops
-- Use `sync.WaitGroup` for coordination
-- Don't force concurrency on callers
-
-**Structure:**
-
-- Return early with guard clauses
-- Keep success path left-aligned
-- Import groups: stdlib, external, internal
-
-**Testing:**
-
-- Table-driven with named fields
-- Use `t.Run()` for subtests
-- Call `t.Helper()` in helpers
-- Message format: `got X, want Y`
-
-**Critical pitfalls:**
-
-- Loop variable capture: pass to closure explicitly
-- Nil interface check: interface with nil value ≠ nil
-- Defer in loops: wrap in closure
-- Map writes to nil: always `make()` first

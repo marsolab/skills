@@ -28,6 +28,7 @@ CATEGORIES: dict[str, str] = {
     "multi-agent-config": "devops",
     "sys-arch": "architecture",
     "front-dev": "development",
+    "things-todo": "productivity",
 }
 
 DISPLAY_NAMES: dict[str, str] = {
@@ -38,6 +39,7 @@ DISPLAY_NAMES: dict[str, str] = {
     "multi-agent-config": "Multi-Agent Config",
     "sys-arch": "Sys Arch",
     "front-dev": "Front Dev",
+    "things-todo": "Things To-Do",
 }
 
 CATEGORY_DISPLAY: dict[str, str] = {
@@ -46,6 +48,7 @@ CATEGORY_DISPLAY: dict[str, str] = {
     "design": "Design",
     "devops": "DevOps",
     "architecture": "Architecture",
+    "productivity": "Productivity",
 }
 
 

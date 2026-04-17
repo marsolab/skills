@@ -87,6 +87,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Architecture"
+    },
+    {
+      "name": "things-todo",
+      "source": {
+        "source": "local",
+        "path": "./plugins/things-todo"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

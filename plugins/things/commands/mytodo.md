@@ -3,7 +3,7 @@ description: Add to-dos to Things 3. Bare command is interactive (asks for proje
 allowed-tools: Bash, Read
 ---
 
-Use the `things-todo` skill to capture to-dos in Things 3.
+Use the `things` skill to capture to-dos in Things 3.
 
 Raw input: $ARGUMENTS
 
@@ -23,8 +23,8 @@ Always submit via the bundled helper — never build `things:///` URLs inline in
 Bash:
 
 ```
-python3 plugins/things-todo/skills/things-todo/scripts/things_add.py --stdin
+python3 plugins/things/skills/things/scripts/things_add.py --stdin
 ```
 
-Refer to `plugins/things-todo/skills/things-todo/SKILL.md` for the parsing
+Refer to `plugins/things/skills/things/SKILL.md` for the parsing
 rules, JSON schema, and failure modes.

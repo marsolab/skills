@@ -89,10 +89,10 @@
       "category": "Architecture"
     },
     {
-      "name": "things-todo",
+      "name": "things",
       "source": {
         "source": "local",
-        "path": "./plugins/things-todo"
+        "path": "./plugins/things"
       },
       "policy": {
         "installation": "AVAILABLE",

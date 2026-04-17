@@ -1,5 +1,5 @@
 ---
-name: things-todo
+name: things
 description: >-
   Capture tasks into Things 3 on macOS via the things:/// URL scheme. ALWAYS
   use this skill when the user mentions Things (the Cultured Code app), Things
@@ -102,7 +102,7 @@ scheduling in step 1.
 Build a JSON array and pipe it to the bundled helper:
 
 ```bash
-python3 plugins/things-todo/skills/things-todo/scripts/things_add.py --stdin <<'JSON'
+python3 plugins/things/skills/things/scripts/things_add.py --stdin <<'JSON'
 [
   {"type":"to-do","attributes":{"title":"Email Alex about Q2 roadmap","when":"today","list":"Work"}},
   {"type":"to-do","attributes":{"title":"Book flight for Austin trip","notes":"Departing week of the 15th","when":"today","list":"Work"}}

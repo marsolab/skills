@@ -703,15 +703,21 @@ less memory. CDP-compatible with Playwright and Puppeteer.
 
 #### Install Lightpanda
 
-```bash
-# Binary install
-curl -fsSL https://pkg.lightpanda.io/install.sh | bash
+Use the official Docker image — Docker Hub provides a verifiable distribution
+channel. Avoid `curl | bash` installers from the project's own domain.
 
-# Or Docker
+```bash
 docker run -p 9222:9222 lightpanda/browser:nightly
 ```
 
+If you need a native binary, download a release from the project's GitHub
+releases page and verify the checksum before running it. Do **not** pipe a
+remote shell script directly into `bash`.
+
 #### Start Lightpanda CDP Server
+
+The Docker container exposes the CDP server on port 9222 by default. For a
+locally built binary:
 
 ```bash
 lightpanda serve --host 127.0.0.1 --port 9222

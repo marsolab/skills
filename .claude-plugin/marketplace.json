@@ -38,7 +38,7 @@
       "name": "front-dev",
       "source": "./plugins/front-dev",
       "description": "Frontend web development with Bun, Astro, React, Preact, Tailwind CSS v4, and Shadcn UI. ALWAYS use this skill when the user's task involves frontend or web UI work — building websites, web apps, landing pages, dashboards, components, or pages. This includes: Astro islands architecture, React or Preact components, Tailwind styling, Shadcn UI setup, frontend testing with Playwright and Lightpanda, accessibility, web performance, forms, data tables, static sites, SSR, View Transitions, content collections, MDX, deployment to Vercel/Netlify/Cloudflare, or any task mentioning .astro/.tsx/.jsx files, CSS utilities, or frontend build tooling. Even if the user just says \"build me a page\" or \"create a website\" — use this skill.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "keywords": [
         "frontend",
         "web",

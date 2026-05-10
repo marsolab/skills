@@ -1,0 +1,11 @@
+{
+  "name": "go-concurrency",
+  "version": "1.0.0",
+  "description": "Disciplined Go concurrency. ALWAYS use this skill when writing or reviewing Go code that touches goroutines, channels, `context.Context`, `sync.WaitGroup`, `sync.Mutex` / `sync.RWMutex`, `sync.Once`, `errgroup.Group`, worker pools, fan-out/fan-in pipelines, request cancellation, timeouts, deadlines, or any \"run this in the background\" pattern. Also use when debugging deadlocks, goroutine leaks, race conditions, or channel-related bugs. Pair with go-errors for error propagation across goroutines.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Go Concurrency",
+    "shortDescription": "Disciplined Go concurrency.",
+    "category": "Development"
+  }
+}

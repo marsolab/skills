@@ -1,0 +1,11 @@
+{
+  "name": "go-sql",
+  "version": "1.0.0",
+  "description": "Type-safe SQL access in Go with sqlc and goose migrations. ALWAYS use this skill when writing or reviewing Go database code — `sqlc.yaml` configuration, query annotations (`:one`, `:many`, `:exec`, `:execrows`), generated `Querier` interface for mocking, goose Up/Down migrations, transaction patterns with `BEginTx` and `db.WithTx`, `pgx`/`pgxpool` vs `database/sql`, `sql.ErrNoRows` handling, JSON columns, and testing the data layer. Pair with go-http for the service-handler-storage stack, go-errors for wrapping `sql.ErrNoRows`, and go-testing for `Querier` mocking.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Go SQL",
+    "shortDescription": "Type-safe SQL access in Go with sqlc and goose migrations.",
+    "category": "Development"
+  }
+}

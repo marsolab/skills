@@ -1,0 +1,5 @@
+{
+  "name": "go-cli",
+  "description": "Building command-line tools in Go with the stdlib `flag` package. ALWAYS use this skill when writing or reviewing Go CLI code — top-level flags with `flag.Parse`, subcommands with `flag.NewFlagSet`, exit codes, writing errors to `os.Stderr`, signal handling, environment-variable fallbacks, `-h`/`-help` output, and `cmd/<tool>` project layout. Avoid reaching for cobra/urfave-cli unless the tool clearly needs it (~5+ subcommands with rich help). Pair with go-style for naming and config patterns, go-errors for exit-code mapping, and go-logging for diagnostic output.",
+  "version": "1.0.0"
+}

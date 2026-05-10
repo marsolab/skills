@@ -1,0 +1,137 @@
+# Testing reference
+
+Carved from the comprehensive Go style guide. Covers table-driven tests,
+useful failure messages, `t.Helper()`, integration test gating, and the
+third-party-frameworks debate.
+
+---
+
+## Use table-driven tests with named fields
+
+Table-driven tests are the Go standard for comprehensive coverage with minimal
+duplication:
+
+```go
+func TestParseHost(t *testing.T) {
+    tests := []struct {
+        name         string
+        input        string
+        expectedHost string
+        expectedPort string
+        expectedErr  bool
+    }{
+        {
+            name:         "host and port",
+            input:        "example.com:8080",
+            expectedHost: "example.com",
+            expectedPort: "8080",
+        },
+        {
+            name:         "host only",
+            input:        "example.com",
+            expectedHost: "example.com",
+            expectedPort: "",
+        },
+        {
+            name:        "invalid format",
+            input:       ":::invalid",
+            expectedErr: true,
+        },
+    }
+
+    for _, tc := range tests {
+        t.Run(tc.name, func(t *testing.T) {
+            host, port, err := ParseHost(tc.input)
+            if tc.expectedErr {
+                if err == nil {
+                    t.Fatal("expected error, got nil")
+                }
+                return
+            }
+            if err != nil {
+                t.Fatalf("unexpected error: %v", err)
+            }
+            if host != tc.expectedHost {
+                t.Errorf("host = %q, want %q", host, tc.expectedHost)
+            }
+            if port != tc.expectedPort {
+                t.Errorf("port = %q, want %q", port, tc.expectedPort)
+            }
+        })
+    }
+}
+```
+
+Use **named struct fields** for readability when test cases span multiple lines.
+The variable conventions across production codebases: test slice named `tests`,
+loop variable `tc` or `tt`, description field `name`.
+
+## Write useful failure messages
+
+Test failures should identify what went wrong, with what inputs, what was
+expected, and what was received:
+
+```go
+// GOOD: actionable failure message
+if got != want {
+    t.Errorf("Square(%d) = %d; want %d", input, got, want)
+}
+
+// BAD: unhelpful failure
+if got != want {
+    t.Error("test failed")
+}
+```
+
+The convention is `got, want` order matching
+`Errorf("got %v, want %v", got, want)`.
+
+## Mark test helpers with t.Helper()
+
+Helper functions should call `t.Helper()` so failure line numbers point to the
+actual test:
+
+```go
+func assertNoError(t *testing.T, err error) {
+    t.Helper()
+    if err != nil {
+        t.Fatalf("unexpected error: %v", err)
+    }
+}
+```
+
+Use `t.Fatal` for setup failures that prevent continuation, `t.Error` with
+`continue` in table tests to run remaining cases.
+
+## Skip integration tests with environment checks, not build tags
+
+Peter Bourgon's evolved recommendation (2021): **Build tags hide test failures
+and are non-discoverable.** Use environment variable checks instead:
+
+```go
+// GOOD: discoverable skip
+func TestDatabaseIntegration(t *testing.T) {
+    dsn := os.Getenv("TEST_DATABASE_URL")
+    if dsn == "" {
+        t.Skip("set TEST_DATABASE_URL to run this test")
+    }
+    db, err := sql.Open("postgres", dsn)
+    // ...
+}
+
+// AVOID: build tags hide tests
+// +build integration
+func TestDatabaseIntegration(t *testing.T) {
+    // ...
+}
+```
+
+The `t.Skip` approach surfaces in test output, making it clear when tests are
+skipped and why.
+
+## Google prohibits third-party testing frameworks
+
+Within Google's codebase, assertion libraries like testify and testing
+frameworks like ginkgo are explicitly banned. The standard `testing` package
+suffices. GitLab permits testify but follows the expected-first convention:
+`require.Equal(t, want, got)`.

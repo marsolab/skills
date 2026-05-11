@@ -163,7 +163,7 @@ first := original[:4:4]  // [low:high:max]
 first = append(first, "XXX"...)  // allocates new array
 ```
 
-## HTTP response bodies must be closed and drained
+## HTTP response bodies must be closed
 
 ```go
 // WRONG position for defer
@@ -190,5 +190,9 @@ if err != nil {
 }
 ```
 
-Always drain the body to enable connection reuse:
-`io.Copy(io.Discard, resp.Body)`.
+Modern Go (CL 737720, [golang/go#77370](https://github.com/golang/go/issues/77370))
+drains any remaining body inside `Close()` — up to 256 KB or 50 ms — so
+connection reuse no longer requires a manual
+`io.Copy(io.Discard, resp.Body)`. On older Go versions (before this CL
+landed) add the manual drain when the body is small and you care about
+keep-alive reuse.

@@ -9,38 +9,37 @@ third-party-frameworks debate.
 ## Use table-driven tests with named fields
 
 Table-driven tests are the Go standard for comprehensive coverage with minimal
-duplication:
+duplication. Use `map[string]tcase` so the case name becomes the subtest name
+automatically and the compiler enforces unique keys:
 
 ```go
 func TestParseHost(t *testing.T) {
-    tests := []struct {
-        name         string
+    type tcase struct {
         input        string
         expectedHost string
         expectedPort string
         expectedErr  bool
-    }{
-        {
-            name:         "host and port",
+    }
+
+    tests := map[string]tcase{
+        "host and port": {
             input:        "example.com:8080",
             expectedHost: "example.com",
             expectedPort: "8080",
         },
-        {
-            name:         "host only",
+        "host only": {
             input:        "example.com",
             expectedHost: "example.com",
             expectedPort: "",
         },
-        {
-            name:        "invalid format",
+        "invalid format": {
             input:       ":::invalid",
             expectedErr: true,
         },
     }
 
-    for _, tc := range tests {
-        t.Run(tc.name, func(t *testing.T) {
+    for name, tc := range tests {
+        t.Run(name, func(t *testing.T) {
             host, port, err := ParseHost(tc.input)
             if tc.expectedErr {
                 if err == nil {
@@ -63,8 +62,8 @@ func TestParseHost(t *testing.T) {
 ```
 
 Use **named struct fields** for readability when test cases span multiple lines.
-The variable conventions across production codebases: test slice named `tests`,
-loop variable `tc` or `tt`, description field `name`.
+The variable conventions across production codebases: test map named `tests`,
+case type named `tcase` (or `testCase`), loop variables `name, tc`.
 
 ## Write useful failure messages
 

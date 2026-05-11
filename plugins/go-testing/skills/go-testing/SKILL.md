@@ -26,22 +26,23 @@ tags:
 
 Pick the assertion stack by what your project allows:
 
-- **Dependency-free project** — use the standard library `testing`
-  package only. No third-party assertions.
+- **Dependency-free project** — stdlib `testing` only. No third-party
+  assertions.
 - **Project that allows deps** — use
-  [`go-testdeep`](https://github.com/maxatome/go-testdeep). Its
-  composable operators (`td.Cmp`, `td.CmpStruct`, `td.Smuggle`,
-  `td.Between`, etc.) produce precise diffs and read naturally.
-- **Never use testify.** Its `assert`/`require` split, vague failure
-  messages, and reliance on `interface{}` comparisons are worse than
-  either alternative above.
+  [`go-testdeep`](https://github.com/maxatome/go-testdeep). Composable
+  operators (`td.Cmp`, `td.Struct`, `td.Smuggle`, `td.Between`, …)
+  produce precise diffs.
+- **Never use testify.** Vague messages, the `assert`/`require` split,
+  and `interface{}` comparisons are worse than either alternative.
 
-For the comprehensive reference, see `references/testing.md`.
+References: `references/testing.md` for the carved style guide,
+`references/perf-and-parallel.md` for parallel tests, benchmarks, and
+the race detector.
 
 ## Table-driven with named cases
 
-`map[string]testCase` makes the case name the subtest name automatically.
-Assertions use `td.Cmp`, `td.CmpError`, `td.CmpNoError`:
+`map[string]testCase` makes the case name the subtest name
+automatically:
 
 ```go
 import (
@@ -83,14 +84,10 @@ func TestProcess(t *testing.T) {
 ```
 
 On a dependency-free project, swap the `td.*` calls for plain
-`if got != tc.want { t.Errorf(...) }` checks — the loop and table shape
-stay the same.
+`if got != tc.want { t.Errorf(...) }` checks — the table shape stays
+the same.
 
 ## Helpers must call t.Helper()
-
-Use `td.Require(t)` inside helpers when a setup step must succeed before
-the rest of the test can run. `t.Helper()` keeps the failure line pointed
-at the caller:
 
 ```go
 func mustOpen(t *testing.T, path string) *os.File {
@@ -103,24 +100,15 @@ func mustOpen(t *testing.T, path string) *os.File {
 ```
 
 `td.Require(t)` returns a `*td.T` whose failing assertions call
-`t.Fatal` (vs `td.Cmp(t, ...)` which calls `t.Error`). `t.Cleanup` runs
-in LIFO order at the end of the test (or subtest) and is the preferred
-replacement for `defer` in test setup helpers.
+`t.Fatal`; `td.Cmp(t, ...)` is the `t.Error` equivalent. `t.Cleanup`
+runs in LIFO order at the end of the test and replaces `defer` in
+setup helpers.
 
 ## Failure messages
 
-testdeep generates structured field-level diffs automatically. You
-write the comparison; the library produces the message:
-
-```go
-td.Cmp(t, got, want)
-// On failure prints something like:
-//   DATA: Field "Email"
-//        got: "ada@example.com "
-//   expected: "ada@example.com"
-```
-
-For more expressive comparisons, use operators:
+testdeep generates field-level diffs automatically — write the
+comparison and let the library produce the message. Compose operators
+for richer assertions:
 
 ```go
 td.Cmp(t, user, td.Struct(User{}, td.StructFields{
@@ -130,8 +118,8 @@ td.Cmp(t, user, td.Struct(User{}, td.StructFields{
 }))
 ```
 
-On a **dependency-free project**, include inputs, expected, and actual
-in the message yourself:
+On stdlib-only projects, include inputs, expected, and actual yourself
+— `got` first, `want` second:
 
 ```go
 if got != want {
@@ -139,23 +127,18 @@ if got != want {
 }
 ```
 
-Convention for stdlib: `got` first, `want` second. Never write
-`t.Error("test failed")` — it tells the next person reading the failure
-nothing.
+Never write `t.Error("test failed")`. See `references/testing.md` for
+the full discussion.
 
 ## t.Fatal vs t.Error (and td.Require vs td.Cmp)
 
-- `t.Fatal` / `t.Fatalf` — stop this test immediately. Use when later
-  assertions can't run (setup failure, nil result you'd dereference).
-- `t.Error` / `t.Errorf` — record failure, keep running. Use when later
-  assertions still produce useful information.
-- `td.Require(t).Cmp(...)` is testdeep's `Fatal` equivalent;
-  `td.Cmp(t, ...)` is the `Error` equivalent.
+- `t.Fatal` / `td.Require(t).Cmp(...)` — stop this test immediately.
+  Use when later assertions can't run (setup failure, nil that would
+  be dereferenced).
+- `t.Error` / `td.Cmp(t, ...)` — record failure, keep running so
+  remaining assertions still produce useful information.
 
 ## Integration tests: env vars, not build tags
-
-Build tags hide tests; environment variables surface them in the
-`t.Skip` output:
 
 ```go
 func TestDatabaseIntegration(t *testing.T) {
@@ -168,87 +151,21 @@ func TestDatabaseIntegration(t *testing.T) {
 }
 ```
 
-`go test ./...` then runs unit tests cleanly while skipping integration
-ones — and the skip lines tell you what to set.
+Build tags hide tests; the `t.Skip` line surfaces in normal `go test`
+output and tells you exactly what to set.
 
-## Parallel tests
+## Parallel, benchmarks, race detector
 
-Mark independent tests with `t.Parallel()` to use multiple cores. Inside
-a table-driven loop, capture the case variable to avoid the loop-var
-capture bug (Go 1.22+ fixes the loop case but `t.Parallel` still benefits
-from explicit capture for clarity):
+The headlines:
 
-```go
-for name, tc := range tests {
-    name, tc := name, tc
-    t.Run(name, func(t *testing.T) {
-        t.Parallel()
-        // ...
-    })
-}
-```
+- Mark independent tests with `t.Parallel()`. Re-bind the loop
+  variables before passing to a subtest closure.
+- Benchmarks live in `func BenchmarkXxx(b *testing.B)` and run with
+  `go test -bench=. -benchmem`. Use `b.ResetTimer()` after setup.
+- Run CI with `go test -race ./...`. The race detector finds the
+  bugs you can't reproduce.
 
-## Benchmarks
-
-```go
-func BenchmarkProcess(b *testing.B) {
-    data := generateTestData()
-    b.ResetTimer()
-    for i := 0; i < b.N; i++ {
-        Process(data)
-    }
-}
-```
-
-Run with `go test -bench=. -benchmem`. Use `b.ReportAllocs()` and
-`b.ResetTimer()` to keep setup out of the measurement.
-
-## Race detector
-
-Run `go test -race ./...` regularly — it catches concurrent map writes,
-unsynchronized field access, and other heisenbugs. CI should always run
-with `-race`.
-
-## Third-party frameworks
-
-**Use `go-testdeep` when the project allows third-party dependencies.**
-It builds expressive matchers on top of `testing.T`:
-
-```go
-import (
-    "testing"
-
-    "github.com/maxatome/go-testdeep/td"
-)
-
-func TestUser(t *testing.T) {
-    got := loadUser(1)
-
-    td.Cmp(t, got, td.Struct(User{}, td.StructFields{
-        "ID":        int64(1),
-        "Email":     td.Re(`^.+@.+\..+$`),
-        "CreatedAt": td.Between(time.Now().Add(-time.Minute), time.Now()),
-    }))
-}
-```
-
-The failure output is a precise diff of the failing fields — not a stack
-trace, not "expected X to equal Y".
-
-**Use the stdlib `testing` package** when the project must stay
-dependency-free (libraries, very small tools, embedded use). Plain
-`if got != want { t.Errorf(...) }` with table-driven tests covers most
-needs.
-
-**Do not use testify.** Its split between `assert` and `require` invites
-test continuation after fatal failures, its messages are vague, and its
-comparison semantics rely on `reflect.DeepEqual` against `interface{}`
-without the matcher composability `go-testdeep` gives you. If a project
-already depends on testify, migrate when you touch the tests; don't add
-new uses.
-
-Ginkgo and other BDD frameworks add a DSL layer on top of testing — not
-worth the cognitive cost.
+Full discussion: `references/perf-and-parallel.md`.
 
 ## When to load a sibling skill
 

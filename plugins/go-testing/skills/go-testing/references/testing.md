@@ -10,9 +10,16 @@ third-party-frameworks debate.
 
 Table-driven tests are the Go standard for comprehensive coverage with minimal
 duplication. Use `map[string]tcase` so the case name becomes the subtest name
-automatically and the compiler enforces unique keys:
+automatically and the compiler enforces unique keys. Assertions use
+`td.Cmp`, `td.CmpError`, `td.CmpNoError`:
 
 ```go
+import (
+    "testing"
+
+    "github.com/maxatome/go-testdeep/td"
+)
+
 func TestParseHost(t *testing.T) {
     type tcase struct {
         input        string
@@ -42,20 +49,12 @@ func TestParseHost(t *testing.T) {
         t.Run(name, func(t *testing.T) {
             host, port, err := ParseHost(tc.input)
             if tc.expectedErr {
-                if err == nil {
-                    t.Fatal("expected error, got nil")
-                }
+                td.CmpError(t, err)
                 return
             }
-            if err != nil {
-                t.Fatalf("unexpected error: %v", err)
-            }
-            if host != tc.expectedHost {
-                t.Errorf("host = %q, want %q", host, tc.expectedHost)
-            }
-            if port != tc.expectedPort {
-                t.Errorf("port = %q, want %q", port, tc.expectedPort)
-            }
+            td.CmpNoError(t, err)
+            td.Cmp(t, host, tc.expectedHost)
+            td.Cmp(t, port, tc.expectedPort)
         })
     }
 }
@@ -65,42 +64,73 @@ Use **named struct fields** for readability when test cases span multiple lines.
 The variable conventions across production codebases: test map named `tests`,
 case type named `tcase` (or `testCase`), loop variables `name, tc`.
 
+On a dependency-free project, swap each `td.*` call for the stdlib
+equivalent — `td.CmpError(t, err)` → `if err == nil { t.Fatal(...) }`,
+`td.Cmp(t, got, want)` → `if got != want { t.Errorf(...) }`. The table
+shape stays the same.
+
 ## Write useful failure messages
 
-Test failures should identify what went wrong, with what inputs, what was
-expected, and what was received:
+testdeep generates structured diffs automatically — you write the
+comparison and let the library produce the message:
 
 ```go
-// GOOD: actionable failure message
+td.Cmp(t, got, want)
+
+// On failure the report shows the offending field:
+//   DATA: Field "Email"
+//        got: "ada@example.com "
+//   expected: "ada@example.com"
+```
+
+Operators compose to make richer assertions self-documenting:
+
+```go
+td.Cmp(t, user, td.Struct(User{}, td.StructFields{
+    "ID":    int64(1),
+    "Email": td.Re(`^.+@.+\..+$`),
+    "Tags":  td.Bag("go", "testing"),
+}))
+```
+
+On a **dependency-free project**, include inputs, expected, and actual
+in the failure message yourself:
+
+```go
+// GOOD: actionable
 if got != want {
-    t.Errorf("Square(%d) = %d; want %d", input, got, want)
+    t.Errorf("Square(%d) = %d, want %d", input, got, want)
 }
 
-// BAD: unhelpful failure
+// BAD: unhelpful
 if got != want {
     t.Error("test failed")
 }
 ```
 
-The convention is `got, want` order matching
+Convention for stdlib: `got` first, `want` second, matching
 `Errorf("got %v, want %v", got, want)`.
 
 ## Mark test helpers with t.Helper()
 
-Helper functions should call `t.Helper()` so failure line numbers point to the
-actual test:
+Helper functions should call `t.Helper()` so failure line numbers point
+to the actual test. With testdeep you rarely need a generic
+`assertNoError` helper — `td.Require(t).CmpNoError(err)` covers it — but
+domain-specific helpers still benefit:
 
 ```go
-func assertNoError(t *testing.T, err error) {
+func mustLoadFixture(t *testing.T, path string) []byte {
     t.Helper()
-    if err != nil {
-        t.Fatalf("unexpected error: %v", err)
-    }
+    data, err := os.ReadFile(path)
+    td.Require(t).CmpNoError(err)
+    return data
 }
 ```
 
-Use `t.Fatal` for setup failures that prevent continuation, `t.Error` with
-`continue` in table tests to run remaining cases.
+`td.Require(t)` returns a `*td.T` whose failing assertions call
+`t.Fatal` (so the caller stops on bad setup). `td.Cmp(t, ...)` is the
+`t.Error` equivalent — record the failure but keep running for the
+remaining assertions in the same subtest.
 
 ## Skip integration tests with environment checks, not build tags
 

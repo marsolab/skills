@@ -1,14 +1,16 @@
 ---
 name: go-testing
 description: >-
-  Idiomatic Go testing with the stdlib `testing` package. ALWAYS use this
-  skill when writing or reviewing Go tests — table-driven tests with
-  `map[string]testCase` or `[]struct{name string; ...}`, `t.Run` subtests,
-  `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration
-  test gating with environment variables, useful failure messages
-  (`got %v, want %v`), benchmarks (`testing.B`), fuzz tests, and the
-  third-party-frameworks debate (go-testdeep for projects that allow
-  deps, stdlib-only for dependency-free projects, never testify). Pair with go-sql for
+  Idiomatic Go testing with the stdlib `testing` package and the
+  go-testdeep assertion library. ALWAYS use this skill when writing or
+  reviewing Go tests — table-driven tests with `map[string]testCase`,
+  `t.Run` subtests, `t.Helper()` for assertion helpers, `t.Cleanup`,
+  `t.Parallel`, integration test gating with environment variables,
+  benchmarks (`testing.B`), fuzz tests, go-testdeep operators
+  (`td.Cmp`, `td.CmpError`, `td.CmpNoError`, `td.Struct`, `td.Smuggle`,
+  `td.Between`, `td.Re`, `td.Require`), and the third-party-frameworks
+  debate (go-testdeep when deps are allowed, stdlib-only for
+  dependency-free projects, never testify). Pair with go-sql for
   testing DB code with sqlc's `Querier` interface, go-http for `httptest`
   patterns, and go-concurrency for race-detector usage.
 version: 1.0.0
@@ -38,9 +40,16 @@ For the comprehensive reference, see `references/testing.md`.
 
 ## Table-driven with named cases
 
-`map[string]testCase` makes the case name the subtest name automatically:
+`map[string]testCase` makes the case name the subtest name automatically.
+Assertions use `td.Cmp`, `td.CmpError`, `td.CmpNoError`:
 
 ```go
+import (
+    "testing"
+
+    "github.com/maxatome/go-testdeep/td"
+)
+
 func TestProcess(t *testing.T) {
     type testCase struct {
         input   string
@@ -62,62 +71,86 @@ func TestProcess(t *testing.T) {
     for name, tc := range tests {
         t.Run(name, func(t *testing.T) {
             got, err := Process(tc.input)
-            if (err != nil) != tc.wantErr {
-                t.Fatalf("Process() error = %v, wantErr %v", err, tc.wantErr)
+            if tc.wantErr {
+                td.CmpError(t, err)
+                return
             }
-            if got != tc.want {
-                t.Errorf("Process() = %q, want %q", got, tc.want)
-            }
+            td.CmpNoError(t, err)
+            td.Cmp(t, got, tc.want)
         })
     }
 }
 ```
 
-The `[]struct{name string; ...}` form is also fine; choose one and stay
-consistent in a package.
+On a dependency-free project, swap the `td.*` calls for plain
+`if got != tc.want { t.Errorf(...) }` checks — the loop and table shape
+stay the same.
 
 ## Helpers must call t.Helper()
+
+Use `td.Require(t)` inside helpers when a setup step must succeed before
+the rest of the test can run. `t.Helper()` keeps the failure line pointed
+at the caller:
 
 ```go
 func mustOpen(t *testing.T, path string) *os.File {
     t.Helper()
     f, err := os.Open(path)
-    if err != nil {
-        t.Fatalf("open %s: %v", path, err)
-    }
+    td.Require(t).CmpNoError(err)
     t.Cleanup(func() { f.Close() })
     return f
 }
 ```
 
-`t.Helper()` makes failure line numbers point at the caller. `t.Cleanup`
-runs in LIFO order at the end of the test (or subtest) and is the
-preferred replacement for `defer` in test setup helpers.
+`td.Require(t)` returns a `*td.T` whose failing assertions call
+`t.Fatal` (vs `td.Cmp(t, ...)` which calls `t.Error`). `t.Cleanup` runs
+in LIFO order at the end of the test (or subtest) and is the preferred
+replacement for `defer` in test setup helpers.
 
-## Failure messages must be actionable
+## Failure messages
+
+testdeep generates structured field-level diffs automatically. You
+write the comparison; the library produces the message:
 
 ```go
-// GOOD
+td.Cmp(t, got, want)
+// On failure prints something like:
+//   DATA: Field "Email"
+//        got: "ada@example.com "
+//   expected: "ada@example.com"
+```
+
+For more expressive comparisons, use operators:
+
+```go
+td.Cmp(t, user, td.Struct(User{}, td.StructFields{
+    "ID":    int64(1),
+    "Email": td.Re(`^.+@.+\..+$`),
+    "Tags":  td.Bag("go", "testing"),  // unordered set match
+}))
+```
+
+On a **dependency-free project**, include inputs, expected, and actual
+in the message yourself:
+
+```go
 if got != want {
     t.Errorf("Square(%d) = %d, want %d", input, got, want)
 }
-
-// BAD
-if got != want {
-    t.Error("test failed")
-}
 ```
 
-Convention: `got %v, want %v` — `got` first, then `want`. With
-`require`-style libraries the order is `(want, got)`; pick whichever
-matches your tooling and don't mix them.
+Convention for stdlib: `got` first, `want` second. Never write
+`t.Error("test failed")` — it tells the next person reading the failure
+nothing.
 
-## t.Fatal vs t.Error
+## t.Fatal vs t.Error (and td.Require vs td.Cmp)
 
 - `t.Fatal` / `t.Fatalf` — stop this test immediately. Use when later
   assertions can't run (setup failure, nil result you'd dereference).
 - `t.Error` / `t.Errorf` — record failure, keep running. Use when later
   assertions still produce useful information.
+- `td.Require(t).Cmp(...)` is testdeep's `Fatal` equivalent;
+  `td.Cmp(t, ...)` is the `Error` equivalent.
 
 ## Integration tests: env vars, not build tags
 

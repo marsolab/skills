@@ -41,10 +41,118 @@
       "category": "Development"
     },
     {
+      "name": "go-cli",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-cli"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-concurrency",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-concurrency"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
       "name": "go-dev",
       "source": {
         "source": "local",
         "path": "./plugins/go-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-errors",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-errors"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-http",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-http"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-lint",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-lint"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-logging",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-logging"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-sql",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-sql"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-style",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-style"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
+      "name": "go-testing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/go-testing"
       },
       "policy": {
         "installation": "AVAILABLE",

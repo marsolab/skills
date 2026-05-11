@@ -31,19 +31,39 @@ automatically.
 |--------|----------|-------------|
 | [apple-dev][1] | Development | Swift, SwiftUI, HIG |
 | [copy][2] | Writing | SaaS copywriting |
-| [go-dev][3] | Development | Go backends, CLIs |
-| [landing-page-breakdown][4] | Design | Page analysis |
-| [multi-agent-config][5] | DevOps | Multi-agent configs |
-| [sys-arch][6] | Architecture | System design |
-| [front-dev][7] | Development | Modern web apps |
+| [front-dev][3] | Development | Modern web apps |
+| [go-dev][4] | Development | Go umbrella; routes to go-* siblings |
+| [go-style][5] | Development | Idiomatic Go: naming, generics, interfaces |
+| [go-errors][6] | Development | Error wrapping, errors.Join, panic discipline |
+| [go-concurrency][7] | Development | Goroutines, channels, context, errgroup |
+| [go-logging][8] | Development | Structured logging with log/slog |
+| [go-testing][9] | Development | Table-driven tests, helpers, integration gating |
+| [go-http][10] | Development | HTTP services with Chi router |
+| [go-cli][11] | Development | CLI tools with the stdlib flag package |
+| [go-sql][12] | Development | sqlc + goose migrations |
+| [go-lint][13] | Development | golangci-lint config and tooling |
+| [landing-page-breakdown][14] | Design | Page analysis |
+| [multi-agent-config][15] | DevOps | Multi-agent configs |
+| [sys-arch][16] | Architecture | System design |
+| [things][17] | Productivity | Capture tasks into Things 3 |
 
 [1]: plugins/apple-dev/skills/apple-dev/SKILL.md
 [2]: plugins/copy/skills/copy/SKILL.md
-[3]: plugins/go-dev/skills/go-dev/SKILL.md
-[4]: plugins/landing-page-breakdown/skills/landing-page-breakdown/SKILL.md
-[5]: plugins/multi-agent-config/skills/multi-agent-config/SKILL.md
-[6]: plugins/sys-arch/skills/sys-arch/SKILL.md
-[7]: plugins/front-dev/skills/front-dev/SKILL.md
+[3]: plugins/front-dev/skills/front-dev/SKILL.md
+[4]: plugins/go-dev/skills/go-dev/SKILL.md
+[5]: plugins/go-style/skills/go-style/SKILL.md
+[6]: plugins/go-errors/skills/go-errors/SKILL.md
+[7]: plugins/go-concurrency/skills/go-concurrency/SKILL.md
+[8]: plugins/go-logging/skills/go-logging/SKILL.md
+[9]: plugins/go-testing/skills/go-testing/SKILL.md
+[10]: plugins/go-http/skills/go-http/SKILL.md
+[11]: plugins/go-cli/skills/go-cli/SKILL.md
+[12]: plugins/go-sql/skills/go-sql/SKILL.md
+[13]: plugins/go-lint/skills/go-lint/SKILL.md
+[14]: plugins/landing-page-breakdown/skills/landing-page-breakdown/SKILL.md
+[15]: plugins/multi-agent-config/skills/multi-agent-config/SKILL.md
+[16]: plugins/sys-arch/skills/sys-arch/SKILL.md
+[17]: plugins/things/skills/things/SKILL.md
 
 ## Adding a New Plugin
 

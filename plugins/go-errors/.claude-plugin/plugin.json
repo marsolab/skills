@@ -1,0 +1,5 @@
+{
+  "name": "go-errors",
+  "description": "Idiomatic Go error handling. ALWAYS use this skill when writing or reviewing Go code that raises, returns, wraps, matches, or aggregates errors — questions about `fmt.Errorf` with `%w` vs `%v`, `errors.Is` and `errors.As`, sentinel errors, typed error structs, `errors.Join` for combining failures, the \"handle exactly once\" rule, panic vs error, guard clauses and early return, error message formatting, or any `if err != nil` pattern. Use alongside go-style for general idioms.",
+  "version": "1.0.0"
+}

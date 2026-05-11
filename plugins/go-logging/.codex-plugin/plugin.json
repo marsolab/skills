@@ -1,0 +1,11 @@
+{
+  "name": "go-logging",
+  "version": "1.0.0",
+  "description": "Structured logging in Go with `log/slog` (Go 1.21+ stdlib). ALWAYS use this skill when adding, reviewing, or debugging logging in Go — choosing a logger, configuring `slog.NewJSONHandler` / `slog.NewTextHandler`, injecting `*slog.Logger` as a dependency, using `slog.With`, `slog.Group`, `LogValuer` for lazy values, propagating loggers through `context.Context`, picking log levels (info/debug/warn/error), or designing observability patterns (USE method, RED method). Pair with go-http for request-scoped logging middleware and go-errors for the \"log or return, not both\" rule.",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Go Logging",
+    "shortDescription": "Structured logging in Go with `log/slog` (Go 1.21+ stdlib).",
+    "category": "Development"
+  }
+}

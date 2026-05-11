@@ -128,9 +128,42 @@ func TestDatabaseIntegration(t *testing.T) {
 The `t.Skip` approach surfaces in test output, making it clear when tests are
 skipped and why.
 
-## Google prohibits third-party testing frameworks
+## Assertion libraries: go-testdeep or stdlib, never testify
 
-Within Google's codebase, assertion libraries like testify and testing
-frameworks like ginkgo are explicitly banned. The standard `testing` package
-suffices. GitLab permits testify but follows the expected-first convention:
-`require.Equal(t, want, got)`.
+Pick the assertion stack by what the project allows:
+
+- **Dependency-free projects** (libraries, very small tools, embedded
+  use): standard library `testing` only. No third-party assertions.
+- **Projects that allow dependencies**: use
+  [`go-testdeep`](https://github.com/maxatome/go-testdeep). Its
+  matcher operators (`td.Cmp`, `td.Struct`, `td.Smuggle`, `td.Between`,
+  `td.Re`, …) compose, produce precise field-level diffs, and integrate
+  cleanly with `*testing.T`.
+
+```go
+import (
+    "testing"
+
+    "github.com/maxatome/go-testdeep/td"
+)
+
+func TestUser(t *testing.T) {
+    got := loadUser(1)
+
+    td.Cmp(t, got, td.Struct(User{}, td.StructFields{
+        "ID":        int64(1),
+        "Email":     td.Re(`^.+@.+\..+$`),
+        "CreatedAt": td.Between(time.Now().Add(-time.Minute), time.Now()),
+    }))
+}
+```
+
+**Do not use testify.** Its `assert` vs `require` split invites test
+continuation past fatal failures, its messages are vague, and it relies
+on `reflect.DeepEqual` against `interface{}` without the composable
+matchers `go-testdeep` provides. Within Google's codebase testify is
+banned outright. Migrate existing testify use when you touch the tests
+— don't add new uses.
+
+Ginkgo and other BDD frameworks layer a DSL on top of `testing` —
+not worth the cognitive cost.

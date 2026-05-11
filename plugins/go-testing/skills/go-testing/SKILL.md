@@ -7,7 +7,8 @@ description: >-
   `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration
   test gating with environment variables, useful failure messages
   (`got %v, want %v`), benchmarks (`testing.B`), fuzz tests, and the
-  third-party-frameworks debate (testify, ginkgo). Pair with go-sql for
+  third-party-frameworks debate (go-testdeep for projects that allow
+  deps, stdlib-only for dependency-free projects, never testify). Pair with go-sql for
   testing DB code with sqlc's `Querier` interface, go-http for `httptest`
   patterns, and go-concurrency for race-detector usage.
 version: 1.0.0
@@ -21,9 +22,17 @@ tags:
 
 # Go Testing
 
-Use the standard library `testing` package. Skip the assertion DSLs —
-they trade tiny syntactic wins for cognitive overhead and worse failure
-messages.
+Pick the assertion stack by what your project allows:
+
+- **Dependency-free project** — use the standard library `testing`
+  package only. No third-party assertions.
+- **Project that allows deps** — use
+  [`go-testdeep`](https://github.com/maxatome/go-testdeep). Its
+  composable operators (`td.Cmp`, `td.CmpStruct`, `td.Smuggle`,
+  `td.Between`, etc.) produce precise diffs and read naturally.
+- **Never use testify.** Its `assert`/`require` split, vague failure
+  messages, and reliance on `interface{}` comparisons are worse than
+  either alternative above.
 
 For the comprehensive reference, see `references/testing.md`.
 
@@ -169,12 +178,44 @@ with `-race`.
 
 ## Third-party frameworks
 
-- Google bans testify and ginkgo internally; the stdlib suffices.
-- GitLab permits testify with `(want, got)` argument order.
-- Peter Bourgon: testing DSLs increase cognitive burden.
+**Use `go-testdeep` when the project allows third-party dependencies.**
+It builds expressive matchers on top of `testing.T`:
 
-Default to the stdlib. Reach for `testify/require` only if your team has
-already standardized on it.
+```go
+import (
+    "testing"
+
+    "github.com/maxatome/go-testdeep/td"
+)
+
+func TestUser(t *testing.T) {
+    got := loadUser(1)
+
+    td.Cmp(t, got, td.Struct(User{}, td.StructFields{
+        "ID":        int64(1),
+        "Email":     td.Re(`^.+@.+\..+$`),
+        "CreatedAt": td.Between(time.Now().Add(-time.Minute), time.Now()),
+    }))
+}
+```
+
+The failure output is a precise diff of the failing fields — not a stack
+trace, not "expected X to equal Y".
+
+**Use the stdlib `testing` package** when the project must stay
+dependency-free (libraries, very small tools, embedded use). Plain
+`if got != want { t.Errorf(...) }` with table-driven tests covers most
+needs.
+
+**Do not use testify.** Its split between `assert` and `require` invites
+test continuation after fatal failures, its messages are vague, and its
+comparison semantics rely on `reflect.DeepEqual` against `interface{}`
+without the matcher composability `go-testdeep` gives you. If a project
+already depends on testify, migrate when you touch the tests; don't add
+new uses.
+
+Ginkgo and other BDD frameworks add a DSL layer on top of testing — not
+worth the cognitive cost.
 
 ## When to load a sibling skill
 

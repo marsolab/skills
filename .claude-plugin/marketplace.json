@@ -189,7 +189,7 @@
     {
       "name": "go-testing",
       "source": "./plugins/go-testing",
-      "description": "Idiomatic Go testing with the stdlib `testing` package. ALWAYS use this skill when writing or reviewing Go tests — table-driven tests with `map[string]testCase` or `[]struct{name string; ...}`, `t.Run` subtests, `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration test gating with environment variables, useful failure messages (`got %v, want %v`), benchmarks (`testing.B`), fuzz tests, and the third-party-frameworks debate (testify, ginkgo). Pair with go-sql for testing DB code with sqlc's `Querier` interface, go-http for `httptest` patterns, and go-concurrency for race-detector usage.",
+      "description": "Idiomatic Go testing with the stdlib `testing` package. ALWAYS use this skill when writing or reviewing Go tests — table-driven tests with `map[string]testCase` or `[]struct{name string; ...}`, `t.Run` subtests, `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration test gating with environment variables, useful failure messages (`got %v, want %v`), benchmarks (`testing.B`), fuzz tests, and the third-party-frameworks debate (go-testdeep for projects that allow deps, stdlib-only for dependency-free projects, never testify). Pair with go-sql for testing DB code with sqlc's `Querier` interface, go-http for `httptest` patterns, and go-concurrency for race-detector usage.",
       "version": "1.0.0",
       "keywords": [
         "go",

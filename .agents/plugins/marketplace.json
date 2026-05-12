@@ -161,6 +161,18 @@
       "category": "Development"
     },
     {
+      "name": "kinde",
+      "source": {
+        "source": "local",
+        "path": "./plugins/kinde"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
       "name": "landing-page-breakdown",
       "source": {
         "source": "local",

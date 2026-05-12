@@ -197,6 +197,18 @@
       "category": "DevOps"
     },
     {
+      "name": "sqlite",
+      "source": {
+        "source": "local",
+        "path": "./plugins/sqlite"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    },
+    {
       "name": "sys-arch",
       "source": {
         "source": "local",

@@ -37,6 +37,7 @@ CATEGORIES: dict[str, str] = {
     "kinde": "development",
     "landing-page-breakdown": "design",
     "multi-agent-config": "devops",
+    "sqlite": "development",
     "sys-arch": "architecture",
     "things": "productivity",
 }
@@ -58,6 +59,7 @@ DISPLAY_NAMES: dict[str, str] = {
     "kinde": "Kinde",
     "landing-page-breakdown": "Landing Page Breakdown",
     "multi-agent-config": "Multi-Agent Config",
+    "sqlite": "SQLite",
     "sys-arch": "Sys Arch",
     "things": "Things",
 }

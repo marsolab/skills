@@ -56,7 +56,7 @@
       "name": "go-cli",
       "source": "./plugins/go-cli",
       "description": "Building command-line tools in Go with the stdlib `flag` package. ALWAYS use this skill when writing or reviewing Go CLI code — top-level flags with `flag.Parse`, subcommands with `flag.NewFlagSet`, exit codes, writing errors to `os.Stderr`, signal handling, environment-variable fallbacks, `-h`/`-help` output, and `cmd/<tool>` project layout. Avoid reaching for cobra/urfave-cli unless the tool clearly needs it (~5+ subcommands with rich help). Pair with go-style for naming and config patterns, go-errors for exit-code mapping, and go-logging for diagnostic output.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -70,7 +70,7 @@
       "name": "go-concurrency",
       "source": "./plugins/go-concurrency",
       "description": "Disciplined Go concurrency. ALWAYS use this skill when writing or reviewing Go code that touches goroutines, channels, `context.Context`, `sync.WaitGroup`, `sync.Mutex` / `sync.RWMutex`, `sync.Once`, `errgroup.Group`, worker pools, fan-out/fan-in pipelines, request cancellation, timeouts, deadlines, or any \"run this in the background\" pattern. Also use when debugging deadlocks, goroutine leaks, race conditions, or channel-related bugs. Pair with go-errors for error propagation across goroutines.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -85,8 +85,8 @@
     {
       "name": "go-dev",
       "source": "./plugins/go-dev",
-      "description": "Umbrella skill for Go development. ALWAYS use this skill when the user's task involves Go or Golang in any way — writing new Go code, reviewing existing Go code, building Go services, creating Go CLI tools, working with Go tests, setting up Go linting, using sqlc for database access, or anything else Go-related. This includes mentions of: Go, Golang, .go files, go.mod, go test, golangci-lint, Chi router, sqlc, goose migrations, generics, goroutines, channels, interfaces, error handling, concurrency, table-driven tests, slog, iterators, or any Go package/tool. This skill is a router — it loads fast and points to the focused sibling skill(s) that own the deep reference material for the task at hand.",
-      "version": "2.0.0",
+      "description": "Writing, reviewing, refactoring, debugging, or designing Go code — backends, microservices, APIs, CLI tools, daemons, workers, data pipelines, libraries. Umbrella router that delegates to focused sibling Go skills.",
+      "version": "2.1.0",
       "keywords": [
         "go",
         "golang",
@@ -98,7 +98,7 @@
       "name": "go-errors",
       "source": "./plugins/go-errors",
       "description": "Idiomatic Go error handling. ALWAYS use this skill when writing or reviewing Go code that raises, returns, wraps, matches, or aggregates errors — questions about `fmt.Errorf` with `%w` vs `%v`, `errors.Is` and `errors.As`, sentinel errors, typed error structs, `errors.Join` for combining failures, the \"handle exactly once\" rule, panic vs error, guard clauses and early return, error message formatting, or any `if err != nil` pattern. Use alongside go-style for general idioms.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -112,7 +112,7 @@
       "name": "go-http",
       "source": "./plugins/go-http",
       "description": "Building HTTP services in Go with the Chi router and stdlib `net/http`. ALWAYS use this skill when writing or reviewing Go HTTP code — defining routes with `chi.Router`, middleware (`chi.Use`, `middleware.Logger`, `middleware.Recoverer`, `middleware.RequestID`), handler signatures, request decoding, JSON responses, status codes from typed errors, graceful shutdown with `http.Server.Shutdown`, `httptest` patterns, service project layout (`cmd/server`, `internal/handler`, `internal/service`), and timeouts (`ReadTimeout`, `WriteTimeout`, `IdleTimeout`). Pair with go-sql for the data layer, go-logging for request-scoped logging, go-errors for status code mapping, and go-testing for handler tests.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -128,7 +128,7 @@
       "name": "go-lint",
       "source": "./plugins/go-lint",
       "description": "Linting and formatting Go code with `gofmt`, `goimports`, `golangci-lint`, and a curated `.golangci.yml`. ALWAYS use this skill when setting up or troubleshooting Go linting — installing golangci-lint, dropping the bundled `.golangci.yml` into a project, configuring pre-commit hooks, picking which linters to enable (errcheck, govet, staticcheck, unused, misspell, prealloc, gosec, revive, gocritic), suppressing findings with `//nolint` comments, reading lint output, or wiring lint into CI. Pair with go-style for the underlying idioms most lint rules enforce.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -143,7 +143,7 @@
       "name": "go-logging",
       "source": "./plugins/go-logging",
       "description": "Structured logging in Go with `log/slog` (Go 1.21+ stdlib). ALWAYS use this skill when adding, reviewing, or debugging logging in Go — choosing a logger, configuring `slog.NewJSONHandler` / `slog.NewTextHandler`, injecting `*slog.Logger` as a dependency, using `slog.With`, `slog.Group`, `LogValuer` for lazy values, propagating loggers through `context.Context`, picking log levels (info/debug/warn/error), or designing observability patterns (USE method, RED method). Pair with go-http for request-scoped logging middleware and go-errors for the \"log or return, not both\" rule.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -158,7 +158,7 @@
       "name": "go-sql",
       "source": "./plugins/go-sql",
       "description": "Type-safe SQL access in Go with sqlc and goose migrations. ALWAYS use this skill when writing or reviewing Go database code — `sqlc.yaml` configuration, query annotations (`:one`, `:many`, `:exec`, `:execrows`), generated `Querier` interface for mocking, goose Up/Down migrations, transaction patterns with `BEginTx` and `db.WithTx`, `pgx`/`pgxpool` vs `database/sql`, `sql.ErrNoRows` handling, JSON columns, and testing the data layer. Pair with go-http for the service-handler-storage stack, go-errors for wrapping `sql.ErrNoRows`, and go-testing for `Querier` mocking.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -174,7 +174,7 @@
       "name": "go-style",
       "source": "./plugins/go-style",
       "description": "Idiomatic Go style: naming, package and file organization, interfaces, documentation, generics, iterators, range-over-int, performance, dependency management, and common pitfalls. ALWAYS use this skill when writing or reviewing Go code for general style and idioms — questions about naming conventions, where to put a type, when to use generics vs `any`, how to size interfaces, godoc comments, the `internal/` package, struct literal initialization, slice/map gotchas, loop-variable capture, defer timing, or \"is this idiomatic Go?\". Pair with go-errors, go-concurrency, go-testing, go-logging, go-http, go-cli, go-sql, or go-lint when those concerns dominate the task.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",
@@ -190,7 +190,7 @@
       "name": "go-testing",
       "source": "./plugins/go-testing",
       "description": "Idiomatic Go testing with the stdlib `testing` package and the go-testdeep assertion library. ALWAYS use this skill when writing or reviewing Go tests — table-driven tests with `map[string]testCase`, `t.Run` subtests, `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration test gating with environment variables, benchmarks (`testing.B`), fuzz tests, go-testdeep operators (`td.Cmp`, `td.CmpError`, `td.CmpNoError`, `td.Struct`, `td.Smuggle`, `td.Between`, `td.Re`, `td.Require`), and the third-party-frameworks debate (go-testdeep when deps are allowed, stdlib-only for dependency-free projects, never testify). Pair with go-sql for testing DB code with sqlc's `Querier` interface, go-http for `httptest` patterns, and go-concurrency for race-detector usage.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "keywords": [
         "go",
         "golang",

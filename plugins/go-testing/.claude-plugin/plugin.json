@@ -1,7 +1,12 @@
 {
   "name": "go-testing",
   "description": "Idiomatic Go testing with the stdlib `testing` package and the go-testdeep assertion library. ALWAYS use this skill when writing or reviewing Go tests — table-driven tests with `map[string]testCase`, `t.Run` subtests, `t.Helper()` for assertion helpers, `t.Cleanup`, `t.Parallel`, integration test gating with environment variables, benchmarks (`testing.B`), fuzz tests, go-testdeep operators (`td.Cmp`, `td.CmpError`, `td.CmpNoError`, `td.Struct`, `td.Smuggle`, `td.Between`, `td.Re`, `td.Require`), and the third-party-frameworks debate (go-testdeep when deps are allowed, stdlib-only for dependency-free projects, never testify). Pair with go-sql for testing DB code with sqlc's `Querier` interface, go-http for `httptest` patterns, and go-concurrency for race-detector usage.",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "when_to_use": "TRIGGER WHEN the user is writing or reviewing Go tests — files ending in `_test.go`, `testing.T`, `testing.B`, `testing.F`, table-driven tests with `map[string]testCase`, `t.Run` subtests, `t.Helper`, `t.Cleanup`, `t.Parallel`, `t.TempDir`, fixtures under `testdata/`, integration test gating via env var, benchmarks, fuzz tests, race detector (`go test -race`), go-testdeep operators (`td.Cmp`, `td.CmpError`, `td.CmpNoError`, `td.Struct`, `td.Smuggle`, `td.Between`, `td.Re`, `td.Require`), or the framework decision (stdlib-only vs go-testdeep — never testify). ALSO TRIGGER on phrases like \"write a test for…\", \"table-driven test\", \"add a benchmark\", \"mock this with Querier\". SKIP for non-Go testing frameworks.",
+  "paths": [
+    "**/*_test.go",
+    "**/testdata/**"
+  ],
   "hooks": [
     "hooks/post-edit-test.sh"
   ]

@@ -1,6 +1,6 @@
 {
   "name": "go-http",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Building HTTP services in Go with the Chi router and stdlib `net/http`. ALWAYS use this skill when writing or reviewing Go HTTP code — defining routes with `chi.Router`, middleware (`chi.Use`, `middleware.Logger`, `middleware.Recoverer`, `middleware.RequestID`), handler signatures, request decoding, JSON responses, status codes from typed errors, graceful shutdown with `http.Server.Shutdown`, `httptest` patterns, service project layout (`cmd/server`, `internal/handler`, `internal/service`), and timeouts (`ReadTimeout`, `WriteTimeout`, `IdleTimeout`). Pair with go-sql for the data layer, go-logging for request-scoped logging, go-errors for status code mapping, and go-testing for handler tests.",
   "skills": "./skills/",
   "interface": {

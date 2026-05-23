@@ -1,11 +1,11 @@
 {
   "name": "go-dev",
-  "version": "2.0.0",
-  "description": "Umbrella skill for Go development. ALWAYS use this skill when the user's task involves Go or Golang in any way — writing new Go code, reviewing existing Go code, building Go services, creating Go CLI tools, working with Go tests, setting up Go linting, using sqlc for database access, or anything else Go-related. This includes mentions of: Go, Golang, .go files, go.mod, go test, golangci-lint, Chi router, sqlc, goose migrations, generics, goroutines, channels, interfaces, error handling, concurrency, table-driven tests, slog, iterators, or any Go package/tool. This skill is a router — it loads fast and points to the focused sibling skill(s) that own the deep reference material for the task at hand.",
+  "version": "2.1.0",
+  "description": "Writing, reviewing, refactoring, debugging, or designing Go code — backends, microservices, APIs, CLI tools, daemons, workers, data pipelines, libraries. Umbrella router that delegates to focused sibling Go skills.",
   "skills": "./skills/",
   "interface": {
     "displayName": "Go Dev",
-    "shortDescription": "Umbrella skill for Go development.",
+    "shortDescription": "Writing, reviewing, refactoring, debugging, or designing Go code — backends, microservices, APIs, CLI tools, daemons,...",
     "category": "Development"
   }
 }

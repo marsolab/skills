@@ -85,8 +85,10 @@ def parse_frontmatter(path: Path) -> dict:
     return {
         "name": data.get("name", ""),
         "description": data.get("description", ""),
+        "when_to_use": data.get("when_to_use", ""),
         "version": str(data.get("version", "1.0.0")),
         "tags": data.get("tags", []),
+        "paths": data.get("paths", []),
     }
 
 
@@ -157,6 +159,10 @@ def main() -> int:
 
         # Per-plugin: Claude Code
         claude_plugin: dict = {"name": name, "description": desc, "version": ver}
+        if fm.get("when_to_use"):
+            claude_plugin["when_to_use"] = fm["when_to_use"]
+        if fm.get("paths"):
+            claude_plugin["paths"] = fm["paths"]
         hooks = discover_hooks(plugin_dir)
         if hooks:
             claude_plugin["hooks"] = hooks

@@ -286,6 +286,25 @@
         "url-scheme"
       ],
       "category": "productivity"
+    },
+    {
+      "name": "use-browser",
+      "source": "./plugins/use-browser",
+      "description": "Browser automation, web testing, and page interaction driven from the command line with `playwright-cli`, defaulting to the Lightpanda headless browser. ALWAYS use this skill when the agent needs a browser — opening pages, navigating, clicking/typing/filling forms, taking snapshots or screenshots, scraping or reading page content, logging in, running or debugging Playwright tests, mocking network requests, managing cookies / localStorage / storage state, recording traces or video, or generating tests. The agent defaults to Lightpanda (installed locally and driven over CDP) without asking, and switches to Chromium, Chrome, Firefox, WebKit, or Microsoft Edge only when the user asks. Falls back to a full browser when Lightpanda cannot render a page.",
+      "version": "1.0.0",
+      "keywords": [
+        "browser",
+        "playwright",
+        "playwright-cli",
+        "lightpanda",
+        "automation",
+        "e2e",
+        "testing",
+        "scraping",
+        "cdp",
+        "headless"
+      ],
+      "category": "development"
     }
   ]
 }

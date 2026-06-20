@@ -1,0 +1,35 @@
+use-browser skill
+==================
+
+This skill is built on Microsoft's playwright-cli project and bundles
+portions of its agent skill documentation.
+
+The SKILL.md command reference and the following files under
+references/ are adapted from, or copied verbatim from, the
+"playwright-cli" skill in https://github.com/microsoft/playwright-cli:
+
+  references/element-attributes.md
+  references/playwright-tests.md
+  references/request-mocking.md
+  references/running-code.md
+  references/session-management.md
+  references/spec-driven-testing.md
+  references/storage-state.md
+  references/test-generation.md
+  references/tracing.md
+  references/video-recording.md
+
+Those materials are:
+
+  Copyright (c) Microsoft Corporation.
+  Licensed under the Apache License, Version 2.0.
+  https://www.apache.org/licenses/LICENSE-2.0
+  https://github.com/microsoft/playwright-cli/blob/main/LICENSE
+
+The files references/browsers.md and references/lightpanda.md, and the
+"Choosing a browser" and Lightpanda-specific additions to SKILL.md, are
+original to this skill.
+
+Lightpanda (https://lightpanda.io, https://github.com/lightpanda-io/browser)
+is a separate project under its own license; this skill only documents
+how to install and drive it.

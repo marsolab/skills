@@ -1,0 +1,13 @@
+{
+  "name": "use-browser",
+  "description": "Browser automation, web testing, and page interaction driven from the command line with `playwright-cli`, defaulting to the Lightpanda headless browser. ALWAYS use this skill when the agent needs a browser — opening pages, navigating, clicking/typing/filling forms, taking snapshots or screenshots, scraping or reading page content, logging in, running or debugging Playwright tests, mocking network requests, managing cookies / localStorage / storage state, recording traces or video, or generating tests. The agent defaults to Lightpanda (installed locally and driven over CDP) without asking, and switches to Chromium, Chrome, Firefox, WebKit, or Microsoft Edge only when the user asks. Falls back to a full browser when Lightpanda cannot render a page.",
+  "version": "1.0.0",
+  "when_to_use": "TRIGGER WHEN the agent or user needs to drive a real web browser — \"open a browser\", \"go to <url>\", \"click / fill / type on the page\", \"take a screenshot / snapshot\", \"scrape this page\", \"read this page\", \"log in and …\", \"fill out this form\", \"run the Playwright tests\", \"debug this e2e test\", \"mock this API in the browser\", \"record a trace / video\", \"generate a test for …\", or any request that names a browser (Lightpanda, Chrome, Chromium, Firefox, WebKit, Edge). DEFAULT to Lightpanda; only offer or switch browsers when the user explicitly asks for a different one. SKIP for plain HTTP scripting that needs no browser (use curl / fetch) and when a Playwright MCP server is already the chosen tool.",
+  "paths": [
+    "**/playwright.config.*",
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    "**/e2e/**",
+    "**/tests/**/*.spec.*"
+  ]
+}

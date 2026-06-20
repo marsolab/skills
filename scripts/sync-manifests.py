@@ -40,6 +40,7 @@ CATEGORIES: dict[str, str] = {
     "sqlite": "development",
     "sys-arch": "architecture",
     "things": "productivity",
+    "use-browser": "development",
 }
 
 DISPLAY_NAMES: dict[str, str] = {
@@ -62,6 +63,7 @@ DISPLAY_NAMES: dict[str, str] = {
     "sqlite": "SQLite",
     "sys-arch": "Sys Arch",
     "things": "Things",
+    "use-browser": "Use Browser",
 }
 
 CATEGORY_DISPLAY: dict[str, str] = {

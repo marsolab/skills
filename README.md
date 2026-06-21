@@ -46,6 +46,7 @@ automatically.
 | [multi-agent-config][15] | DevOps | Multi-agent configs |
 | [sys-arch][16] | Architecture | System design |
 | [things][17] | Productivity | Capture tasks into Things 3 |
+| [use-browser][18] | Development | Browser automation, default Lightpanda |
 
 [1]: plugins/apple-dev/skills/apple-dev/SKILL.md
 [2]: plugins/copy/skills/copy/SKILL.md
@@ -64,6 +65,7 @@ automatically.
 [15]: plugins/multi-agent-config/skills/multi-agent-config/SKILL.md
 [16]: plugins/sys-arch/skills/sys-arch/SKILL.md
 [17]: plugins/things/skills/things/SKILL.md
+[18]: plugins/use-browser/skills/use-browser/SKILL.md
 
 ## Adding a New Plugin
 

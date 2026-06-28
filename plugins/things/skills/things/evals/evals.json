@@ -5,7 +5,7 @@
       "id": 0,
       "name": "interactive-work-brainstorm",
       "prompt": "/mytodo tomorrow I need to follow up with Sarah about the contract, also I should book the flight for the Austin trip and remember to submit my expense report from last week",
-      "expected_output": "Claude parses into ~3 atomic to-dos with short imperative titles, presents as a numbered markdown list, asks whether anything needs editing, then asks for a project/area, then asks for a schedule, then calls scripts/things_add.py --stdin with the finalized JSON.",
+      "expected_output": "The agent parses into ~3 atomic to-dos with short imperative titles, presents as a numbered markdown list, asks whether anything needs editing, then asks for a project/area, then asks for a schedule, then calls scripts/things_add.py --stdin with the finalized JSON.",
       "files": []
     },
     {

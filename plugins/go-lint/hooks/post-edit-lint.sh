@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # PostToolUse hook: runs golangci-lint after edits.
-# Exits non-zero so Claude sees lint failures and fixes them.
+# Exits non-zero so the agent sees lint failures and fixes them.
 
 if ! command -v golangci-lint &>/dev/null; then
     echo "golangci-lint not found in PATH, skipping lint"

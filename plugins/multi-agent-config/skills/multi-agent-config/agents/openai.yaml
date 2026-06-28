@@ -1,0 +1,6 @@
+interface:
+  display_name: "Multi-Agent Config"
+  short_description: "Sync AI code agent configurations"
+  default_prompt: "Use $multi-agent-config to sync Codex and Claude Code configuration for this project."
+policy:
+  allow_implicit_invocation: true

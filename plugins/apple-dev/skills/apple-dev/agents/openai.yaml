@@ -1,0 +1,6 @@
+interface:
+  display_name: "Apple Dev"
+  short_description: "Native Apple app development guidance"
+  default_prompt: "Use $apple-dev to review this SwiftUI implementation for native Apple best practices."
+policy:
+  allow_implicit_invocation: true

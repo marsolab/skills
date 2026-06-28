@@ -1,0 +1,6 @@
+interface:
+  display_name: "Landing Page Breakdown"
+  short_description: "Landing page design analysis workflow"
+  default_prompt: "Use $landing-page-breakdown to analyze this landing page URL and extract design specs."
+policy:
+  allow_implicit_invocation: true

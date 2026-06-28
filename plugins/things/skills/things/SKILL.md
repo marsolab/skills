@@ -30,9 +30,9 @@ accepts a JSON array of items and requires no auth token for creating new
 to-dos — only for updating existing ones.
 
 The skill is designed for dictation workflows: the user speaks or types a
-rambling brain-dump, and Claude turns it into a tidy list. Two modes:
+rambling brain-dump, and the agent turns it into a tidy list. Two modes:
 
-| Mode | Invocation | What Claude does |
+| Mode | Invocation | What the agent does |
 | --- | --- | --- |
 | Interactive | `/mytodo <text>` or skill triggers naturally | Parse → show list → ask for edits → ask project/area → ask schedule → submit |
 | Quick | `/mytodo --quick <text>` | Parse → submit to Inbox. No questions. |

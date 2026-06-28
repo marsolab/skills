@@ -91,9 +91,9 @@ browser, or asks to choose. When they do, present the options and use
 | WebKit | `playwright-cli open --browser=webkit` | Safari engine checks |
 | Microsoft Edge | `playwright-cli open --browser=msedge` | Edge channel needed |
 
-When you do offer a choice in Claude Code, use the **AskUserQuestion**
-tool with Lightpanda preselected as the recommended default; in other
-contexts ask in plain text. See
+When you do offer a choice and an interactive choice tool is available, use it
+with Lightpanda preselected as the recommended default; in other contexts ask
+in plain text. See
 [references/browsers.md](references/browsers.md) for the full decision
 guide and tradeoffs.
 

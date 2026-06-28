@@ -1,0 +1,6 @@
+interface:
+  display_name: "Things"
+  short_description: "Capture structured tasks into Things 3"
+  default_prompt: "Use $things to turn this brain dump into atomic Things 3 to-dos."
+policy:
+  allow_implicit_invocation: true

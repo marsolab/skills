@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # PostToolUse hook: runs Go tests with race detection and coverage after edits.
-# Exits non-zero so Claude sees failures and fixes them.
+# Exits non-zero so the agent sees failures and fixes them.
 
 if ! command -v go &>/dev/null; then
     echo "go not found in PATH, skipping tests"

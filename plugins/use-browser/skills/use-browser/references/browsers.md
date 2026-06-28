@@ -14,9 +14,9 @@ browsers are used **only when the user asks**.
    you to choose, switch to that browser with `playwright-cli open
    --browser=<name>`.
 3. **Offer a choice when asked.** If the user asks "which browser can I
-   use?" or wants to pick, present the options below. In Claude Code use
-   the **AskUserQuestion** tool with **Lightpanda** preselected as the
-   recommended default; elsewhere, ask in plain text.
+   use?" or wants to pick, present the options below. Use an interactive
+   choice tool when available, with **Lightpanda** preselected as the
+   recommended default; otherwise ask in plain text.
 4. **Fall back when Lightpanda can't render.** If a Lightpanda
    `goto`/`snapshot` errors or times out, stop retrying Lightpanda, tell
    the user, and offer Chromium (`playwright-cli open --browser=chromium`).

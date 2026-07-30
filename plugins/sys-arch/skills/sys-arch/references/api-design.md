@@ -608,10 +608,10 @@ Secure flow for web applications.
 1. User → Client: Click "Login"
 2. Client → Auth Server: Redirect to /authorize?client_id=...&redirect_uri=...
 3. User → Auth Server: Enter credentials
-4. Auth Server → Client: Redirect to redirect_uri?code=ABC
-5. Client → Auth Server: POST /token with code=ABC&client_secret=XYZ
+4. Auth Server → Client: Redirect to redirect_uri?code=<code>
+5. Client → Auth Server: POST /token with code=<code>&client_secret=<client_secret>
 6. Auth Server → Client: Return access_token + refresh_token
-7. Client → API: Request with Authorization: Bearer {access_token}
+7. Client → API: Request with Authorization: Bearer <access_token>
 ```
 
 ### OAuth 2.0 PKCE (for mobile/SPA)

@@ -15,8 +15,8 @@ risk)
 **Format:**
 
 ```text
-Authorization: Bearer sk_live_51H8v7xKJ2v3x7x7x7x7x7x7x
-X-API-Key: your-api-key-here
+Authorization: Bearer <api_key>
+X-API-Key: <api_key>
 ```
 
 **Implementation:**
@@ -37,6 +37,8 @@ def authenticate_api_key(request):
 **Best practices:**
 
 - Hash keys in database (never store plaintext)
+- Prefix keys with a type and environment marker so leaks are
+  identifiable and secret scanners can detect them
 - Support key rotation (multiple active keys)
 - Scope keys to specific resources/actions
 - Rate limit per API key
@@ -542,10 +544,11 @@ git secrets --register-aws
 **Usage:**
 
 ```bash
-# Write secret
+# Write secret (pass the value by env var, never as a literal
+# argument — arguments land in shell history and process listings)
 vault kv put secret/database/config \
   username=dbuser \
-  password=supersecret
+  password="$DB_PASSWORD"
 
 # Read secret
 vault kv get secret/database/config
@@ -562,8 +565,8 @@ GET /database/creds/app-readonly
 
 Response:
 {
-  "username": "v-token-app-readonly-9xkUfJv",
-  "password": "Abc123XyZ",
+  "username": "<generated_username>",
+  "password": "<generated_password>",
   "lease_duration": 3600
 }
 

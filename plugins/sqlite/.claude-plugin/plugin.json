@@ -1,5 +1,0 @@
-{
-  "name": "sqlite",
-  "description": "Production-grade SQLite for web, mobile, and CLI projects. Use this skill when designing schemas, tuning PRAGMAs (WAL, busy_timeout, mmap, optimize), modeling writer concurrency (single-writer pool, BEGIN IMMEDIATE, busy retry), building indexes (covering, partial, expression, STRICT, WITHOUT ROWID), paginating with keyset cursors, implementing job queues via `UPDATE ... RETURNING`, full-text search with FTS5 + sqlite-vec, replicating with Litestream / Turso / Cloudflare D1, picking a driver (better-sqlite3, modernc.org/sqlite, GRDB, Room, SQLDelight, expo-sqlite, SQLCipher), or running the 12-step `ALTER TABLE` rewrite. Pair with go-sql for sqlc + goose against SQLite, apple-dev for GRDB on iOS, and front-dev for in-browser SQLite via OPFS.",
-  "version": "1.0.0"
-}

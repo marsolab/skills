@@ -368,7 +368,7 @@ synchronous_commit = on
 CHANGE MASTER TO
     MASTER_HOST='primary.example.com',
     MASTER_USER='replication',
-    MASTER_PASSWORD='password';
+    MASTER_PASSWORD='<replication_password>';
 START SLAVE;
 ```
 

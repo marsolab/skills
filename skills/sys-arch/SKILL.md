@@ -2,7 +2,7 @@
 name: sys-arch
 description: Design production-grade software systems with expert knowledge of architecture patterns, distributed systems, cloud platforms, and operational excellence. Use this skill when architecting complex systems, evaluating technology choices, designing scalable infrastructure, or making critical architectural decisions requiring trade-off analysis.
 metadata:
-  version: "1.0.1"
+  version: "1.1.1"
   tags: "architecture, system-design, distributed-systems, microservices, cloud, scalability, observability, infrastructure"
 ---
 

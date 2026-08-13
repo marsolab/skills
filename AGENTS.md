@@ -1,55 +1,70 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Project Structure
 
-This repository is a plugin marketplace for Claude Code and OpenAI Codex.
-Primary content lives under `plugins/<plugin-name>/`. Each plugin contains
-platform manifests in `.claude-plugin/` and `.codex-plugin/`, plus one skill at
-`skills/<skill-name>/SKILL.md`. Optional supporting material belongs in
-`references/`, `assets/`, or `scripts/` under that skill directory. Root-level
-automation lives in `scripts/`, and CI is defined in
+This repository is a portable Agent Skills registry for OpenAI Codex, Claude
+Code, and Cursor. The only registry is the directory tree under `skills/`:
+
+```text
+skills/<name>/
+├── SKILL.md
+├── agents/       # optional agent-specific presentation metadata
+├── assets/       # optional
+├── evals/        # optional
+├── references/   # optional
+└── scripts/      # optional
+```
+
+Do not add plugin wrappers, marketplace JSON, generated manifests, or another
+canonical catalog. Root automation belongs in `scripts/`; CI lives in
 `.github/workflows/release-skills.yml`.
 
-`SKILL.md` frontmatter is the source of truth. Do not hand-edit generated files
-such as `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`,
-or per-plugin `plugin.json` files.
+## Build and Validation Commands
 
-## Build, Test, and Development Commands
+There is no build step. Validate and lint the canonical files directly:
 
-There is no separate build step; contributors mainly regenerate and validate
-manifests.
-
-- `uv run scripts/sync-manifests.py`: regenerate marketplace and plugin JSON.
-- `uv run scripts/sync-manifests.py --check`: fail if generated manifests drift.
-- `uvx ruff check scripts/`: lint Python utility scripts.
+- `uv run scripts/validate-skills.py`: validate registry layout, frontmatter,
+  versions, portability constraints, and relative links.
+- `uvx ruff check scripts/`: lint Python utilities.
 - `uvx ruff format --check scripts/`: verify Python formatting.
-- `python3 scripts/fix-markdown.py`: normalize common Markdown lint issues in
-  plugin docs.
-- `mado check README.md CLAUDE.md`: lint root documentation before submission.
+- `mado check README.md CLAUDE.md AGENTS.md`: lint root documentation when mado
+  is available.
+- `npx skills add . --list`: confirm standard installer discovery.
 
-## Coding Style & Naming Conventions
+## Skill and Code Conventions
 
-Use Python 3.11+ for repository scripts and standard 4-space indentation.
-Prefer small, direct functions and type hints where they improve clarity.
-Plugin and skill directory names should use kebab-case and align with the
-`name:` value in `SKILL.md` frontmatter, for example `plugins/go-dev/`.
+The directory name must exactly match the `name` in `SKILL.md`. Use lowercase
+kebab-case. Portable frontmatter requires `name` and `description`; keep the
+quoted semantic version at `metadata.version`. Metadata keys and values are
+strings.
 
-Keep Markdown concise, use fenced code blocks with languages, and wrap prose
-near 80 characters to match the existing lint settings.
+Descriptions state both capability and trigger conditions. Keep detailed or
+rarely needed material in `references/`, and refer to supporting files with
+paths relative to the skill directory. Do not depend on host-only command
+aliases, automatic hooks, or namespaced skill identifiers.
+
+Use Python 3.11+ for root utilities, four-space indentation, and type hints where
+they improve clarity. Keep Markdown concise, use fenced code blocks with
+languages, and wrap prose near 80 characters.
 
 ## Testing Guidelines
 
-There is no dedicated unit-test suite yet. Treat validation as:
-`sync-manifests.py --check`, Ruff checks for `scripts/`, and a review of any
-generated JSON diffs. When adding a plugin, verify the release workflow can find
-`plugins/<name>/skills/*/SKILL.md` and parse `version:` from frontmatter.
+Run the registry validator after every structural or frontmatter change. When a
+skill contains executable helpers, also run the relevant syntax or focused
+behavior checks. When a skill has evaluations, update and review them alongside
+behavior changes. Confirm that external discovery still lists every expected
+skill after changing the registry layout.
 
-## Commit & Pull Request Guidelines
+## CI and Releases
 
-Recent history uses short, imperative commit subjects such as `Add skills`,
-`Remove outdated CHANGELOG.md files`, and `Migrate workflows to Blacksmith`.
-Follow that pattern and keep each commit scoped to one logical change.
+Pull requests validate the complete registry. On `main`, the release workflow
+detects changed `skills/<name>/` directories, reads `metadata.version`, and can
+publish a standalone archive tagged `<skill>-v<version>`. The skill directory is
+the archive's sole top-level entry. Releases are distribution artifacts and are
+not a registry.
 
-Pull requests should describe the affected plugin(s), mention whether manifests
-were regenerated, and include relevant command output for validation. Include
-screenshots only when documentation visuals materially changed.
+## Commit and Pull Request Guidelines
+
+Use short, imperative commit subjects and keep each commit scoped to one logical
+change. Pull requests should name the affected skills, explain any version bump,
+and include the relevant validation output. Preserve unrelated worktree changes.

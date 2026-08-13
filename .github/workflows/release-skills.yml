@@ -1,163 +1,218 @@
-name: Release Skills
+name: Validate and Release Skills
 
 on:
+  pull_request:
   push:
     branches:
       - main
   workflow_dispatch:
     inputs:
-      plugin_folder:
-        description: 'Plugin folder name under plugins/ (e.g., go-dev, copy)'
-        required: false
+      skill_folder:
+        description: "Skill folder name under skills/ (for example, go-dev)"
+        required: true
         type: string
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  detect-changes:
+  validate:
+    name: Validate skills
     runs-on: blacksmith-2vcpu-ubuntu-2404
-    outputs:
-      plugins: ${{ steps.changes.outputs.plugins }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+        uses: actions/checkout@v6
 
-      - name: Detect changed plugin folders
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
+
+      - name: Validate portable skills
+        run: uv run scripts/validate-skills.py
+
+  detect-changes:
+    name: Detect changed skills
+    if: github.event_name != 'pull_request'
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    outputs:
+      skills: ${{ steps.changes.outputs.skills }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed skill folders
         id: changes
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_SKILL: ${{ inputs.skill_folder }}
         run: |
-          # If manual trigger with plugin_folder specified, use that
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.plugin_folder }}" ]; then
-            PLUGIN_FOLDER="${{ github.event.inputs.plugin_folder }}"
-            SKILL_MD=$(find "plugins/$PLUGIN_FOLDER/skills" -name "SKILL.md" -maxdepth 2 2>/dev/null | head -1)
-            if [ -d "plugins/$PLUGIN_FOLDER" ] && [ -n "$SKILL_MD" ]; then
-              echo "plugins=$(jq -nc --arg plugin "$PLUGIN_FOLDER" '[{"plugin": $plugin}]')" >> $GITHUB_OUTPUT
-              exit 0
-            else
-              echo "Error: Plugin folder 'plugins/$PLUGIN_FOLDER' not found or missing SKILL.md"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ ! "$REQUESTED_SKILL" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+              echo "Invalid skill folder: $REQUESTED_SKILL" >&2
               exit 1
             fi
-          fi
-
-          # Otherwise, detect changed folders using git diff
-          CHANGED_PLUGINS=$(git diff --name-only HEAD~1 HEAD | grep '^plugins/' | cut -d'/' -f2 | sort -u)
-
-          PLUGINS=()
-          for folder in $CHANGED_PLUGINS; do
-            # Skip hidden folders
-            if [[ "$folder" =~ ^\. ]] || [ "$folder" = "" ]; then
-              continue
+            if [[ ! -f "skills/$REQUESTED_SKILL/SKILL.md" ]]; then
+              echo "Skill not found: skills/$REQUESTED_SKILL/SKILL.md" >&2
+              exit 1
             fi
 
-            # Check if plugin directory has a SKILL.md
-            SKILL_MD=$(find "plugins/$folder/skills" -name "SKILL.md" -maxdepth 2 2>/dev/null | head -1)
-            if [ -d "plugins/$folder" ] && [ -n "$SKILL_MD" ]; then
-              PLUGINS+=("$folder")
+            skills_json="$({
+              printf '%s\n' "$REQUESTED_SKILL"
+            } | jq -Rsc 'split("\n") | map(select(length > 0)) | map({skill: .})')"
+            echo "skills=$skills_json" >> "$GITHUB_OUTPUT"
+            echo "Selected skill: $REQUESTED_SKILL"
+            exit 0
+          fi
+
+          if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" =~ ^0+$ ]] \
+            || ! git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            base_sha="$(git hash-object -t tree /dev/null)"
+          else
+            base_sha="$BEFORE_SHA"
+          fi
+
+          mapfile -t changed_skills < <(
+            git diff --name-only "$base_sha" "$CURRENT_SHA" \
+              | awk -F/ '$1 == "skills" && NF >= 3 {print $2}' \
+              | sort -u
+          )
+
+          releasable_skills=()
+          for skill in "${changed_skills[@]}"; do
+            if [[ -f "skills/$skill/SKILL.md" ]]; then
+              releasable_skills+=("$skill")
             fi
           done
 
-          if [ ${#PLUGINS[@]} -eq 0 ]; then
-            echo "No plugin folders with changes detected"
-            echo "plugins=[]" >> $GITHUB_OUTPUT
-          else
-            # Create JSON array for matrix
-            PLUGINS_JSON=$(printf '%s\n' "${PLUGINS[@]}" | jq -R . | jq -s . | jq -c 'map({plugin: .})')
-            echo "Detected changed plugins: ${PLUGINS[@]}"
-            echo "plugins=$PLUGINS_JSON" >> $GITHUB_OUTPUT
+          if (( ${#releasable_skills[@]} == 0 )); then
+            echo "No changed skills to release."
+            echo "skills=[]" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
-  check-manifests:
-    runs-on: blacksmith-2vcpu-ubuntu-2404
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-
-      - name: Verify manifests are in sync
-        run: |
-          uv run scripts/sync-manifests.py --check
+          skills_json="$(
+            printf '%s\n' "${releasable_skills[@]}" \
+              | jq -Rsc 'split("\n") | map(select(length > 0)) | map({skill: .})'
+          )"
+          echo "skills=$skills_json" >> "$GITHUB_OUTPUT"
+          echo "Changed skills: ${releasable_skills[*]}"
 
   release:
-    needs: [detect-changes, check-manifests]
+    name: Release ${{ matrix.skill }}
+    if: >-
+      github.event_name != 'pull_request' &&
+      needs.detect-changes.outputs.skills != '[]'
+    needs:
+      - validate
+      - detect-changes
     runs-on: blacksmith-2vcpu-ubuntu-2404
-    if: needs.detect-changes.outputs.plugins != '[]'
+    permissions:
+      contents: write
     strategy:
-      matrix:
-        plugin: ${{ fromJson(needs.detect-changes.outputs.plugins) }}
       fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.detect-changes.outputs.skills) }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Parse version from SKILL.md
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
+
+      - name: Read skill version
         id: version
+        env:
+          SKILL_FILE: skills/${{ matrix.skill }}/SKILL.md
         run: |
-          SKILL_FILE=$(find "plugins/${{ matrix.plugin.plugin }}/skills" -name "SKILL.md" -maxdepth 2 | head -1)
+          uv run --with pyyaml python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          import re
+          from pathlib import Path
 
-          if [ -z "$SKILL_FILE" ]; then
-            echo "Error: SKILL.md not found in plugins/${{ matrix.plugin.plugin }}/"
-            exit 1
-          fi
+          import yaml
 
-          # Extract version from YAML frontmatter: version: 1.0.0
-          VERSION=$(grep -E "^version:" "$SKILL_FILE" | head -1 | sed -E 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+          content = Path(os.environ["SKILL_FILE"]).read_text(encoding="utf-8")
+          match = re.match(
+              r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|\Z)",
+              content,
+              re.DOTALL,
+          )
+          if match is None:
+              raise SystemExit("SKILL.md frontmatter is missing")
+          frontmatter = yaml.safe_load(match.group(1))
+          version = frontmatter["metadata"]["version"]
+          prerelease = "-" in version.split("+", 1)[0]
+          print(f"version={version}")
+          print(f"prerelease={str(prerelease).lower()}")
+          PY
 
-          if [ -z "$VERSION" ]; then
-            echo "Error: Could not parse version from $SKILL_FILE"
-            echo "Expected format in YAML frontmatter: version: 1.0.0"
-            exit 1
-          fi
-
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Parsed version: $VERSION"
-
-      - name: Create .skill archive
-        id: archive
+      - name: Check whether release tag exists
+        id: tag
+        env:
+          SKILL_NAME: ${{ matrix.skill }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          PLUGIN_NAME="${{ matrix.plugin.plugin }}"
-          VERSION="${{ steps.version.outputs.version }}"
-
-          # Create archive with plugin name
-          ARCHIVE_NAME="${PLUGIN_NAME}.skill"
-
-          # Create zip archive with plugin contents
-          cd "plugins/$PLUGIN_NAME"
-          zip -r "../../${ARCHIVE_NAME}" . -q
-          cd ../..
-
-          echo "archive_path=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
-          echo "Created archive: ${ARCHIVE_NAME}"
-
-      - name: Check if tag exists
-        id: check_tag
-        run: |
-          PLUGIN_NAME="${{ matrix.plugin.plugin }}"
-          VERSION="${{ steps.version.outputs.version }}"
-          TAG="${PLUGIN_NAME}-v${VERSION}"
-
-          # Check if tag exists
-          git fetch --tags --quiet || true
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-            echo "Tag $TAG already exists, skipping release"
+          tag="$SKILL_NAME-v$VERSION"
+          git fetch --force --tags --quiet
+          if git show-ref --verify --quiet "refs/tags/$tag"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag $tag already exists; skipping release."
           else
-            echo "exists=false" >> $GITHUB_OUTPUT
-            echo "Tag $TAG does not exist, will create release"
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Tag $tag does not exist; creating a release."
           fi
 
-      - name: Create GitHub Release
-        if: steps.check_tag.outputs.exists != 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ matrix.plugin.plugin }}-v${{ steps.version.outputs.version }}
-          name: ${{ matrix.plugin.plugin }} v${{ steps.version.outputs.version }}
-          body: |
-            Release of ${{ matrix.plugin.plugin }} plugin v${{ steps.version.outputs.version }}
+      - name: Create skill archive
+        if: steps.tag.outputs.exists != 'true'
+        id: archive
+        env:
+          SKILL_NAME: ${{ matrix.skill }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          archive_name="$SKILL_NAME-$VERSION.zip"
+          (
+            cd skills
+            zip -q -r "../$archive_name" "$SKILL_NAME" \
+              -x '*/.DS_Store' '*/__pycache__/*' '*/__pycache__'
+          )
 
-            See SKILL.md in the plugin folder for details.
+          mapfile -t top_levels < <(
+            unzip -Z1 "$archive_name" | cut -d/ -f1 | sort -u
+          )
+          if (( ${#top_levels[@]} != 1 )) \
+            || [[ "${top_levels[0]}" != "$SKILL_NAME" ]]; then
+            echo "Archive must contain only $SKILL_NAME as its top-level entry." >&2
+            exit 1
+          fi
+          if ! unzip -Z1 "$archive_name" \
+            | grep -Fqx "$SKILL_NAME/SKILL.md"; then
+            echo "Archive is missing $SKILL_NAME/SKILL.md." >&2
+            exit 1
+          fi
+
+          echo "archive_path=$archive_name" >> "$GITHUB_OUTPUT"
+          echo "Created archive: $archive_name"
+
+      - name: Create GitHub release
+        if: steps.tag.outputs.exists != 'true'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ matrix.skill }}-v${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ matrix.skill }} v${{ steps.version.outputs.version }}
+          body: |
+            Release of the ${{ matrix.skill }} skill v${{ steps.version.outputs.version }}.
+
+            See `skills/${{ matrix.skill }}/SKILL.md` for usage instructions.
           files: ${{ steps.archive.outputs.archive_path }}
           draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, '-') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+          prerelease: ${{ steps.version.outputs.prerelease }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

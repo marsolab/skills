@@ -55,6 +55,7 @@ and optional agent metadata remain available.
 | [go-testing](skills/go-testing/SKILL.md) | Go test design and execution |
 | [kinde](skills/kinde/SKILL.md) | Kinde authentication integration |
 | [landing-page-breakdown][landing] | Landing-page design analysis |
+| [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
 | [multi-agent-config][multi-agent] | Cross-agent configuration |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
 | [sys-arch](skills/sys-arch/SKILL.md) | Production system architecture |

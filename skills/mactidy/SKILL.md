@@ -7,7 +7,7 @@ description: >-
   development processes remain, or the user wants a recurring cleanup plan.
   Do not use for general malware removal or indiscriminate system cleaning.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   tags: "macos, cleanup, disk-space, worktrees, caches, processes, ai-agents"
 ---
 
@@ -16,14 +16,51 @@ metadata:
 Reclaim macOS disk space and memory left behind by agentic development without
 losing source code, uncommitted work, credentials, databases, or active agent
 state. Treat cleanup as an evidence-backed operational change: inventory,
-classify, approve, clean, then verify the physical result.
+classify, approve, clean, then verify the physical result. Prefer the bundled
+Rust CLI for repeatable inventory and guarded cleanup so the agent does not
+reconstruct filesystem logic on every run.
 
-Resolve bundled paths relative to this `SKILL.md`. The inventory helper is
-read-only and accepts one or more explicit development roots:
+## CLI first
+
+Resolve bundled paths relative to this `SKILL.md`. If `mactidy` is already on
+`PATH`, use it. Otherwise, build the dependency-free source to a user-approved
+location; do not install it globally without permission:
 
 ```bash
-bash /absolute/path/to/mactidy/scripts/inventory.sh ~/Code ~/.codex/worktrees
+rustc --edition=2021 -O \
+  /absolute/path/to/mactidy/scripts/mactidy-cli/src/main.rs \
+  -o /approved/output/path/mactidy
 ```
+
+Use one structured audit to collect the routine evidence:
+
+```bash
+mactidy audit \
+  --root ~/Code \
+  --root ~/.codex/worktrees \
+  --repo ~/Code/example \
+  --json
+```
+
+The CLI scans only explicit roots, deduplicates hardlinked files while
+estimating size, inventories Git worktree safety state, reports narrowly
+matched detached development processes, and records Data-volume free space. It
+never signals a process. Its two mutation commands have no force or permanent
+delete mode:
+
+```bash
+mactidy trash --root /exact/root --path /exact/artifact
+mactidy retire-worktree \
+  --repo /exact/repo \
+  --path /exact/worktree \
+  --merged-into origin/main
+```
+
+Both prompt for the canonical path. Use `--confirm /canonical/path` only after
+the user approves that exact target in the current conversation. Read
+[references/cli.md](references/cli.md) when building, invoking, or extending
+the CLI. If Rust is unavailable, `scripts/inventory.sh` remains a read-only
+fallback for explicit roots.
 
 ## Safety contract
 
@@ -65,13 +102,13 @@ hardlinks. Do not promise that its total equals recoverable disk space.
 
 ### 2. Inventory without mutation
 
-Run the bundled helper for the explicit roots, then inspect only relevant
-systems:
+Run one CLI audit for the explicit roots and known repositories. Use the shell
+fallback only when the CLI cannot be built. Then inspect only relevant systems
+the CLI does not cover:
 
-- Git worktrees through `git worktree list --porcelain` from each repository.
 - Tool caches through their own status or cache-path commands.
 - Docker or local VM storage only when those tools are in scope.
-- Candidate processes with `ps`, followed by per-PID inspection with `lsof`.
+- Reported process candidates with per-PID inspection through `lsof`.
 - Known temporary bundles only after identifying the owning application.
 
 Read [references/candidate-catalog.md](references/candidate-catalog.md) for the
@@ -114,8 +151,10 @@ After approval, re-resolve each exact target and repeat the decisive safety
 check. Then use the narrowest supported action:
 
 - tool-native prune for shared stores and caches;
-- `git worktree remove <exact-path>` for verified clean worktrees;
-- exact-path Trash or deletion for reproducible local artifacts;
+- `mactidy retire-worktree` for a clean worktree whose HEAD is already
+  reachable from an explicitly chosen retained ref;
+- `mactidy trash` for an allow-listed reproducible artifact below an exact
+  cleanup root;
 - `SIGTERM` for a verified stale process, followed by a bounded wait and
   re-check. Escalate only with separate evidence that the same PID survived.
 
@@ -128,9 +167,9 @@ contents, or a command that would broaden scope. Do not substitute `sudo`,
 After every batch:
 
 1. Confirm the approved paths or PIDs are gone and unapproved ones remain.
-2. Re-run the relevant worktree, cache, process, or application check.
-3. Re-run `df -h /System/Volumes/Data` and report the actual physical change.
-4. Smoke-test any application or development tool that owned the data.
+1. Re-run the relevant worktree, cache, process, or application check.
+1. Re-run `df -h /System/Volumes/Data` and report the actual physical change.
+1. Smoke-test any application or development tool that owned the data.
 
 Report logical candidate size, physical space reclaimed, memory released, and
 anything skipped as separate facts. A successful command alone is not proof

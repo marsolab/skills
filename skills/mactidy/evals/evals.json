@@ -5,7 +5,7 @@
       "id": 0,
       "name": "audit-before-cleanup",
       "prompt": "My Mac is almost full after weeks of Codex and Claude work. Clean it up.",
-      "expected_output": "The agent establishes explicit development roots, records the Data-volume baseline, runs a read-only inventory, and presents exact candidates with evidence, recovery, and risk before requesting approval for any mutation.",
+      "expected_output": "The agent establishes explicit development roots, uses one mactidy audit with structured output to record the Data-volume baseline and candidates, and presents exact evidence, recovery, and risk before requesting approval for any mutation.",
       "files": []
     },
     {

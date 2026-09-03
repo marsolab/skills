@@ -1,0 +1,12 @@
+[package]
+name = "mactidy"
+version = "1.1.0"
+edition = "2021"
+description = "Conservative macOS cleanup inventory for agentic development leftovers"
+license = "MIT"
+publish = false
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true

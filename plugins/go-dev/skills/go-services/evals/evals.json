@@ -1,0 +1,18 @@
+{
+  "skill_name": "go-services",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Write a CLI tool in Go that reads a CSV file and outputs a summary with row count, column names, and the top 5 most common values in a specified column.",
+      "expected_output": "A Go CLI with flag parsing, CSV reading, summary logic, error handling to stderr, and table-driven tests.",
+      "files": [],
+      "assertions": [
+        {"text": "Uses flag package for CLI argument parsing"},
+        {"text": "Writes errors to os.Stderr"},
+        {"text": "Contains _test.go files with table-driven tests"},
+        {"text": "Uses os.Exit(1) on failure"},
+        {"text": "Minimal external dependencies (primarily stdlib)"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "skill_name": "go-databases",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Build me a REST API in Go that stores users in PostgreSQL. I need endpoints to create a user, get a user by ID, and list all users. Use best practices for project structure.",
+      "expected_output": "A Go project with cmd/server/main.go, internal packages, sqlc for database access, Chi router, goose migrations, proper error handling, and graceful shutdown.",
+      "files": [],
+      "assertions": [
+        {"text": "Project includes a sqlc.yaml configuration file"},
+        {"text": "Code imports github.com/go-chi/chi for HTTP routing"},
+        {"text": "Contains SQL migration files with CREATE TABLE statements"},
+        {"text": "SQL query files use sqlc annotations (:one, :many, :exec)"},
+        {"text": "main.go handles OS signals for graceful shutdown"},
+        {"text": "Project has cmd/ and internal/ directory structure"},
+        {"text": "Handler/service functions accept context.Context as first parameter"},
+        {"text": "Uses fmt.Errorf with %w for error wrapping"}
+      ]
+    }
+  ]
+}

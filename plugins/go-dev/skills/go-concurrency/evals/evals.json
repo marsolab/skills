@@ -1,0 +1,19 @@
+{
+  "skill_name": "go-concurrency",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I need a generic cache with TTL in Go. It should be safe for concurrent use, support Get/Set/Delete, and automatically evict expired entries.",
+      "expected_output": "A generic Cache[K, V] struct using type parameters, sync.RWMutex for concurrency, background cleanup goroutine with context cancellation, and comprehensive tests.",
+      "files": [],
+      "assertions": [
+        {"text": "Cache type uses type parameters [K comparable, V any]"},
+        {"text": "Uses sync.RWMutex or sync.Mutex for concurrent safety"},
+        {"text": "Has background goroutine for expired entry eviction"},
+        {"text": "Cleanup goroutine respects context cancellation"},
+        {"text": "Contains _test.go files with tests"},
+        {"text": "Implements Get, Set, and Delete methods"}
+      ]
+    }
+  ]
+}

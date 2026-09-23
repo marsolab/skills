@@ -55,6 +55,7 @@ and optional agent metadata remain available.
 | [go-testing](skills/go-testing/SKILL.md) | Go test design and execution |
 | [kinde](skills/kinde/SKILL.md) | Kinde authentication integration |
 | [landing-page-breakdown][landing] | Landing-page design analysis |
+| [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
 | [multi-agent-config][multi-agent] | Cross-agent configuration |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
 | [sys-arch](skills/sys-arch/SKILL.md) | Production system architecture |
@@ -104,6 +105,9 @@ Add or change the canonical files directly under `skills/`, then validate them:
 uv run scripts/validate-skills.py
 uvx ruff check scripts/
 uvx ruff format --check scripts/
+RUSTFLAGS="-Dwarnings" cargo clippy \
+  --manifest-path skills/mactidy/scripts/mactidy-cli/Cargo.toml \
+  --all-targets --all-features --locked
 ```
 
 The release workflow validates every pull request. On `main`, a changed skill

@@ -27,6 +27,13 @@ There is no build step. Validate and lint the canonical files directly:
   versions, portability constraints, and relative links.
 - `uvx ruff check scripts/`: lint Python utilities.
 - `uvx ruff format --check scripts/`: verify Python formatting.
+- Lint the Mactidy Rust CLI:
+
+  ```shell
+  RUSTFLAGS="-Dwarnings" cargo clippy \
+    --manifest-path skills/mactidy/scripts/mactidy-cli/Cargo.toml \
+    --all-targets --all-features --locked
+  ```
 - `mado check README.md CLAUDE.md AGENTS.md`: lint root documentation when mado
   is available.
 - `npx skills add . --list`: confirm standard installer discovery.

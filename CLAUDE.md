@@ -18,6 +18,11 @@ uv run scripts/validate-skills.py
 uvx ruff check scripts/
 uvx ruff format --check scripts/
 
+# Lint the Mactidy Rust CLI and fail on every warning
+RUSTFLAGS="-Dwarnings" cargo clippy \
+  --manifest-path skills/mactidy/scripts/mactidy-cli/Cargo.toml \
+  --all-targets --all-features --locked
+
 # Check root Markdown when mado is available
 mado check README.md CLAUDE.md AGENTS.md
 

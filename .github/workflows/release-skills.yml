@@ -22,7 +22,7 @@ defaults:
 jobs:
   validate:
     name: Validate skills
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: [self-hosted]
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -127,7 +127,7 @@ jobs:
     needs:
       - validate
       - detect-changes
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: [self-hosted]
     permissions:
       contents: write
     strategy:

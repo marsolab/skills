@@ -1,6 +1,0 @@
-interface:
-  display_name: "Use Browser"
-  short_description: "Browser automation with playwright-cli"
-  default_prompt: "Use $use-browser to open the page, inspect it, and capture a screenshot."
-policy:
-  allow_implicit_invocation: true

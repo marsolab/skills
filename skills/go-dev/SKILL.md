@@ -8,7 +8,7 @@ description: >-
   goose, slog, goroutines, channels, context, generics, linting, or tests.
   Routes work to focused sibling Go skills. Skip tasks with no Go component.
 metadata:
-  version: "2.1.1"
+  version: "2.1.2"
   tags: "go, golang, umbrella"
 ---
 

@@ -40,9 +40,6 @@ and optional agent metadata remain available.
 
 | Skill | Focus |
 | --- | --- |
-| [apple-dev](skills/apple-dev/SKILL.md) | Native Apple platform development |
-| [copy](skills/copy/SKILL.md) | SaaS copywriting and positioning |
-| [front-dev](skills/front-dev/SKILL.md) | Modern frontend development |
 | [go-cli](skills/go-cli/SKILL.md) | Go command-line applications |
 | [go-concurrency](skills/go-concurrency/SKILL.md) | Go concurrency patterns |
 | [go-dev](skills/go-dev/SKILL.md) | Go development router |
@@ -53,17 +50,9 @@ and optional agent metadata remain available.
 | [go-sql](skills/go-sql/SKILL.md) | Go SQL, sqlc, and migrations |
 | [go-style](skills/go-style/SKILL.md) | Idiomatic Go style |
 | [go-testing](skills/go-testing/SKILL.md) | Go test design and execution |
-| [kinde](skills/kinde/SKILL.md) | Kinde authentication integration |
-| [landing-page-breakdown][landing] | Landing-page design analysis |
 | [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
-| [multi-agent-config][multi-agent] | Cross-agent configuration |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
-| [sys-arch](skills/sys-arch/SKILL.md) | Production system architecture |
 | [things](skills/things/SKILL.md) | Capture tasks in Things 3 |
-| [use-browser](skills/use-browser/SKILL.md) | Browser automation |
-
-[landing]: skills/landing-page-breakdown/SKILL.md
-[multi-agent]: skills/multi-agent-config/SKILL.md
 
 ## Registry Contract
 
@@ -113,3 +102,9 @@ RUSTFLAGS="-Dwarnings" cargo clippy \
 The release workflow validates every pull request. On `main`, a changed skill
 can be packaged as a standalone archive and released under the tag
 `<skill>-v<version>`; releases do not define the registry.
+
+To recover missed releases, run **Validate and Release Skills** manually on
+`main` with `skill_folder` set to `all` (the default) or a single skill name.
+Existing version tags are skipped. Bump `metadata.version` before releasing a
+skill whose packaged files have changed since its last release. Archives contain
+only the committed files in that skill directory.

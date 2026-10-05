@@ -8,8 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       skill_folder:
-        description: "Skill folder name under skills/ (for example, go-dev)"
+        description: "Skill folder under skills/ (for example, go-dev), or all"
         required: true
+        default: all
         type: string
 
 permissions:
@@ -22,7 +23,8 @@ defaults:
 jobs:
   validate:
     name: Validate skills
-    runs-on: [self-hosted]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -38,6 +40,11 @@ jobs:
       - name: Validate portable skills
         run: uv run scripts/validate-skills.py
 
+      - name: Lint release utilities
+        run: |
+          uvx ruff check scripts/
+          uvx ruff format --check scripts/
+
       - name: Lint mactidy Rust CLI
         env:
           RUSTFLAGS: "-Dwarnings"
@@ -50,8 +57,9 @@ jobs:
 
   detect-changes:
     name: Detect changed skills
-    if: github.event_name != 'pull_request'
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     outputs:
       skills: ${{ steps.changes.outputs.skills }}
     steps:
@@ -69,6 +77,18 @@ jobs:
           REQUESTED_SKILL: ${{ inputs.skill_folder }}
         run: |
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$REQUESTED_SKILL" == "all" ]]; then
+              skills_json="$(
+                for skill_file in skills/*/SKILL.md; do
+                  basename "$(dirname "$skill_file")"
+                done | jq -Rsc \
+                  'split("\n") | map(select(length > 0)) | map({skill: .})'
+              )"
+              echo "skills=$skills_json" >> "$GITHUB_OUTPUT"
+              echo "Selected all skills."
+              exit 0
+            fi
+
             if [[ ! "$REQUESTED_SKILL" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
               echo "Invalid skill folder: $REQUESTED_SKILL" >&2
               exit 1
@@ -123,11 +143,13 @@ jobs:
     name: Release ${{ matrix.skill }}
     if: >-
       github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/main' &&
       needs.detect-changes.outputs.skills != '[]'
     needs:
       - validate
       - detect-changes
-    runs-on: [self-hosted]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: write
     strategy:
@@ -190,13 +212,11 @@ jobs:
         env:
           SKILL_NAME: ${{ matrix.skill }}
           VERSION: ${{ steps.version.outputs.version }}
+          CURRENT_SHA: ${{ github.sha }}
         run: |
           archive_name="$SKILL_NAME-$VERSION.zip"
-          (
-            cd skills
-            zip -q -r "../$archive_name" "$SKILL_NAME" \
-              -x '*/.DS_Store' '*/__pycache__/*' '*/__pycache__'
-          )
+          git archive --format=zip --output="$archive_name" \
+            --prefix="$SKILL_NAME/" "$CURRENT_SHA:skills/$SKILL_NAME"
 
           mapfile -t top_levels < <(
             unzip -Z1 "$archive_name" | cut -d/ -f1 | sort -u
@@ -227,6 +247,7 @@ jobs:
 
             See `skills/${{ matrix.skill }}/SKILL.md` for usage instructions.
           files: ${{ steps.archive.outputs.archive_path }}
+          fail_on_unmatched_files: true
           draft: false
           prerelease: ${{ steps.version.outputs.prerelease }}
         env:

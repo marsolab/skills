@@ -34,7 +34,7 @@ There is no build step. Validate and lint the canonical files directly:
     --manifest-path skills/mactidy/scripts/mactidy-cli/Cargo.toml \
     --all-targets --all-features --locked
   ```
-- `mado check README.md CLAUDE.md AGENTS.md`: lint root documentation when mado
+- `mado check README.md AGENTS.md`: lint root documentation when mado
   is available.
 - `npx skills add . --list`: confirm standard installer discovery.
 

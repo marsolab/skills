@@ -9,11 +9,11 @@ description: >-
   `UPDATE ... RETURNING`, full-text search with FTS5 + sqlite-vec,
   replicating with Litestream / Turso / Cloudflare D1, picking a driver
   (better-sqlite3, modernc.org/sqlite, GRDB, Room, SQLDelight, expo-sqlite,
-  SQLCipher), or running the 12-step `ALTER TABLE` rewrite. Pair with go-sql
+  SQLCipher), or running the 12-step `ALTER TABLE` rewrite. Pair with golang
   for sqlc + goose against SQLite, apple-dev for GRDB on iOS, and front-dev
   for in-browser SQLite via OPFS.
 metadata:
-  version: "1.0.1"
+  version: "1.0.2"
   tags: "sqlite, database, sql, wal, fts5, litestream, turso, libsql, sqlcipher, mobile, embedded"
 ---
 
@@ -306,7 +306,7 @@ PRAGMA foreign_keys = ON;
 
 Use a real migrator: **goose**, **atlas**, **alembic**,
 **sqlx-migrate**, **dbmate**, or **sqlite-utils**. Pair with
-the `go-sql` skill for the sqlc + goose flow against an SQLite engine.
+the `golang` skill's SQL guide for sqlc + goose against an SQLite engine.
 
 ## Driver picks
 
@@ -315,7 +315,7 @@ the `go-sql` skill for the sqlc + goose flow against an SQLite engine.
 | Node / Bun server | **better-sqlite3** (Node), **bun:sqlite** (Bun) | Synchronous API matches single-writer model; fast |
 | Browser | **wa-sqlite** + OPFS | Real WAL semantics in the browser |
 | Python | stdlib **sqlite3** + `isolation_level=None`; **aiosqlite** for async; **sqlite-utils** for CLI work | Stdlib is good enough; manage txns explicitly |
-| Go | **modernc.org/sqlite** (pure Go, no CGo) or **mattn/go-sqlite3** (CGo, faster) | Pair with sqlc — see `go-sql` |
+| Go | **modernc.org/sqlite** (pure Go, no CGo) or **mattn/go-sqlite3** (CGo, faster) | Pair with sqlc — see `golang` |
 | Rust | **rusqlite** (sync) or **sqlx** (compile-time checked, async) | Bundled feature pins the SQLite version |
 | iOS / Swift | **GRDB** | Recommended over SQLite.swift; clean concurrency model |
 | Android / Kotlin | **Room** (Jetpack) or **SQLDelight** (KMP) | Codegen + compile-time SQL checking |
@@ -385,8 +385,8 @@ Index of extensions and Litestream/Turso config:
 
 | Task | Skill |
 |---|---|
-| sqlc + goose with SQLite engine | `go-sql` |
-| Embedding SQLite in a Go CLI binary | `go-cli` |
+| sqlc + goose with SQLite engine | `golang` (SQL guide) |
+| Embedding SQLite in a Go CLI binary | `golang` (CLI guide) |
 | GRDB / Core Data on iOS | `apple-dev` |
 | Browser SQLite via OPFS / wa-sqlite | `front-dev` |
-| Wrapping `sql.ErrNoRows` cleanly in Go | `go-errors` |
+| Wrapping `sql.ErrNoRows` cleanly in Go | `golang` (errors guide) |

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Golang"
+  short_description: "Complete Go development, testing, and tooling"
+  default_prompt: "Use $golang to implement or review this Go change with the relevant topic guides and checks."

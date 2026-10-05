@@ -155,7 +155,7 @@ ro.SetMaxOpenConns(runtime.NumCPU())
 ### sqlc + SQLite
 
 `sqlc` supports SQLite as a generation target. Pair with `goose`
-for migrations. See the sibling `go-sql` skill — most of its
+for migrations. See the `golang` skill's SQL guide — most of its
 guidance applies directly; just swap engine and the rowid alias
 syntax.
 

@@ -1,0 +1,89 @@
+{
+  "skill_name": "golang",
+  "evals": [
+    {
+      "id": 0,
+      "name": "postgres-api",
+      "prompt": "Build a Go HTTP API with Chi, sqlc, goose, and PostgreSQL for creating and loading users.",
+      "expected_output": "Use HTTP, SQL, errors, logging, and testing guides inside golang. Keep driver generation and transaction types consistent, parameterize SQL, translate no-rows errors, bound requests, and wait for graceful shutdown.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "csv-cli",
+      "prompt": "Write a dependency-free Go CLI that summarizes a CSV file and supports stdin, help, and a column flag.",
+      "expected_output": "Use CLI, errors, style, and testing guides. Parse flags without exiting from reusable code, return help successfully, send data to stdout and diagnostics to stderr, handle Close errors, and test parsing and malformed input.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "concurrent-cache",
+      "prompt": "Implement a generic concurrent TTL cache with Get, Set, Delete, and an optional background cleanup worker.",
+      "expected_output": "Use style, concurrency, and testing guides. State value ownership and synchronization, give the worker cancellation and a join operation, and test expiration and races. Do not add an unowned background goroutine.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "closed-worker-queue",
+      "prompt": "My Go workers spin after their jobs channel is closed. Fix the pool and allow the caller to cancel early.",
+      "expected_output": "Read concurrency and testing. Receive with comma-ok, coordinate channel closure across producers, propagate cancellation through blocking sends and work, and wait for every worker before completion.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "cleanup-errors",
+      "prompt": "A Go writer operation and its deferred Close can both fail. Preserve both errors and let callers match them.",
+      "expected_output": "Read errors. Use a named error return and deferred errors.Join, preserve operation and cleanup failures for errors.Is/As, and avoid log-and-return or blanket errcheck suppression.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "derived-slog-handler",
+      "prompt": "Add request IDs to slog records. Component loggers use With and WithGroup.",
+      "expected_output": "Read logging. Use a private context key, keep the wrapper in WithAttrs and WithGroup, test derived loggers, and avoid serializing credentials or arbitrary request bodies.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "graceful-http-stop",
+      "prompt": "My server loses in-flight requests during SIGTERM. Repair shutdown without waiting forever.",
+      "expected_output": "Read HTTP and concurrency. Use a fresh bounded shutdown context, wait for Shutdown and the listener goroutine, handle deadline failure explicitly, and coordinate upgraded connections and application workers separately.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "sql-driver-consistency",
+      "prompt": "The sqlc config uses pgx/v5, but a transfer function takes sql.DB and sql.Tx. Repair generation and transactions.",
+      "expected_output": "Read SQL and errors. Choose the existing intended driver; align sqlc configuration, pool and transaction types, matching errors, and cleanup. Check rollback failures while treating already-completed transactions as expected.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "lint-setup-preserves-project",
+      "prompt": "Copy the golang lint configuration into a temporary module that already has a config and a Git pre-commit hook.",
+      "expected_output": "Read lint. Preserve existing files without explicit replacement flags. Resolve hooks through Git for worktrees and core.hooksPath. Do not install packages, append Makefiles, or replace hooks as a side effect.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "go-version-boundaries",
+      "prompt": "This library declares Go 1.21. Add a generic helper and tests without increasing the minimum Go version.",
+      "expected_output": "Read development, style, and testing. Respect go.mod; avoid iter.Seq, integer range, B.Loop, and WaitGroup.Go; use compatible generics and benchmark/coordination patterns.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "workspace-coverage",
+      "prompt": "A Go workspace contains api and worker modules. Change a shared API and verify both callers.",
+      "expected_output": "Read development and testing. Inspect go.work and module boundaries, run the relevant gates in each affected module, and do not claim root go test covers all modules without verifying the package set.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "name": "parser-fuzzing",
+      "prompt": "Add tests and fuzzing for a port parser. Successful results must be between 1 and 65535.",
+      "expected_output": "Read testing. Use named boundary cases, deterministic fuzz seeds and a bounded contract assertion, distinguish seed execution from a timed fuzz campaign, and use stdlib assertions for a dependency-free module.",
+      "files": []
+    }
+  ]
+}

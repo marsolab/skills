@@ -21,7 +21,7 @@ To inspect the registry or install one skill:
 
 ```shell
 npx skills add marsolab/skills --list
-npx skills add marsolab/skills --skill go-dev -a codex
+npx skills add marsolab/skills --skill golang -a codex
 ```
 
 For a manual project installation, copy or symlink a complete skill directory
@@ -40,19 +40,19 @@ and optional agent metadata remain available.
 
 | Skill | Focus |
 | --- | --- |
-| [go-cli](skills/go-cli/SKILL.md) | Go command-line applications |
-| [go-concurrency](skills/go-concurrency/SKILL.md) | Go concurrency patterns |
-| [go-dev](skills/go-dev/SKILL.md) | Go development router |
-| [go-errors](skills/go-errors/SKILL.md) | Idiomatic Go error handling |
-| [go-http](skills/go-http/SKILL.md) | Go HTTP services |
-| [go-lint](skills/go-lint/SKILL.md) | Go linting and static analysis |
-| [go-logging](skills/go-logging/SKILL.md) | Structured Go logging |
-| [go-sql](skills/go-sql/SKILL.md) | Go SQL, sqlc, and migrations |
-| [go-style](skills/go-style/SKILL.md) | Idiomatic Go style |
-| [go-testing](skills/go-testing/SKILL.md) | Go test design and execution |
+| [golang](skills/golang/SKILL.md) | Go development, testing, and tooling |
 | [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
 | [things](skills/things/SKILL.md) | Capture tasks in Things 3 |
+
+The `golang` skill contains the complete Go workflow in one portable directory.
+Its entrypoint routes to topic folders under `references/`: development, style,
+errors, concurrency, logging, testing, HTTP, CLI, SQL, and lint. Executable
+helpers live under `scripts/lint/` and `scripts/testing/`, with the bundled
+golangci-lint configuration under `assets/lint/`.
+
+If an installation still contains the former individual Go skills, remove
+those installed copies when switching to `golang` to avoid duplicate guidance.
 
 ## Registry Contract
 

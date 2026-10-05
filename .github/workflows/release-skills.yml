@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       skill_folder:
-        description: "Skill folder under skills/ (for example, go-dev), or all"
+        description: "Skill folder under skills/ (for example, golang), or all"
         required: true
         default: all
         type: string

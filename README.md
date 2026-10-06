@@ -40,6 +40,7 @@ and optional agent metadata remain available.
 
 | Skill | Focus |
 | --- | --- |
+| [advisor](skills/advisor/SKILL.md) | Advice from stronger models |
 | [golang](skills/golang/SKILL.md) | Go development, testing, and tooling |
 | [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
@@ -53,6 +54,13 @@ golangci-lint configuration under `assets/lint/`.
 
 If an installation still contains the former individual Go skills, remove
 those installed copies when switching to `golang` to avoid duplicate guidance.
+
+The `advisor` skill lets any model consult a more capable subagent and receive
+its advice in the requester's existing context. The advisor returns analysis;
+the original model retains execution and validation. It requires native
+subagents with explicit model selection and does not change the chat model.
+Consultations can solve a blocker, give an independent answer, or critique a
+specific proposal.
 
 ## Registry Contract
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Advisor"
+  short_description: "Get advice from a stronger model in your current context"
+  default_prompt: "Use $advisor to get focused advice from a stronger model, read it here, and continue the task yourself."
+policy:
+  allow_implicit_invocation: true

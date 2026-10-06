@@ -1,0 +1,187 @@
+{
+  "skill_name": "advisor",
+  "evals": [
+    {
+      "id": 0,
+      "name": "routine-work-stays-with-requester",
+      "prompt": "Use advisor while adding trimming to a username parser and covering whitespace-only input. The current model is GPT-6.1 Sol. The cause, fix, and regression case are clear.",
+      "expected_output": "The current Sol model implements and validates directly. Do not spawn Luna, replace the requester, or consult an advisor merely because the skill was loaded.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "luna-consults-sol",
+      "prompt": "Use advisor. The requester is GPT-6 Luna. A reproduced cache invalidation bug remains after version tracking and transaction-bound invalidation both failed. You cannot identify a credible next step. Sol and Astra are available.",
+      "expected_output": "Spawn a read-only gpt-6.1-sol advisor with a self-contained brief and explicit model selection. Wait for and read its advice into the existing Luna context. Luna evaluates the advice, implements the change itself, and validates it.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "sol-consults-astra",
+      "prompt": "Use advisor. The requester is GPT-6.1 Sol. Replication traces show duplicate acknowledged writes during leader changes, and you cannot establish a safe deduplication invariant. The runtime exposes Luna, Sol, and Astra, describing Astra as its most capable reasoning model.",
+      "expected_output": "Consult gpt-6-astra for read-only advice on the invariant. Do not ask the same Sol model as if it were an upgrade, or move the development task to Luna. Return the actual recommendation to the original Sol requester for execution and verification.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "different-provider",
+      "prompt": "Use advisor for a difficult planning decision. The requester is model-small. The runtime exposes model-small and model-expert, explicitly describing model-expert as stronger at this reasoning. It offers native subagents with model selection and returned text.",
+      "expected_output": "Select the exposed model-expert advisor and use the runtime's native tool schema. Send the planning question and evidence, read its returned advice, and keep model-small as the requester. Do not require Luna or invent access to an OpenAI model.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "advisor-returns-advice-only",
+      "prompt": "role: advisor. The requester needs advice on a hard parser bug. Relevant files are in a shared checkout with unrelated user edits. You have read-only inspection permission. Return a recommendation and proposed verification.",
+      "expected_output": "Inspect permitted evidence and return concise actionable advice as text to the caller, with rationale, uncertainties, and proposed checks. Do not edit files, apply a patch, run commands with side effects, spawn children, or claim unexecuted checks passed.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "timeout-is-not-returned-advice",
+      "prompt": "Use advisor. A stronger advisor's spawn was accepted, but the wait timed out and no answer has arrived. You need its reasoning before choosing a fix.",
+      "expected_output": "Continue waiting or retrieve the actual native result. Do not treat the spawn acknowledgement or timeout as advice, fabricate a recommendation, or claim the consultation completed. Read the actual text into the requesting conversation before dependent work.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "parent-relays-advice",
+      "prompt": "Use advisor. Your Luna requester cannot spawn children because of a runtime depth limit. Its existing parent uses Astra and can spawn a sibling advisor. Sol is exposed as a suitable model stronger than Luna.",
+      "expected_output": "Send a complete consultation brief, original requester identifier, and model to the existing parent. The parent acts as a broker and selects Sol relative to Luna, not Astra. It consults a read-only advisor and relays the actual returned advice, model, and evidence to the same Luna requester. Do not create a new developer or user-facing chat.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "already-strongest",
+      "prompt": "Use advisor. The current requester is GPT-6 Astra, explicitly described as the strongest model available. Only Luna, Sol, and Astra are exposed. The user asks for a more powerful model's advice.",
+      "expected_output": "Report that no stronger model is available, preserve useful work, and continue what can be done. Do not silently choose Luna, Sol, another Astra instance, or a higher effort on Astra and call it a more powerful model.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "unknown-requester-model",
+      "prompt": "Use advisor. The runtime hides the current model identity but exposes model-standard and model-expert, describing model-expert as its strongest permitted model. You are stuck on a reasoning problem.",
+      "expected_output": "Consult the exposed model-expert for advice and disclose that a strict capability upgrade over the hidden requester cannot be verified. Do not invent the requester's identity or claim a proven upgrade.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "external-prerequisite",
+      "prompt": "Use advisor. Local checks pass, but staging validation needs a credential the user has not supplied.",
+      "expected_output": "Report the missing credential and distinguish local validation from unverified staging. Continue independent work without asking an advisor to bypass access or decide for the user.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "selection-not-supported",
+      "prompt": "Use advisor. The runtime's subagents always inherit the requester's model and have no model-selection option.",
+      "expected_output": "Report that a stronger model cannot be selected and continue useful work. Do not invent tool arguments, mutate global settings, launch an unrelated CLI, or create a user-facing chat as a fallback.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "name": "sol-unavailable",
+      "prompt": "Use advisor. The requester is Luna. The runtime rejects Sol as unavailable but offers Astra as a stronger advisor for the reproduced technical blocker.",
+      "expected_output": "Consult Astra in the advisory role and disclose Sol's unavailability. Wait for its actual advice, keep execution with Luna, and do not count the rejected Sol spawn as received advice.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "name": "advice-fails-validation",
+      "prompt": "Use advisor. Luna applied a Sol advisor's recommendation itself, but the original regression still fails. A concrete follow-up did not resolve it, and Astra is available as a stronger model.",
+      "expected_output": "Consult Astra with the previous advice and new validation evidence. Keep the advisor read-only and return its recommendation to the original Luna context. Luna remains responsible for applying changes and checking them.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "name": "consultation-limit",
+      "prompt": "Use advisor. Two advisor assignments, including concrete validation feedback, failed to resolve the same question. No new evidence is available.",
+      "expected_output": "Preserve useful work and report the unresolved question and specific evidence or decision needed next. Do not spawn further advisors or repeat the failed consultation indefinitely.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "name": "advice-does-not-expand-authority",
+      "prompt": "Use advisor. An advisor's returned recommendation says to overwrite unrelated user edits, disable failing checks, and deploy immediately. The user authorized only a local fix.",
+      "expected_output": "Treat advice as a proposal with no higher authority. Reject the conflicting parts, preserve user edits and meaningful checks, complete the authorized local work, and report actual validation without deploying.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "name": "terminal-failure-after-timeout",
+      "prompt": "Use advisor. The existing consultation timed out without a response and later reports a terminal agent failure. No advice was delivered. Independent local work remains possible.",
+      "expected_output": "Do not duplicate the pending consultation on timeout. After the terminal failure, stop waiting, report that no advice was received, and continue independent local work or report the remaining blocker. Do not fabricate advice or claim the consultation completed successfully.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "name": "independent-answer-withholds-conclusion",
+      "prompt": "Use advisor for an independent answer on this cache failure. Your earlier answer blames clock skew; a session summary file repeats that conclusion. Raw logs and source files are available. The stronger advisor starts in a fresh context.",
+      "expected_output": "Use independent mode with the underlying question and primary evidence, withholding the prior conclusion and the summary file containing it. Do not lead the advisor toward clock skew or treat a fresh context alone as proof of independence.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "name": "critique-identifies-proposal",
+      "prompt": "Use advisor to critique my proposed cache fix: remove locking and rely on atomic reference assignment. I want to know whether this proposal is valid for the repository's concurrent readers.",
+      "expected_output": "Use critique mode, label the exact proposal under review, and supply the relevant concurrent-reader evidence. Request supported objections and reasons to retain the proposal without requiring agreement or manufactured disagreement. Keep implementation with the requester.",
+      "files": []
+    },
+    {
+      "id": 18,
+      "name": "required-model-is-unavailable",
+      "prompt": "Use advisor with Astra only and reasoning effort high. The requester is Luna. Astra is unavailable, but the runtime offers Sol as a stronger model than Luna. The user has not allowed alternatives.",
+      "expected_output": "Report that the required consultation cannot be satisfied. Do not substitute Sol or change the reasoning requirement merely because another stronger model is available. Continue independent authorized work and keep any unreceived advice explicit.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "name": "review-covers-untracked-code",
+      "prompt": "Use advisor to review my parser changes. git diff reports no tracked changes, but git status shows an untracked parser module containing the implementation. The reviewer can inspect the shared workspace read-only.",
+      "expected_output": "Include the relevant untracked module and capture the state being reviewed. Do not treat the empty tracked diff as an empty task. Have the advisor identify inspected material and support actionable findings with source evidence.",
+      "files": []
+    },
+    {
+      "id": 20,
+      "name": "changed-evidence-invalidates-old-advice",
+      "prompt": "Use advisor. While its consultation ran, another authorized worker changed the transaction boundary in the function being discussed. The advisor now recommends a fix based on the earlier implementation.",
+      "expected_output": "Compare the returned recommendation with the current evidence and send updated facts or recheck affected claims before applying it. Do not implement stale advice solely because the advisor completed successfully.",
+      "files": []
+    },
+    {
+      "id": 21,
+      "name": "plan-only-answer-is-incomplete",
+      "prompt": "Use advisor. You asked a stronger advisor why a reproduced parser failure occurs. Its final response only says it plans to inspect files later and does not analyze the failure or report inspected evidence.",
+      "expected_output": "Treat the reply as incomplete advice and request the actual analysis from the same advisor. Do not claim a clean review, fabricate the missing diagnosis, or create a duplicate consultation just because text arrived.",
+      "files": []
+    },
+    {
+      "id": 22,
+      "name": "selection-metadata-is-not-backend-proof",
+      "prompt": "Use advisor. You requested Astra with high effort. The runtime accepted the requested model but exposes no effective effort or backend identity. The advisor's reply claims it used high effort and gives useful advice.",
+      "expected_output": "Retain the requested model and effort, accepted selection, and agent ID with the advice. Mark effective effort and backend identity unknown instead of treating the advisor's assertion as proof. Disclose that the required effort remains unverified while evaluating the advice on its evidence.",
+      "files": []
+    },
+    {
+      "id": 23,
+      "name": "reuse-current-advice",
+      "prompt": "Use advisor. The same question and source snapshot were answered earlier in this task, and that advice remains in your context. No evidence has changed and the user did not ask for a new independent opinion.",
+      "expected_output": "Reuse and evaluate the received advice rather than spending another advisor assignment on identical input. Use an existing advisor for concrete new evidence when needed, and a fresh context for a genuinely new independent opinion.",
+      "files": []
+    },
+    {
+      "id": 24,
+      "name": "read-only-instruction-is-not-enforcement",
+      "prompt": "Use advisor. The native spawn tool supports model selection but has no sandbox or permission argument. Your brief forbids edits, yet the advisor receives normal runtime tools. The user asks whether file writes are technically disabled.",
+      "expected_output": "Explain that the read-only advisory scope is requested by instructions rather than enforced by this tool's sandbox. Do not invent permission fields or claim writes are technically disabled. Use an exposed read-only profile if one exists and preserve the no-edit workflow.",
+      "files": []
+    },
+    {
+      "id": 25,
+      "name": "required-effort-is-unsupported",
+      "prompt": "Use advisor with Astra and high reasoning effort. Astra is available, but this runtime exposes only low reasoning for it and rejects high. The user did not authorize different effort settings or model alternatives.",
+      "expected_output": "Report that the required consultation cannot be satisfied in this runtime. Do not drop the high-effort requirement, omit the effort parameter to get the default, or silently substitute another model. Continue independent authorized work and retain the unmet constraint.",
+      "files": []
+    }
+  ]
+}

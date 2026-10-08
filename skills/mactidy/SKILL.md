@@ -1,15 +1,16 @@
 ---
 name: mactidy
 description: >-
-  Audit and safely clean macOS disk, process, cache, and Git-worktree leftovers
-  created by AI coding agents and development tools. Use when a Mac is low on
-  space or memory, agent worktrees and build artifacts have accumulated, stale
-  development processes remain, the user invokes /mactidy tidy or
-  /mactidy inspect, or the user wants a recurring cleanup plan.
+  Audit macOS disk and memory pressure, and safely clean process, cache, and
+  Git-worktree leftovers created by AI coding agents and development tools.
+  Use when a Mac is low on space or memory, agent worktrees and build artifacts
+  have accumulated, stale development processes or Docker stacks remain, the
+  user invokes /mactidy tidy or /mactidy inspect, or the user wants a recurring
+  cleanup plan. Visualize audited usage and help the user choose what to remove.
   Do not use for general malware removal or indiscriminate system cleaning.
 metadata:
-  version: "1.2.0"
-  tags: "macos, cleanup, disk-space, worktrees, caches, processes, ai-agents"
+  version: "1.3.0"
+  tags: "macos, cleanup, disk-space, memory, worktrees, caches, processes, ai-agents"
 ---
 
 # Mactidy
@@ -17,9 +18,9 @@ metadata:
 Reclaim macOS disk space and memory left behind by agentic development without
 losing source code, uncommitted work, credentials, databases, or active agent
 state. Treat cleanup as an evidence-backed operational change: inventory,
-classify, check authorization, clean, then verify the physical result. Use the
-bundled Rust CLI for repeatable inventory and guarded cleanup so the agent
-does not reconstruct filesystem logic on every run.
+classify, visualize, check authorization, clean, then verify the physical
+result. Use the bundled Rust CLI for repeatable inventory and guarded cleanup
+so the agent does not reconstruct filesystem logic on every run.
 
 ## Commands
 
@@ -29,8 +30,8 @@ These modes route the workflow; they are not executable CLI subcommands.
 
 | Command | Behavior |
 | --- | --- |
-| `/mactidy tidy` | Inventory and clean all proven disposable development leftovers within the established scope, then verify disk and memory changes. |
-| `/mactidy inspect` | Show what can be cleaned, its occupied space, cleanup method, recovery, and risk. Do not delete files, prune stores, retire worktrees, or signal processes. |
+| `/mactidy tidy` | Audit, review, and clean verified in-scope leftovers. |
+| `/mactidy inspect` | Audit and review only; CLI setup is permitted. |
 
 Both modes check for the CLI, install it if missing, and use it as described
 below. A bare Mactidy invocation defaults to `inspect` unless the user has
@@ -39,11 +40,13 @@ already requested cleanup.
 For `inspect`, report total Data-volume usage and free space, candidate paths
 and sizes, totals by category, and uncertain or active items that must be kept.
 Separate logical candidate bytes from estimated physical recovery; show
-process RSS separately from disk space. Finish with the available cleanup plan.
+process RSS separately from disk space. Finish with the visual cleanup plan.
+Do not delete files, prune stores, retire worktrees, or signal processes.
 
 For `tidy`, the command authorizes cleanup of proven disposable items within
-the established development scope. Present the concrete plan, then carry out
-authorized batches without asking the user to approve the same scope again.
+the established development scope. Present the concrete visual plan, then
+carry out authorized batches without asking the user to approve the same scope
+again. If the user asks to choose targets first, wait for that selection.
 Keep uncertain items and request approval only for actions beyond that scope,
 such as deleting unique data, emptying Trash, or adding persistent automation.
 "All" means all verified candidates in scope, not every large or old file on
@@ -99,12 +102,19 @@ cleanup completed.
 
 ## Safety contract
 
-- Audit is the default. Before any deletion, process signal, package-store
-  prune, worktree removal, Docker prune, or persistent automation, show the
-  exact targets and check the user's existing authorization. `tidy` covers
-  proven disposable development leftovers in scope; obtain approval when a
-  proposed action goes beyond that authorization. `inspect` authorizes CLI
-  setup and read-only inspection only.
+- Audit and visual review are the default. `inspect` authorizes CLI setup and
+  read-only inspection only. For a general cleanup request, show usage and
+  verified candidates, then ask the user which targets to remove.
+- Before mutation, show exact targets and check the user's authorization.
+  `tidy` covers proven disposable development leftovers in scope. Honor an
+  already authorized exact batch or concrete operation such as
+  `docker system prune` without asking again, unless the user requires a new
+  selection step. Permission for one operation does not authorize other
+  targets or uncertain data. `inspect` never performs cleanup, even if an
+  earlier request authorized it.
+- Selecting chart marks or checking boxes only drafts a plan; it never deletes
+  anything. When selection is required, match the user's submitted choice to
+  exact targets before acting.
 - Never delete source, `.git`, untracked or unpushed work, credentials, agent
   history, session state, databases, Docker volumes, signing material, or
   system-managed files merely because they are large or old.
@@ -129,6 +139,10 @@ Establish the macOS host, development roots and agent tools from the request
 and available context. `tidy` covers disk and memory cleanup; `inspect` covers
 both inventories. Ask about scope only when it cannot be established from
 context. Do not silently scan unrelated user data.
+
+Record user-protected paths and workloads for this audit, and exclude them from
+all proposed cleanup/stop batches. Show those exclusions in the review; do not
+persist new global protection settings without a separate request.
 
 Record physical free space before cleanup:
 
@@ -157,6 +171,23 @@ Read [references/candidate-catalog.md](references/candidate-catalog.md) for the
 candidate type being investigated. Do not load or apply unrelated cleanup
 recipes.
 
+For Docker cleanup, read [references/docker.md](references/docker.md). It covers
+local-context checks, Compose and BuildKit ownership, volume classification,
+bounded prune operations, and host-space verification.
+
+For memory usage or stale processes, read
+[references/memory.md](references/memory.md). The disk CLI's detached-process
+list is not a full RAM inventory. Use the bundled dependency-free, read-only
+collector for pressure, VM statistics, swap, and top processes across owners:
+
+```bash
+python3 scripts/memory-audit.py --samples 3 --interval 10 --top 30
+```
+
+Resolve the script relative to this skill. This is bounded observation, not a
+background monitor or process killer. Use `--jsonl` to receive each snapshot
+immediately. Supplement Docker/container memory only when Docker is in scope.
+
 ### 3. Prove each candidate is disposable
 
 For every candidate, establish all applicable facts:
@@ -172,11 +203,21 @@ For worktrees, check status, untracked files, upstream divergence, and the
 repository's current worktree registry. Remove through `git worktree remove`,
 not filesystem deletion. Never use `--force` to bypass unexplained state.
 
-For processes, capture PID, parent, elapsed time, full command, cwd, open files,
-and listening ports. A process is safe to stop only when its purpose is known
-and no live task depends on it.
+For processes, capture PID, start time, executable, UID, parent, elapsed time,
+cwd, open files, and listening ports. Inspect arguments only when needed and
+redact secrets before displaying or storing them. A process is safe to stop
+only when its purpose is known and no live task depends on it. High RSS, swap,
+or low free RAM alone never authorizes stopping a process.
 
-### 4. Present the cleanup plan
+### 4. Visualize usage and present the cleanup plan
+
+Read [references/visual-review.md](references/visual-review.md). Show a visual
+overview of what occupies space, grouped by project or owning tool, with exact
+targets available as details. Prefer an interactive diagram when grouping,
+drill-down, or selecting several targets helps the decision; use a static chart
+and table when interaction is unavailable or the batch is small. Keep physical
+disk usage, logical candidate sizes, Docker accounting, and process memory in
+separate views.
 
 Show a compact table with one row per target or homogeneous batch:
 
@@ -187,9 +228,21 @@ Separate high-confidence reproducible artifacts from uncertain items. Keep
 uncertain items in the report rather than deleting them. State whether each
 size is logical (`du`) or expected physical recovery (`df`).
 
+For an audit or general cleanup without an already authorized batch, or when
+the user requests a selection step, ask one concrete question in the user's
+language, for example:
+"Что удалить из проверенных кандидатов:
+только кэши, кэши и выбранные сборки,
+или ничего?" Map every offered choice to an exact list of targets and
+operations. Let the user choose individual items or keep everything. When
+selection is required, stop before mutation until the user submits that choice;
+no selection, a saved widget state, or elapsed time is not approval.
+
 In `inspect` mode, stop after reporting this plan. In `tidy` mode, proceed with
-proven candidates covered by the command's authorization. Request approval
-only for additional actions that need it.
+proven candidates covered by the command's authorization unless the user asked
+to choose first. For an already authorized exact batch, show the review and
+proceed within that scope. Request approval only for additional actions that
+need it.
 
 ### 5. Clean in bounded batches
 
@@ -202,11 +255,16 @@ safety check. Then use the narrowest supported action:
 - `mactidy trash` for an allow-listed reproducible artifact below an exact
   cleanup root;
 - `SIGTERM` for a verified stale process, followed by a bounded wait and
-  re-check. Escalate only with separate evidence that the same PID survived.
+  re-check. Prefer the owning application's normal stop/quit operation first.
+  Recheck PID plus start time/executable before signalling; stop on PID reuse,
+  new dependencies, or restart by a supervisor. Escalation needs separate
+  evidence and authorization covering its increased consequences.
 
 Stop the batch on target drift, permission errors, an active owner, unexpected
-contents, or a command that would broaden scope. Do not substitute `sudo`,
-`--force`, a different account, or a wider deletion.
+contents, or a command that would broaden scope. Do not substitute `sudo`, a
+different account, or a wider deletion. A tool's confirmation-only `--force`
+flag may be used for an already authorized prune; never use force to bypass
+dependency, dirty-worktree, or in-use checks.
 
 ### 6. Verify the outcome
 
@@ -217,9 +275,17 @@ After every batch:
 1. Re-run `df -h /System/Volumes/Data` and report the actual physical change.
 1. Smoke-test any application or development tool that owned the data.
 
+Refresh the visual with measured before/after free space and completed,
+retained, or skipped targets. Keep the original snapshot timestamp visible.
+
 Report logical candidate size, physical space reclaimed, memory released, and
 anything skipped as separate facts. A successful command alone is not proof
 that cleanup helped or that the Mac remains healthy.
+
+For memory actions, compare pressure, compressor occupancy, swap activity, and
+remaining processes in fresh snapshots. Report the stopped processes' previous
+RSS separately from observed host changes; shared pages and VM accounting mean
+that RSS totals are not guaranteed reclaimed RAM.
 
 ## Prevention mode
 
@@ -229,3 +295,12 @@ retention, and periodic read-only inventory. Install a `launchd` job or other
 automatic deletion/kill policy only after the user reviews the exact script,
 scope, interval, logs, and uninstall procedure. Scheduled audits are safer than
 scheduled deletion.
+
+Memory monitoring follows the same rule: bounded read-only samples first. Do
+not install a persistent watcher, auto-killer, or RAM-purge schedule merely
+because the user asks to improve memory awareness.
+
+Read [references/cleanmymac-notes.md](references/cleanmymac-notes.md) only when
+comparing cleanup design or evaluating ideas from CleanMyMac CLI. It records
+the inspected public behavior and the limits of the available implementation
+evidence; it is not authorization to install or run another cleanup tool.

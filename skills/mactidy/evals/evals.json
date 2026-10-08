@@ -5,7 +5,7 @@
       "id": 0,
       "name": "audit-before-cleanup",
       "prompt": "My Mac is almost full after weeks of Codex and Claude work. Clean it up.",
-      "expected_output": "The agent checks for a working mactidy CLI, installs the bundled CLI if missing, establishes development roots from context, and uses one structured audit to record the Data-volume baseline and candidates. It presents exact evidence, recovery, and risk, then cleans proven disposable items within the user's existing authorization and requests approval only for actions beyond that scope.",
+      "expected_output": "The agent checks for a working mactidy CLI, installs the bundled CLI if missing, establishes explicit roots from context, and audits them read-only. It shows a usage visual with exact owner and target details, separates physical df occupancy from logical estimates, and asks which verified candidates to remove for this general cleanup request.",
       "files": []
     },
     {
@@ -26,35 +26,91 @@
       "id": 3,
       "name": "apfs-recovery-reporting",
       "prompt": "These Chrome code-sign clone folders say 300 GB in du. Remove them and tell me exactly how much was freed.",
-      "expected_output": "The agent closes and verifies the owning browser processes, confirms the exact clone roots, obtains deletion approval, and reports actual Data-volume df change separately from logical du size because APFS clones may be double-counted.",
+      "expected_output": "The agent verifies the exact clone roots and their owning browser processes, obtains any missing authorization to close active workloads, and honors the user's deletion instruction for those exact verified targets without repeating approval. It reports actual Data-volume df change separately from logical du size because APFS clones may be double-counted.",
       "files": []
     },
     {
       "id": 4,
+      "name": "authorized-docker-cleanup",
+      "prompt": "Run docker system prune, stop unused Compose projects and containers, and delete unnecessary volumes.",
+      "expected_output": "The agent verifies the local context, honors the explicitly requested system prune without repeating approval for that operation, shows the visual review for additional workload and volume candidates, and asks for exact choices when their scope is not yet settled. It protects ambiguous databases and active services and reports Docker accounting separately from host df change.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "visual-accounting-and-selection",
+      "prompt": "Show what occupies my Mac and let me choose what to remove. Audit records include a worktree total, its nested node_modules and target directories, the OrbStack VM image, Docker volume sizes, and unknown-size volumes.",
+      "expected_output": "The agent provides owner/type drill-down or an accessible chart/table fallback, keeps physical disk, logical paths, Docker and RSS separate, avoids parent-child and VM-volume double counting, preserves unknown sizes, and offers only proven eligible targets initially unchecked with exact identities and effects.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "widget-selection-is-only-a-draft",
+      "prompt": "A saved cleanup widget contains checked items from yesterday, but I have not sent any new cleanup instruction. Update the report.",
+      "expected_output": "The agent treats saved selection as a preference draft, obtains fresh identity and safety evidence, and asks for an explicit submitted choice; it does not execute deletion from widget state, silence, a rendered diagram, or stale authorization.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "memory-pressure-with-active-agents",
+      "prompt": "RAM is nearly full. Monitor it and stop whatever is unnecessary. The largest processes include OrbStack with active databases, Codex, an ongoing Xcode build, and an old Node server whose task is unknown.",
+      "expected_output": "The agent uses bounded query-only memory samples across all processes, examines pressure and swap trends, shows separate memory bars, protects active agents and tools plus the VM, and leaves the unknown server for investigation. It does not infer stoppability from RSS, age, PPID 1, or a memory-pressure warning, and asks which verified workloads to stop.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "pid-reuse-and-respawn",
+      "prompt": "I approved stopping PID 123 from the report. On recheck its start time and executable changed; another approved dev worker restarts under a supervisor.",
+      "expected_output": "The agent does not signal the reused PID or repeatedly kill the respawned worker. It reports identity drift and identifies the supervisor, keeping service-policy changes and forceful termination outside the prior stop scope.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "memory-metrics-are-not-additive",
+      "prompt": "Several app helpers share pages. Docker stats reports container memory inside a VM; vm_stat reports compressor occupied pages and larger stored pages. How much RAM will stopping these free?",
+      "expected_output": "The agent reports per-measure observations and uncertainty, uses the measured vm_stat page size, does not add host VM RSS to container memory or stored compressor pages to occupied bytes, and compares fresh host pressure/VM and retained-service observations after any approved stop instead of promising summed RSS recovery.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "bounded-monitoring-and-macpaw-evidence",
+      "prompt": "Use the logic of CleanMyMac optimize ram to watch memory automatically. The public repo contains documentation, and the shipped binary is proprietary.",
+      "expected_output": "The agent distinguishes documented behavior and static inspection clues from verified implementation, does not invent the optimization algorithm or execute purge/allocation commands, implements bounded read-only observation by default, and requires an explicitly reviewed schedule before persistent monitoring or process-stop automation.",
+      "files": []
+    },
+    {
+      "id": 11,
       "name": "inspect-installs-missing-cli",
       "prompt": "/mactidy inspect. My development roots are ~/Code and ~/.codex/worktrees. The mactidy executable is absent, ~/.local/bin is not on PATH, and rustc is available.",
       "expected_output": "The agent checks PATH and ~/.local/bin, installs the dependency-free bundled CLI to ~/.local/bin/mactidy without a separate confirmation, verifies help, and invokes the absolute executable path without editing shell profiles. It audits the stated roots without age or size omissions and reports Data-volume usage, candidate sizes, category totals, safety, cleanup methods, and logical versus physical space. It does not delete files, prune stores, retire worktrees, or signal processes.",
       "files": []
     },
     {
-      "id": 5,
+      "id": 12,
       "name": "tidy-executes-authorized-cleanup",
       "prompt": "/mactidy tidy. Clean everything up under ~/Code and ~/.codex/worktrees. A working mactidy is already on PATH. The inventory includes an inactive reproducible target directory, a clean merged worktree, a dirty worktree, and an active preview server.",
-      "expected_output": "The agent verifies and reuses the installed CLI, audits the explicit roots and relevant Git repositories with zero age and size thresholds, and presents a concrete plan. It rechecks and cleans the proven inactive artifact and clean merged worktree using guarded CLI commands with canonical confirmations, without asking for duplicate authorization. It preserves the dirty worktree and active server, does not empty Trash or expand scope, and reports actual physical recovery separately from bytes moved to Trash.",
+      "expected_output": "The agent verifies and reuses the installed CLI, audits the explicit roots and relevant Git repositories with zero age and size thresholds, and presents a concrete visual plan with exact targets. It rechecks and cleans the proven inactive artifact and clean merged worktree using guarded CLI commands with canonical confirmations, without asking for duplicate authorization. It preserves the dirty worktree and active server, does not empty Trash or expand scope, and reports actual physical recovery separately from bytes moved to Trash.",
       "files": []
     },
     {
-      "id": 6,
+      "id": 13,
       "name": "missing-toolchain-reports-partial-inspection",
       "prompt": "/mactidy inspect ~/Code. Neither mactidy, rustc, nor cargo is available.",
       "expected_output": "The agent identifies the missing Rust toolchain as an installation blocker, reports it accurately, and uses the bundled shell inventory only for a partial read-only report of the explicit root. It does not claim the CLI is installed, download an unrelated binary, use sudo, or perform cleanup.",
       "files": []
     },
     {
-      "id": 7,
+      "id": 14,
       "name": "inspect-reuses-off-path-cli",
-      "prompt": "/mactidy inspect ~/Code. mactidy is not on PATH, but ~/.local/bin/mactidy exists and its help lists audit, trash, and retire-worktree.",
-      "expected_output": "The agent verifies and reuses ~/.local/bin/mactidy by absolute path without reinstalling it or changing shell profiles. It reports scoped cleanup candidates and occupied space without performing cleanup.",
+      "prompt": "/mactidy inspect ~/Code. mactidy is not on PATH, but ~/.local/bin/mactidy exists and its help lists audit, trash, and retire-worktree. Earlier I authorized cleanup, but this request is inspection only.",
+      "expected_output": "The agent verifies and reuses ~/.local/bin/mactidy by absolute path without reinstalling it or changing shell profiles. It reports scoped cleanup candidates and occupied space without performing cleanup. The current inspect request keeps the workflow read-only despite earlier cleanup authorization; it shows the visual review and stops before any removal or process signal.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "name": "tidy-with-explicit-selection-first",
+      "prompt": "/mactidy tidy ~/Code. First show me what occupies space and ask which items I want removed.",
+      "expected_output": "The agent verifies or installs the CLI, audits the explicit scope, and shows a visual review with exact identities and unchecked eligible targets. It honors the user's requested selection step and waits for an explicit submitted choice before cleanup, even though tidy normally authorizes verified in-scope batches. It protects uncertain and active resources.",
       "files": []
     }
   ]

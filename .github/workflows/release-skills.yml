@@ -55,6 +55,12 @@ jobs:
           --all-features
           --locked
 
+      - name: Check Mactidy memory audit
+        run: |
+          uvx ruff check skills/mactidy/scripts/*memory*.py
+          uvx ruff format --check skills/mactidy/scripts/*memory*.py
+          python3 -B skills/mactidy/scripts/test-memory-audit.py
+
   detect-changes:
     name: Detect changed skills
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

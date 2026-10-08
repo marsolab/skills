@@ -1,6 +1,6 @@
 interface:
   display_name: "Mactidy"
-  short_description: "Safely clean AI development leftovers on macOS"
-  default_prompt: "Use $mactidy to audit this Mac for stale AI development leftovers and propose a safe cleanup plan."
+  short_description: "Visualize Mac disk and RAM, then choose safe cleanup"
+  default_prompt: "Use $mactidy to audit disk and memory pressure on this Mac, visualize what uses resources and which tools own it, then ask me which verified files to remove or unused processes to stop."
 policy:
   allow_implicit_invocation: true

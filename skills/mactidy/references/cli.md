@@ -6,6 +6,49 @@ Rust utility. The source is dependency-free and lives at
 
 ## Build and install
 
+The project directory is named `mactidy-cli`; its executable is `mactidy`.
+Before either skill mode, check `command -v mactidy`, then the executable at
+`~/.local/bin/mactidy`. Run the resolved executable's `help` and confirm it
+supports `audit`, `trash`, and `retire-worktree`. Reuse a working installation.
+Preserve and report an incompatible or broken executable rather than replace
+it automatically.
+
+If absent, install the bundled source to the user-owned `~/.local/bin` without
+a separate confirmation. Set `MACTIDY_SKILL_DIR` to the resolved directory
+containing this skill's `SKILL.md`; no repository checkout is required. With
+`rustc` available, build and verify in a temporary directory before installing:
+
+```bash
+MACTIDY_SKILL_DIR="/absolute/path/to/installed/mactidy"
+MACTIDY_BIN="$HOME/.local/bin/mactidy"
+MACTIDY_BUILD_DIR=$(mktemp -d "${TMPDIR:-/tmp}/mactidy-build.XXXXXX") || exit 1
+rustc --edition=2021 -O \
+  "$MACTIDY_SKILL_DIR/scripts/mactidy-cli/src/main.rs" \
+  -o "$MACTIDY_BUILD_DIR/mactidy" &&
+  "$MACTIDY_BUILD_DIR/mactidy" help &&
+  mkdir -p "$HOME/.local/bin" &&
+  install -m 755 "$MACTIDY_BUILD_DIR/mactidy" "$MACTIDY_BIN" &&
+  "$MACTIDY_BIN" help
+```
+
+If Cargo is available but `rustc` is not on `PATH`, build with it instead:
+
+```bash
+cargo build --release --locked \
+  --manifest-path "$MACTIDY_SKILL_DIR/scripts/mactidy-cli/Cargo.toml" \
+  --target-dir "$MACTIDY_BUILD_DIR/target"
+```
+
+Verify `"$MACTIDY_BUILD_DIR/target/release/mactidy" help` and install that
+executable to the same destination. Remove only the temporary build directory
+created for this setup after verification.
+
+Use `"$MACTIDY_BIN"` for subsequent commands if `~/.local/bin` is not on `PATH`.
+Do not change shell startup files, use `sudo`, overwrite another executable,
+or download an unrelated package with a similar name. If neither compiler is
+available or installation fails, report the missing prerequisite or error;
+the shell inventory fallback produces only a partial read-only report.
+
 For a repository-local validation build:
 
 ```bash
@@ -16,19 +59,9 @@ RUSTFLAGS="-Dwarnings" cargo clippy \
   --all-targets --all-features --locked
 ```
 
-Cargo writes `target/` beside the manifest unless `CARGO_TARGET_DIR` points to
-an explicit temporary directory. Do not leave that build output inside an
-installed skill. For a compact single binary without Cargo build artifacts:
-
-```bash
-rustc --edition=2021 -O \
-  scripts/mactidy-cli/src/main.rs \
-  -o /approved/output/path/mactidy
-```
-
-Choose the output path with the user. Building or copying into
-`~/.local/bin`, `~/.cargo/bin`, or another global location is an installation
-and requires permission.
+Cargo writes `target/` beside the manifest unless `CARGO_TARGET_DIR` or
+`--target-dir` points to an explicit temporary directory. Do not leave that
+build output inside an installed skill.
 
 ## Read-only audit
 
@@ -47,6 +80,11 @@ mactidy audit \
 Repeat `--root` and `--repo` as needed. A root controls artifact discovery; a
 repo enables Git worktree inspection. The command does not auto-discover every
 repository because doing so would create a broad, expensive scan.
+
+The example filters out small or recent artifacts. For a complete scoped
+inventory in `/mactidy inspect` or `/mactidy tidy`, use `--min-age-days 0` and
+`--min-size-mib 0` instead. These thresholds affect discovery, not cleanup
+authorization.
 
 The default text format is concise for humans. Prefer `--json` for agents and
 automation. Its top-level fields are:
@@ -88,8 +126,9 @@ mactidy trash \
   --path /Users/me/Code/project/node_modules
 ```
 
-After the user approves the exact canonical target in the current
-conversation, an agent may use non-interactive confirmation:
+For a verified canonical target covered by the user's cleanup authorization
+(including `/mactidy tidy` within scope), an agent may use non-interactive
+confirmation. `/mactidy inspect` never authorizes this operation:
 
 ```bash
 mactidy trash \
@@ -119,6 +158,10 @@ re-checks status, HEAD, and ancestry after confirmation, then runs ordinary
 `git worktree remove` without `--force`. The ref choice remains a user or
 repository-policy decision; do not invent `origin/main` when another retained
 ref is authoritative.
+
+An agent may pass `--confirm /canonical/worktree/path` after proving the exact
+target is disposable and covered by the user's authorization. The skill's
+`tidy` mode can supply that authorization; `inspect` cannot.
 
 ## Exit behavior
 

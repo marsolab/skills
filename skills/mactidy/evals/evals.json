@@ -5,7 +5,7 @@
       "id": 0,
       "name": "audit-before-cleanup",
       "prompt": "My Mac is almost full after weeks of Codex and Claude work. Clean it up.",
-      "expected_output": "The agent establishes explicit development roots, uses one mactidy audit with structured output to record the Data-volume baseline and candidates, and presents exact evidence, recovery, and risk before requesting approval for any mutation.",
+      "expected_output": "The agent checks for a working mactidy CLI, installs the bundled CLI if missing, establishes development roots from context, and uses one structured audit to record the Data-volume baseline and candidates. It presents exact evidence, recovery, and risk, then cleans proven disposable items within the user's existing authorization and requests approval only for actions beyond that scope.",
       "files": []
     },
     {
@@ -27,6 +27,34 @@
       "name": "apfs-recovery-reporting",
       "prompt": "These Chrome code-sign clone folders say 300 GB in du. Remove them and tell me exactly how much was freed.",
       "expected_output": "The agent closes and verifies the owning browser processes, confirms the exact clone roots, obtains deletion approval, and reports actual Data-volume df change separately from logical du size because APFS clones may be double-counted.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "inspect-installs-missing-cli",
+      "prompt": "/mactidy inspect. My development roots are ~/Code and ~/.codex/worktrees. The mactidy executable is absent, ~/.local/bin is not on PATH, and rustc is available.",
+      "expected_output": "The agent checks PATH and ~/.local/bin, installs the dependency-free bundled CLI to ~/.local/bin/mactidy without a separate confirmation, verifies help, and invokes the absolute executable path without editing shell profiles. It audits the stated roots without age or size omissions and reports Data-volume usage, candidate sizes, category totals, safety, cleanup methods, and logical versus physical space. It does not delete files, prune stores, retire worktrees, or signal processes.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "tidy-executes-authorized-cleanup",
+      "prompt": "/mactidy tidy. Clean everything up under ~/Code and ~/.codex/worktrees. A working mactidy is already on PATH. The inventory includes an inactive reproducible target directory, a clean merged worktree, a dirty worktree, and an active preview server.",
+      "expected_output": "The agent verifies and reuses the installed CLI, audits the explicit roots and relevant Git repositories with zero age and size thresholds, and presents a concrete plan. It rechecks and cleans the proven inactive artifact and clean merged worktree using guarded CLI commands with canonical confirmations, without asking for duplicate authorization. It preserves the dirty worktree and active server, does not empty Trash or expand scope, and reports actual physical recovery separately from bytes moved to Trash.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "missing-toolchain-reports-partial-inspection",
+      "prompt": "/mactidy inspect ~/Code. Neither mactidy, rustc, nor cargo is available.",
+      "expected_output": "The agent identifies the missing Rust toolchain as an installation blocker, reports it accurately, and uses the bundled shell inventory only for a partial read-only report of the explicit root. It does not claim the CLI is installed, download an unrelated binary, use sudo, or perform cleanup.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "inspect-reuses-off-path-cli",
+      "prompt": "/mactidy inspect ~/Code. mactidy is not on PATH, but ~/.local/bin/mactidy exists and its help lists audit, trash, and retire-worktree.",
+      "expected_output": "The agent verifies and reuses ~/.local/bin/mactidy by absolute path without reinstalling it or changing shell profiles. It reports scoped cleanup candidates and occupied space without performing cleanup.",
       "files": []
     }
   ]

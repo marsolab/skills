@@ -53,8 +53,9 @@ The following are Mactidy decisions, not claims about MacPaw's implementation:
   this separation; they do not disclose MacPaw's internal scanner contracts.
 - Keep a bounded, read-only memory observation tool. Look for sustained
   pressure and trends before suggesting stop candidates.
-- Stop a known unused workload through its owner after explicit selection and
-  fresh identity checks. Do not invent a blanket RSS/age process-kill heuristic.
+- Stop a known unused workload through its owner when the user's authorization
+  covers it and fresh identity checks pass. Do not invent a blanket RSS/age
+  process-kill heuristic.
 - Treat cache eviction and forced RAM reclamation as separate operations whose
   practical benefit would need measured evidence. Do not imitate an opaque
   optimization merely because its command promises to release memory.

@@ -102,22 +102,27 @@ Do not upload a manifest or share it with an external service.
 
 ## Ask and act
 
-After the visual, ask one short selection question using the available
-user-input surface or normal chat. Give 2–3 meaningful choices bound to
-concrete batches, plus a way to keep everything or specify individual items.
+When selection is required, ask one short question after the visual using the
+available user-input surface or normal chat. Give 2–3 meaningful choices bound
+to concrete batches, plus a way to keep everything or specify individual items.
 For example: "Что удалить: проверенные кэши
 (A1–A4), кэши и старые сборки
 (A1–A7), или ничего?" Include exact targets, approximate logical size,
 recovery, and
 material consequences before the question, so the choice is reviewable.
 
-If the user already authorized that exact batch or concrete tool-native
-operation, show its scope and do not repeat the question unless they requested
-a new selection step. For a broad cleanup/audit, no reply means retain the
+In `inspect` mode, finish with the review and never execute cleanup, even if an
+earlier request authorized it. `tidy` authorizes proven disposable development
+leftovers within the established scope. For `tidy`, an authorized exact batch,
+or a concrete tool-native operation, show its scope and do not repeat the
+question unless the user requested a new selection step.
+
+For a general cleanup/audit requiring selection, no reply means retain the
 resources. Continue only independent read-only investigation while waiting.
 
-Only a submitted explicit choice authorizes its mapped actions. Ambiguous
-replies or a choice to investigate do not authorize cleanup. Before acting,
+When selection is required, only a submitted explicit choice authorizes its
+mapped actions. Ambiguous replies or a choice to investigate do not authorize
+cleanup. Before acting,
 re-resolve selected identities and repeat decisive checks; skip/reclassify
 targets that became active or drifted. A request to remove files via Trash does
 not authorize emptying Trash, and choosing to stop a stack does not authorize

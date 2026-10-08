@@ -5,7 +5,7 @@
       "id": 0,
       "name": "audit-before-cleanup",
       "prompt": "My Mac is almost full after weeks of Codex and Claude work. Clean it up.",
-      "expected_output": "The agent audits explicit roots read-only, shows a usage visual with exact owner and target details, separates physical df occupancy from logical estimates, and asks which verified candidates to remove before a general cleanup request causes mutation.",
+      "expected_output": "The agent checks for a working mactidy CLI, installs the bundled CLI if missing, establishes explicit roots from context, and audits them read-only. It shows a usage visual with exact owner and target details, separates physical df occupancy from logical estimates, and asks which verified candidates to remove for this general cleanup request.",
       "files": []
     },
     {
@@ -76,6 +76,41 @@
       "name": "bounded-monitoring-and-macpaw-evidence",
       "prompt": "Use the logic of CleanMyMac optimize ram to watch memory automatically. The public repo contains documentation, and the shipped binary is proprietary.",
       "expected_output": "The agent distinguishes documented behavior and static inspection clues from verified implementation, does not invent the optimization algorithm or execute purge/allocation commands, implements bounded read-only observation by default, and requires an explicitly reviewed schedule before persistent monitoring or process-stop automation.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "name": "inspect-installs-missing-cli",
+      "prompt": "/mactidy inspect. My development roots are ~/Code and ~/.codex/worktrees. The mactidy executable is absent, ~/.local/bin is not on PATH, and rustc is available.",
+      "expected_output": "The agent checks PATH and ~/.local/bin, installs the dependency-free bundled CLI to ~/.local/bin/mactidy without a separate confirmation, verifies help, and invokes the absolute executable path without editing shell profiles. It audits the stated roots without age or size omissions and reports Data-volume usage, candidate sizes, category totals, safety, cleanup methods, and logical versus physical space. It does not delete files, prune stores, retire worktrees, or signal processes.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "name": "tidy-executes-authorized-cleanup",
+      "prompt": "/mactidy tidy. Clean everything up under ~/Code and ~/.codex/worktrees. A working mactidy is already on PATH. The inventory includes an inactive reproducible target directory, a clean merged worktree, a dirty worktree, and an active preview server.",
+      "expected_output": "The agent verifies and reuses the installed CLI, audits the explicit roots and relevant Git repositories with zero age and size thresholds, and presents a concrete visual plan with exact targets. It rechecks and cleans the proven inactive artifact and clean merged worktree using guarded CLI commands with canonical confirmations, without asking for duplicate authorization. It preserves the dirty worktree and active server, does not empty Trash or expand scope, and reports actual physical recovery separately from bytes moved to Trash.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "name": "missing-toolchain-reports-partial-inspection",
+      "prompt": "/mactidy inspect ~/Code. Neither mactidy, rustc, nor cargo is available.",
+      "expected_output": "The agent identifies the missing Rust toolchain as an installation blocker, reports it accurately, and uses the bundled shell inventory only for a partial read-only report of the explicit root. It does not claim the CLI is installed, download an unrelated binary, use sudo, or perform cleanup.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "name": "inspect-reuses-off-path-cli",
+      "prompt": "/mactidy inspect ~/Code. mactidy is not on PATH, but ~/.local/bin/mactidy exists and its help lists audit, trash, and retire-worktree. Earlier I authorized cleanup, but this request is inspection only.",
+      "expected_output": "The agent verifies and reuses ~/.local/bin/mactidy by absolute path without reinstalling it or changing shell profiles. It reports scoped cleanup candidates and occupied space without performing cleanup. The current inspect request keeps the workflow read-only despite earlier cleanup authorization; it shows the visual review and stops before any removal or process signal.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "name": "tidy-with-explicit-selection-first",
+      "prompt": "/mactidy tidy ~/Code. First show me what occupies space and ask which items I want removed.",
+      "expected_output": "The agent verifies or installs the CLI, audits the explicit scope, and shows a visual review with exact identities and unchecked eligible targets. It honors the user's requested selection step and waits for an explicit submitted choice before cleanup, even though tidy normally authorizes verified in-scope batches. It protects uncertain and active resources.",
       "files": []
     }
   ]

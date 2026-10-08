@@ -7,6 +7,10 @@ remove. Honor an already authorized concrete operation or exact batch without
 repeating the permission request. Retain uncertain data and report why it was
 excluded; unreferenced volume counts are not proof of safe deletion.
 
+`tidy` covers proven disposable resources within its established development
+scope unless the user asks to choose first. In `inspect` mode, report the plan
+and stop before any workload shutdown, prune, or volume removal.
+
 ## Inventory and context
 
 Record host free bytes with `df -k /System/Volumes/Data`, then inspect:

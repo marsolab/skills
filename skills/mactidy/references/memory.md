@@ -98,8 +98,10 @@ Verified stop candidates start unchecked; protected and unknown workloads are
 not selectable for termination.
 
 For a general request, ask which verified workloads to stop. Existing exact
-authorization is sufficient, but a request to delete files does not imply
-permission to close apps. Immediately before stopping, repeat identity and
+authorization is sufficient; `tidy` also covers proven unused development
+workloads in scope unless the user asks to choose first. `inspect` never stops
+processes. A request to delete files does not imply permission to close apps.
+Immediately before stopping, repeat identity and
 dependency checks and ensure it is not the active agent's process tree.
 
 Prefer the tool's normal shutdown: Compose/buildx stop for its exact workload,

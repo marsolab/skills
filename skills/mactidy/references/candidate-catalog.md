@@ -90,6 +90,10 @@ documented subdirectory whose ownership and rebuild behavior are known.
 
 ## Processes and listeners
 
+For full memory inventory and bounded monitoring, first read
+[memory.md](memory.md). The disk audit's detached-process list is only a review
+subset; it is not the largest consumers across all applications.
+
 Start with a review list, not a killer heuristic:
 
 ```bash
@@ -114,7 +118,9 @@ look idle while remaining intentional.
 Use the owning tool's inventory first, such as `docker system df`, before
 proposing cleanup. Images and stopped containers may be reproducible; named or
 anonymous volumes can hold the only copy of databases. Never include volumes
-in a general prune batch.
+in a general prune batch. For requested Docker cleanup, follow
+[docker.md](docker.md) to stop proven unused stacks, prune Docker resources,
+and remove individually verified disposable volumes.
 
 For Apple simulators, identify unavailable devices and inspect runtime usage
 with the installed Xcode tools. Simulator deletion, runtime removal, archives,

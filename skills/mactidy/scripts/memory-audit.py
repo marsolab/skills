@@ -121,7 +121,8 @@ def collect_snapshot(top=30):
             warnings.append(f"{label} unavailable: {error}")
             return None
 
-    captured_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    # Keep compatibility with macOS installations using Python 3.9.
+    captured_at = datetime.datetime.now(datetime.timezone.utc).isoformat()  # noqa: UP017
     physical_bytes = parse_read(
         ["sysctl", "-n", "hw.memsize"], lambda s: int(s.strip()), "physical memory"
     )

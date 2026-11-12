@@ -53,6 +53,30 @@ user-selected providers/models and explicit budgets. Prefer an already
 authorized account; ask before new subscriptions, installation, credential
 changes, or a material unapproved cost increase.
 
+## Avoid empty starter tabs
+
+Prepare the first worker command before creating a dedicated session. Use
+`rex new TASK --window WORKSTREAM -c WORKDIR --keep-open --json -- COMMAND ARGS`
+with verified arguments so the first pane runs useful work immediately. Record
+its returned session, window, and block IDs; split that worker pane for further
+agents. Session creation alone is not a successful worker launch.
+
+If a task-owned session was already created with a default shell, inspect its
+process and capture first. Reuse that confirmed idle starter shell for the first
+worker through the installed Rex guide's send/send-key mechanism, or launch a
+worker split and close the unused starter block after verifying the launch.
+Do not leave a generic Runtime/Terminal tab solely as a placeholder or anchor.
+A tab label or an empty-looking screen alone does not prove it is unused.
+
+On launch failure and task completion, reconcile all recorded task-owned blocks
+and windows, including starter shells, rather than only registered workers.
+After saving evidence and stopping descendants, remove unused starter panes and
+completed worker panes. If a dedicated session created by this task contains no
+needed work, close its remaining task-owned windows/session too, after checking
+that no user or other agent has added work. Preserve the chief of staff's own
+session and unrelated resources. Do not keep a shell alive just to preserve a
+split anchor; discover a live anchor or create a useful worker when needed.
+
 ## Group panes and clean up finished workers
 
 Treat a Rex window as a tab and a block as a pane (panel). Prefer one task tab

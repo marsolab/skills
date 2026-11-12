@@ -1,0 +1,7 @@
+interface:
+  display_name: "Chief of Staff"
+  short_description: "Plan and orchestrate specialist agents through Rex"
+  default_prompt: "Use $chief-of-staff to deliver this task, automatically choosing and coordinating the specialists it needs."
+
+policy:
+  allow_implicit_invocation: true

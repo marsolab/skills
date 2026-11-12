@@ -9,7 +9,7 @@ description: >-
   cleanup plan. Visualize audited usage and help the user choose what to remove.
   Do not use for general malware removal or indiscriminate system cleaning.
 metadata:
-  version: "1.3.0"
+  version: "1.3.1"
   tags: "macos, cleanup, disk-space, memory, worktrees, caches, processes, ai-agents"
 ---
 

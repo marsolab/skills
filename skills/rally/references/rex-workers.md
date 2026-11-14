@@ -10,12 +10,29 @@ configuration. Locate any bundled executable from the actual installed
 application; paths and app names vary. Prefer the executable matching the active
 server.
 
-Use the explicit user target, otherwise inherited `REX_SESSION`/`REX_BLOCK`.
-Outside Rex, inspect `whoami` and `ls --json`; resolve ambiguity before touching
-an existing session. A dedicated new task session is suitable when the user has
-not requested an existing session. Record full returned IDs, never rely on focus
-or tab positions. Remote hosts require an explicit target and their own paths,
-tools, and authorization.
+Use the explicit user target, otherwise the session where the skill was
+invoked, identified by inherited `REX_SESSION`/`REX_BLOCK` or startup context.
+Validate full IDs with `rex session inspect` and `rex block inspect`. Capture
+that session and pane as the protected coordinator location; do not replace
+it with whichever session the app happens to display later.
+
+If IDs are missing or stale, inspect `rex whoami --json` and `rex ls --json`,
+then inspect candidate metadata to resolve the invoking session. A stale block
+with a valid session needs a new tab in that session, not a new session. Do not
+choose a target from focus, a generated label, or a shared working directory
+alone. If the invocation is known to be inside Rex but its session cannot be
+resolved, report that routing blocker rather than creating another session.
+Only create a dedicated session when running outside Rex with no resolvable
+invoking session, or when the user explicitly requests a new session. An
+explicit but ambiguous target needs clarification. Remote hosts require an
+explicit target and their own paths, tools, and authorization.
+
+Before dispatch, record the invoking session/pane and existing window/block IDs
+as the baseline. Record every task-created session, window, and block ID as it
+is returned, including starter shells and failed launches. Track cleanup
+ownership separately: using an existing session does not make it task-owned.
+Pass the selected full session ID explicitly with `-s` on every tab, split,
+observation, and pane/tab cleanup command. Do not rely on focus or tab positions.
 
 Discover agent executables with `command -v`. Inspect version/help and only the
 necessary non-secret authentication/model status. Installed does not mean
@@ -55,11 +72,17 @@ changes, or a material unapproved cost increase.
 
 ## Avoid empty starter tabs
 
-Prepare the first worker command before creating a dedicated session. Use
+Prepare the first worker command before opening a tab. In the invoking session,
+use `rex window new -s "$task_session"` with the command as shown below; do not
+use `rex new` for ordinary worker dispatch. Launch useful work immediately,
+without a placeholder shell. Record the returned window and new block IDs, then
+split that worker pane for related agents. A distinct workstream still belongs
+in another tab of this session, not in a separate session.
+
+For the dedicated-session exception above, use
 `rex new TASK --window WORKSTREAM -c WORKDIR --keep-open --json -- COMMAND ARGS`
-with verified arguments so the first pane runs useful work immediately. Record
-its returned session, window, and block IDs; split that worker pane for further
-agents. Session creation alone is not a successful worker launch.
+with verified arguments. Record its full session, window, and block IDs and mark
+the session as task-created. Session creation alone is not a successful launch.
 
 If a task-owned session was already created with a default shell, inspect its
 process and capture first. Reuse that confirmed idle starter shell for the first
@@ -73,16 +96,16 @@ and windows, including starter shells, rather than only registered workers.
 After saving evidence and stopping descendants, remove unused starter panes and
 completed worker panes. If a dedicated session created by this task contains no
 needed work, close its remaining task-owned windows/session too, after checking
-that no user or other agent has added work. Preserve the chief of staff's own
+that no user or other agent has added work. Preserve the coordinator's own
 session and unrelated resources. Do not keep a shell alive just to preserve a
 split anchor; discover a live anchor or create a useful worker when needed.
 
 ## Group panes and clean up finished workers
 
-Treat a Rex window as a tab and a block as a pane (panel). Prefer one task tab
-with several related worker panes. Inspect its layout and split an existing task
-pane with `rex split`, using its full block ID. Choose right/below placement and
-proportions to keep active agents readable. Keep the user's focus with
+Treat a Rex window as a tab and a block as a pane (panel). Open one worker tab
+in the invoking session, with several related worker panes. Inspect its layout
+and split an existing task pane with `rex split`, using its full block ID.
+Choose right/below placement and proportions to keep active agents readable. Keep the user's focus with
 `--focus=false`. Create a new tab only for a distinct workstream or when further
 splits would make the current tab impractical; do not create one tab per agent
 by default. Native subagents remain within their parent agent unless the
@@ -90,7 +113,8 @@ platform itself requires another surface.
 
 Record the task tab and worker block IDs. When the pane used as a split anchor
 is closed, inspect the remaining layout and choose a live task pane before the
-next dispatch. Keep the chief of staff's pane available.
+next dispatch. If none remains, launch useful work in a new tab in the same
+session. Keep the coordinator's pane available.
 
 As each worker finishes:
 
@@ -107,9 +131,44 @@ As each worker finishes:
 
 Do this during supervision, not only at final delivery. Leave a pane open only
 when the user requests it or it still hosts needed work. Close only the finished
-worker block, never a shared tab containing other agents, the chief of staff, or
+worker block, never a shared tab containing other agents, the coordinator, or
 unrelated processes. Follow up on any worker or descendant that cannot be
 stopped before transferring its write ownership.
+
+## Final tab and session cleanup
+
+After all assigned agents and descendants have stopped, and on cancellation or
+launch failure after stopping owned workers, reconcile the complete resource
+ledger against a fresh Rex inventory. Save results and diagnostics first.
+
+1. Inspect all task-created tabs and close any remaining finished panes or
+   confirmed unused starter shells. Close a whole tab only if every remaining
+   pane is task-owned and finished; preserve any work added by the user or
+   another task. Verify removal with `rex session inspect`.
+2. Inspect each task-created fallback session again. If it contains no windows,
+   remove the empty session explicitly with `rex kill "$created_session"`.
+   Closing the final pane or tab does not guarantee session removal. If it still
+   contains windows, close only confirmed finished task-owned resources first;
+   do not kill a session containing unrelated or needed work.
+3. Run `rex ls --json` again and verify removed session IDs are absent. Compare
+   the remaining windows/blocks with the baseline and ledger. Preserve the
+   invoking session and coordinator pane, even when no workers remain. A
+   pre-existing session is not eligible for automatic deletion merely because
+   it is empty; retrospective cleanup requires user scope and fresh inspection.
+4. Record closed pane/tab/session IDs, verified absence, and every retained
+   resource with its reason. Report a cleanup failure as an outstanding blocker;
+   do not claim the workflow is fully cleaned up while owned junk remains.
+
+Use the installed command help if syntax differs. These commands operate at
+different scopes; closing a tab or session also closes everything inside it:
+
+```sh
+rex window close -s "$task_session" "$finished_task_window"
+rex session inspect "$created_session" --json
+# Only after confirming this task created it and it is empty:
+rex kill "$created_session"
+rex ls --json
+```
 
 ## Launch, observe, recover
 
@@ -123,6 +182,7 @@ The installed Rex guide currently supports this shape; replace placeholders with
 verified values and a real command, never run them literally:
 
 ```sh
+rex window new -s "$task_session" "$workstream" -c "$worker_dir" --keep-open --focus=false --json -- COMMAND ARGUMENTS
 rex split -s "$task_session" -b "$anchor_block" --split=right -c "$worker_dir" --label "$worker_label" --keep-open --focus=false --json -- COMMAND ARGUMENTS
 rex capture -s "$task_session" -b "$worker_block" --trim --unwrap
 rex block call -s "$task_session" -b "$worker_block" process

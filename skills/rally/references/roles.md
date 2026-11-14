@@ -53,7 +53,7 @@ requirements.
 Deliver an actionable task breakdown and dependency/integration plan in the
 existing tracker or local ledger. Creating external tickets follows the user's
 authorized scope. The TPM proposes sequencing and resolves technical planning
-details; the chief of staff retains staffing, budget, and cross-role
+details; the coordinator retains staffing, budget, and cross-role
 arbitration.
 
 ## Designer / Frontend
@@ -128,7 +128,7 @@ expected answer.
 Deliver a quality report mapping criteria to passed, failed, blocked, or not-run
 checks, with revision/environment, commands or steps, evidence, and remaining
 risks. Recommend readiness based on those results. Unmet gates stay visible; QA
-does not silently waive them or authorize release. The chief of staff
+does not silently waive them or authorize release. The coordinator
 coordinates remediation and reports the final acceptance status.
 
 ## Working together

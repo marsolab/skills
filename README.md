@@ -41,9 +41,9 @@ and optional agent metadata remain available.
 | Skill | Focus |
 | --- | --- |
 | [advisor](skills/advisor/SKILL.md) | Advice from stronger models |
-| [chief-of-staff](skills/chief-of-staff/SKILL.md) | Specialist agent orchestration through Rex |
 | [golang](skills/golang/SKILL.md) | Go development, testing, and tooling |
 | [mactidy](skills/mactidy/SKILL.md) | Safe macOS agent-development cleanup |
+| [rally](skills/rally/SKILL.md) | Specialist agent orchestration through Rex |
 | [sqlite](skills/sqlite/SKILL.md) | Production SQLite engineering |
 | [things](skills/things/SKILL.md) | Capture tasks in Things 3 |
 

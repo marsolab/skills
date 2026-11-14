@@ -1,0 +1,40 @@
+{
+  "skill_name": "rally",
+  "evals": [
+    {
+      "id": 0,
+      "name": "invoking-session-despite-focus-change",
+      "prompt": "Use rally for a backend fix and independent QA. Startup context identifies session S and chief pane C. The app now displays unrelated session U. Both sessions exist.",
+      "expected_output": "Record S/C and the baseline. Open a worker tab with window new -s S and the useful command; split related workers there. Do not target U or create another session. Preserve C and the original tabs during cleanup.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "stale-anchor-new-workstream",
+      "prompt": "Use rally. Invoking session S exists, but the previous worker anchor is gone. A distinct research workstream is ready to launch.",
+      "expected_output": "Create a useful worker tab in S with an explicit session ID. Do not create a session or placeholder shell because the anchor is stale or the workstream is distinct.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "last-pane-leaves-empty-session",
+      "prompt": "You launched workers outside Rex in fallback session F, recorded as task-created. All workers and native descendants have exited, results and diagnostics are saved. Closing the last pane left F listed with no windows.",
+      "expected_output": "Inspect F again, kill the confirmed empty task-created session explicitly, then list sessions and verify F is absent. Record cleanup evidence before completion; pane closure alone is insufficient.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "shared-session-cleanup",
+      "prompt": "All your workers in invoking session S have exited. Your worker tab W now contains a user-added pane running a server. Another unrelated session E is empty. Your chief pane C still exists.",
+      "expected_output": "Save results and close only finished owned panes. Preserve the server, W while it contains the server, S, C, and E. Report why W remains. Do not kill a shared session or delete an unrelated empty session.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "failed-launch-and-missing-routing",
+      "prompt": "The invocation is known to be inside Rex, but inherited IDs are stale and inspected metadata does not identify the invoking session. A launch also timed out without returned IDs.",
+      "expected_output": "Inspect existing sessions, labels and artifacts to reconcile the uncertain launch before retrying. Report unresolved routing as a blocker. Do not fabricate a target, infer it from focus or cwd alone, or create duplicate tabs or a fallback session.",
+      "files": []
+    }
+  ]
+}

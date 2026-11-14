@@ -1,16 +1,16 @@
 ---
-name: chief-of-staff
+name: rally
 description: Automatically coordinate complex work that benefits from specialist agents, parallel tasks, or independent verification. Use when planning or executing multi-part product, design, engineering, research, or QA work, or whenever considering delegation. Discover Rex and launch workers in grouped split panes without requiring the user to mention agents, Rex, or orchestration. Not needed for simple answers or trivial edits.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 
 ---
 
-# Chief of Staff
+# Rally
 
 Own the user's outcome: clarify the objective, develop the plan, hire suitable
 agents, resolve dependencies, and verify the integrated result. Rex is the
-execution surface; the chief of staff remains accountable for decisions and
+execution surface; the coordinator remains accountable for decisions and
 delivery. A skill invocation establishes this workflow, not an unattended
 daemon.
 
@@ -21,7 +21,7 @@ user only describes the desired outcome. The user does not need to name this
 skill, Rex, panes, providers, or roles. Explicit invocation also requests this
 workflow.
 
-Rex is the default transport for the chief of staff's external worker
+Rex is the default transport for the coordinator's external worker
 assignments. When deciding another agent is useful, discover Rex and dispatch
 the worker yourself; do not ask the user to repeat the request with terminal
 instructions or separately confirm an ordinary in-scope worker launch. Use the
@@ -31,13 +31,16 @@ subtree policy below.
 
 Discover the executable through PATH, `REX_BIN_DIR`, or the installed
 application bundle. Read the installed Rex guide, resolve the task's session and
-live anchor pane from inherited context or inspected metadata, and group related
-workers there. If no existing target is requested and no session can be
-unambiguously associated with the task, create a dedicated task session rather
-than asking the user to choose an unrelated one. An explicit but ambiguous user
-target still needs clarification. Verify launches and report their status
-without making the user operate Rex. The chief of staff coordinates specialist
-workers rather than doing all substantive work itself. A role list, plan, or
+live anchor pane from inherited context or inspected metadata. Use the session
+where this skill was invoked unless the user explicitly requests another target.
+Open worker tabs in that same session and split related workers within each tab;
+a new workstream needs a new tab, not a new session. A missing or stale anchor
+pane is not a reason to create a session. Only when running outside Rex with no
+resolvable invoking session, or when the user requests one, create a dedicated
+task session. An explicit but ambiguous user target still needs clarification.
+Verify launches and report their status without making the user operate Rex.
+The coordinator coordinates specialist workers rather than doing all
+substantive work itself. A role list, plan, or
 statement that agents could be used is not a dispatch.
 
 For a multi-part task, perform this loop in the current run:
@@ -56,12 +59,14 @@ For a multi-part task, perform this loop in the current run:
   which workers actually started. A failed launch remains failed, not 'running'.
 4. Supervise through completion: answer questions, inspect artifacts, assign
   dependent work, integrate results, and dispatch QA or an independent reviewer
-  when the task needs verification. The chief of staff may make integration
+  when the task needs verification. The coordinator may make integration
   fixes but should not absorb the specialists' assigned work without explaining
   a concrete failure or constraint.
 5. Capture results and evidence, confirm descendant shutdown, and close finished
-  worker panes. Report which assignments completed, what was verified, and any
-  unresolved blockers.
+  worker panes and task-created tabs. After all agents finish, inspect Rex again
+  and remove any empty session created by this task; closing its last pane may
+  leave an empty session in the sidebar. Preserve the invoking session. Record
+  cleanup verification or a concrete blocker before reporting completion.
 
 Explicit plan-only requests still use research/TPM/review workers when useful,
 restricted to planning; they do not authorize implementation. A simple factual
@@ -115,13 +120,15 @@ it does not authorize publishing, deployment, messaging people, purchasing
 access, or bypassing approval controls.
 
 For substantive orchestration, keep a compact durable ledger in the project's
-existing task-notes location, otherwise `.chief-of-staff/<task-id>/`. Record the
+existing task-notes location, otherwise `.rally/<task-id>/`. Record the
 objective, acceptance criteria, plan and dependencies, decisions, and worker
 assignments. Each assignment needs its provider/model/effort, rationale, owned
 files or worktree, base revision, Rex IDs, status, output paths, verification
-evidence, and next action. Keep prompts and results there too; exclude
-credentials. If the user prohibits file changes, keep the ledger in conversation
-or an explicitly authorized external location. Resume by reconciling the ledger
+evidence, and next action. Record the invoking session/pane and the baseline
+window/block IDs before dispatch, then every created resource ID with ownership
+and cleanup status, including fallback sessions and starter shells. Keep prompts
+and results there too; exclude credentials. If the user prohibits file changes,
+keep the ledger in conversation or an explicitly authorized external location. Resume by reconciling the ledger
 with actual processes and artifacts before launching anything.
 
 ## Build the plan with the relevant skills
@@ -168,21 +175,22 @@ requirements into executable technical work; Designer/Frontend owns the visual
 and interaction experience using `impeccable`; SRE/Backend owns backend and
 operational implementation; QA owns verification coverage and quality gates.
 Engage QA while defining acceptance criteria, not just after implementation. The
-chief of staff owns staffing, cross-role decisions, integration, and final
+coordinator owns staffing, cross-role decisions, integration, and final
 delivery.
 
 ## Hire and dispatch through Rex
 
 Read `rex` and run its installed guide before managing terminals. Then read [Rex
 workers](references/rex-workers.md) for discovery, provider selection, dispatch,
-and recovery. Use actual Rex worker panes for external hires. Group related
-agents as split panes within the same task tab; create another tab only for a
-distinct workstream or when the existing layout becomes impractical. Close
+and recovery. Use actual Rex worker panes for external hires. Open the first
+worker in a task tab within the invoking session using `rex window new -s`;
+group related agents as splits there. Create another tab in the same session
+only for a distinct workstream or when the layout becomes impractical. Close
 finished worker panes promptly after saving their results and confirming the
 worker and its descendants have stopped; keep their evidence in the ledger. Each
 hired agent may use its own platform's native subagents to complete its
 assignment; these remain descendants of that worker, not separate Rex hires.
-Built-in subagents used by the chief of staff are a disclosed fallback or
+Built-in subagents used by the coordinator are a disclosed fallback or
 internal aid, not evidence of an external provider launch.
 
 Select the provider, model, and effort per assignment from verified
@@ -198,7 +206,7 @@ limits where supported; and when to stop or ask. Require a result containing
 changes, evidence, unresolved questions, and resume information. Include the
 native-subagent delegation policy below in every worker brief so the permission
 and limits reach the hired agent. Starting additional external CLI agents
-remains the chief of staff's responsibility unless explicitly delegated.
+remains the coordinator's responsibility unless explicitly delegated.
 
 Use separate worktrees for concurrent writers with overlapping code or
 repository state. Read-only workers may share a checkout. Agree interfaces
@@ -230,13 +238,13 @@ assignment:
 > when known, status, artifacts, and verification evidence. You own integration
 > and the final result. Before reporting completion, collect and verify their
 > outputs and stop or account for every remaining child. Escalate unresolved
-> questions to the chief of staff. Additional external CLI hires require
+> questions to the coordinator. Additional external CLI hires require
 > explicit delegation.
 
 Set a native-child concurrency limit in the dispatch brief and account for it
 alongside other active workers; if none is set, allow at most two active native
 children per worker and one child generation. Further nesting requires an
-explicit allocation from the chief of staff and support from the host platform.
+explicit allocation from the coordinator and support from the host platform.
 These are coordination limits, not permission to override host restrictions. Use
 isolated worktrees or serialize overlapping writers within the subtree, just as
 for top-level workers.
@@ -274,7 +282,8 @@ Conclude only when acceptance criteria are verified or remaining blockers are
 explicitly reported. Distinguish source changes, tests, publication, deployment,
 and live acceptance when applicable. Preserve artifacts and resume IDs; close
 completed task-owned worker panes as work finishes rather than accumulating them
-until final delivery. Leave the chief of staff pane and unrelated terminals
-untouched. Follow the pane lifecycle in Rex workers for result capture and exit
-verification. Report the outcome, evidence, outstanding decisions, and any
-still-running workers.
+until final delivery. Leave the coordinator pane and unrelated terminals
+untouched. Follow the pane and session lifecycle in Rex workers for result
+capture, exit verification, and a final inventory against the baseline. Report
+the outcome, evidence, cleanup result, outstanding decisions, and any
+still-running workers or resources whose cleanup is blocked.

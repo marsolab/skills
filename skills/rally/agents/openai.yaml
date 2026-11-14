@@ -1,0 +1,7 @@
+interface:
+  display_name: "Rally"
+  short_description: "Plan and orchestrate specialist agents through Rex"
+  default_prompt: "Use $rally to deliver this task, automatically choosing and coordinating the specialists it needs."
+
+policy:
+  allow_implicit_invocation: true

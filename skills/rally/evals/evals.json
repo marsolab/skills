@@ -18,8 +18,8 @@
     {
       "id": 2,
       "name": "last-pane-leaves-empty-session",
-      "prompt": "You launched workers outside Rex in fallback session F, recorded as task-created. All workers and native descendants have exited, results and diagnostics are saved. Closing the last pane left F listed with no windows.",
-      "expected_output": "Inspect F again, kill the confirmed empty task-created session explicitly, then list sessions and verify F is absent. Record cleanup evidence before completion; pane closure alone is insufficient.",
+      "prompt": "You launched workers outside Rex in fallback session F, recorded as task-created. All workers in F and their descendants have exited, results and diagnostics are saved, and no assignments remain for F. Closing its last pane left F listed with no windows while work elsewhere continues.",
+      "expected_output": "Immediately list F's windows by full ID, kill it after confirming windows is an empty array, then list sessions and verify F is absent. Record cleanup evidence without waiting for unrelated work or final delivery.",
       "files": []
     },
     {
@@ -34,6 +34,13 @@
       "name": "failed-launch-and-missing-routing",
       "prompt": "The invocation is known to be inside Rex, but inherited IDs are stale and inspected metadata does not identify the invoking session. A launch also timed out without returned IDs.",
       "expected_output": "Inspect existing sessions, labels and artifacts to reconcile the uncertain launch before retrying. Report unresolved routing as a blocker. Do not fabricate a target, infer it from focus or cwd alone, or create duplicate tabs or a fallback session.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "cleanup-only-existing-sessions",
+      "prompt": "Use rally to remove empty sessions in this Rex server. Session inspect omits windows for earlier session E, but window ls returns E's full ID and an empty windows array. Session T has a tab, session I fails window listing, and the invoking session is C.",
+      "expected_output": "Run cleanup without opening tabs or starting workers. Check E with window ls by full ID just before removal, kill E and verify its absence. Preserve T and C, leave I in place and report the listing failure.",
       "files": []
     }
   ]

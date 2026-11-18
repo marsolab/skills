@@ -145,30 +145,37 @@ ledger against a fresh Rex inventory. Save results and diagnostics first.
    confirmed unused starter shells. Close a whole tab only if every remaining
    pane is task-owned and finished; preserve any work added by the user or
    another task. Verify removal with `rex session inspect`.
-2. Inspect each task-created fallback session again. If it contains no windows,
-   remove the empty session explicitly with `rex kill "$created_session"`.
-   Closing the final pane or tab does not guarantee session removal. If it still
-   contains windows, close only confirmed finished task-owned resources first;
-   do not kill a session containing unrelated or needed work.
-3. Run `rex ls --json` again and verify removed session IDs are absent. Compare
-   the remaining windows/blocks with the baseline and ledger. Preserve the
-   invoking session and coordinator pane, even when no workers remain. A
-   pre-existing session is not eligible for automatic deletion merely because
-   it is empty; retrospective cleanup requires user scope and fresh inspection.
-4. Record closed pane/tab/session IDs, verified absence, and every retained
+2. Apply [Remove empty sessions](#remove-empty-sessions) to every task-created
+   session still in the inventory, including failed launches and sessions
+   recovered from the current task's ledger. Compare remaining windows and
+   blocks with the baseline and ledger.
+3. Record closed pane/tab/session IDs, verified absence, and every retained
    resource with its reason. Report a cleanup failure as an outstanding blocker;
    do not claim the workflow is fully cleaned up while owned junk remains.
 
-Use the installed command help if syntax differs. These commands operate at
-different scopes; closing a tab or session also closes everything inside it:
+## Remove empty sessions
 
-```sh
-rex window close -s "$task_session" "$finished_task_window"
-rex session inspect "$created_session" --json
-# Only after confirming this task created it and it is empty:
-rex kill "$created_session"
-rex ls --json
-```
+Closing a session's last pane or tab can leave its label in the sidebar. After
+closing the last task tab in an owned session, run this check immediately once
+its results are saved, its workers have stopped, and it has no pending
+assignments. Also run it at final reconciliation to catch automatic pane
+closure, partial launches, and resumed cleanup.
+
+1. List sessions with `rex ls --json` and select candidates by full ID.
+   During routine cleanup use only task-created IDs from the resource ledger.
+   For an explicit request to remove existing empty sessions, use the user's
+   requested scope, including earlier sessions in that scope. Protect the
+   invoking session and any session the user asked to retain.
+2. Immediately before each removal, run
+   `rex window ls -s "$candidate_session" --json`. Require a successful
+   listing with the matching full `session_id` and `"windows": []`. Use the
+   window listing because some Rex versions omit `windows` from
+   `session inspect` when the session is empty. Skip occupied sessions during
+   a cleanup-only request. Treat a failed or ambiguous listing as a blocker.
+3. Run `rex kill "$candidate_session"` for each confirmed candidate, using
+   the installed help if syntax differs. Re-list with `rex ls --json` and
+   verify each removed ID is absent. If an ID remains, inspect it again before
+   retrying. Record verified removals and report any cleanup blockers.
 
 ## Launch, observe, recover
 

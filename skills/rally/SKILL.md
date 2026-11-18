@@ -1,8 +1,8 @@
 ---
 name: rally
-description: Automatically coordinate complex work that benefits from specialist agents, parallel tasks, or independent verification. Use when planning or executing multi-part product, design, engineering, research, or QA work, or whenever considering delegation. Discover Rex and launch workers in grouped split panes without requiring the user to mention agents, Rex, or orchestration. Not needed for simple answers or trivial edits.
+description: Coordinate complex work that benefits from specialist agents, parallel tasks, or independent verification. Discover Rex, launch workers in grouped split panes, and clean up their tabs and sessions. Also use for explicit requests to clean up empty Rex sessions without launching workers. Not needed for simple answers or trivial edits.
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
 
 ---
 
@@ -13,6 +13,10 @@ agents, resolve dependencies, and verify the integrated result. Rex is the
 execution surface; the coordinator remains accountable for decisions and
 delivery. A skill invocation establishes this workflow, not an unattended
 daemon.
+
+For a cleanup-only request, follow [Rex session
+cleanup](references/rex-workers.md#remove-empty-sessions) for the requested
+scope. Run the cleanup directly, without opening a session or dispatching workers.
 
 ## Execution contract: dispatch, supervise, verify
 
@@ -63,10 +67,10 @@ For a multi-part task, perform this loop in the current run:
   fixes but should not absorb the specialists' assigned work without explaining
   a concrete failure or constraint.
 5. Capture results and evidence, confirm descendant shutdown, and close finished
-  worker panes and task-created tabs. After all agents finish, inspect Rex again
-  and remove any empty session created by this task; closing its last pane may
-  leave an empty session in the sidebar. Preserve the invoking session. Record
-  cleanup verification or a concrete blocker before reporting completion.
+  worker panes and task-created tabs. After the last tab closes in a session
+  you own, [remove the empty session](references/rex-workers.md#remove-empty-sessions)
+  as soon as its work is done. Reconcile the resource ledger at exit, including
+  on failure or cancellation. Record verified removal or a concrete blocker.
 
 Explicit plan-only requests still use research/TPM/review workers when useful,
 restricted to planning; they do not authorize implementation. A simple factual

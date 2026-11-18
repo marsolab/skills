@@ -30,8 +30,8 @@ Replace the bracketed message with
 }
 ```
 
-For an Astra consultation, use `model: "gpt-6-astra"` and a unique task name
-such as `advisor_astra`. For another model, use its actual exposed identifier.
+For other models, use the actual exposed identifier and follow the approval
+rule in [model selection](../SKILL.md#select-a-more-capable-model).
 Set `reasoning_effort` only when needed and supported by the selected model;
 use the default only when no effort was required or selected. If a required
 effort is unsupported, report the limitation and preserve the requirement;

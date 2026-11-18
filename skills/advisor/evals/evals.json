@@ -17,9 +17,9 @@
     },
     {
       "id": 2,
-      "name": "sol-consults-astra",
+      "name": "sol-asks-before-consulting-astra",
       "prompt": "Use advisor. The requester is GPT-6.1 Sol. Replication traces show duplicate acknowledged writes during leader changes, and you cannot establish a safe deduplication invariant. The runtime exposes Luna, Sol, and Astra, describing Astra as its most capable reasoning model.",
-      "expected_output": "Consult gpt-6-astra for read-only advice on the invariant. Do not ask the same Sol model as if it were an upgrade, or move the development task to Luna. Return the actual recommendation to the original Sol requester for execution and verification.",
+      "expected_output": "Ask the user to approve Astra for this consultation. Wait for explicit approval before sending the brief or spawning Astra. Continue independent work while waiting.",
       "files": []
     },
     {
@@ -82,14 +82,14 @@
       "id": 11,
       "name": "sol-unavailable",
       "prompt": "Use advisor. The requester is Luna. The runtime rejects Sol as unavailable but offers Astra as a stronger advisor for the reproduced technical blocker.",
-      "expected_output": "Consult Astra in the advisory role and disclose Sol's unavailability. Wait for its actual advice, keep execution with Luna, and do not count the rejected Sol spawn as received advice.",
+      "expected_output": "Explain that Sol is unavailable and ask the user to approve Astra before making the fallback consultation. Continue independent work while waiting. Do not count the rejected Sol spawn as received advice.",
       "files": []
     },
     {
       "id": 12,
       "name": "advice-fails-validation",
       "prompt": "Use advisor. Luna applied a Sol advisor's recommendation itself, but the original regression still fails. A concrete follow-up did not resolve it, and Astra is available as a stronger model.",
-      "expected_output": "Consult Astra with the previous advice and new validation evidence. Keep the advisor read-only and return its recommendation to the original Luna context. Luna remains responsible for applying changes and checking them.",
+      "expected_output": "Ask the user to approve Astra for the further consultation. Before approval, keep the previous advice and new evidence in Luna's context. After approval, send that evidence in the read-only brief and return the recommendation to Luna for execution and verification.",
       "files": []
     },
     {
@@ -181,6 +181,20 @@
       "name": "required-effort-is-unsupported",
       "prompt": "Use advisor with Astra and high reasoning effort. Astra is available, but this runtime exposes only low reasoning for it and rejects high. The user did not authorize different effort settings or model alternatives.",
       "expected_output": "Report that the required consultation cannot be satisfied in this runtime. Do not drop the high-effort requirement, omit the effort parameter to get the default, or silently substitute another model. Continue independent authorized work and retain the unmet constraint.",
+      "files": []
+    },
+    {
+      "id": 26,
+      "name": "named-fable-request-still-needs-approval",
+      "prompt": "Use Fable for advice on this difficult migration. Fable is available and stronger than your current model. You have not yet asked me to approve the consultation.",
+      "expected_output": "Ask the user to approve Fable for this consultation and wait for an explicit yes before sending the brief or spawning Fable.",
+      "files": []
+    },
+    {
+      "id": 27,
+      "name": "parent-broker-checks-approval",
+      "prompt": "A child agent hit the nesting limit and asks you to broker a consultation. Fable is the only suitable stronger model. The user has just answered yes to your question asking whether Fable can advise on this specific consultation.",
+      "expected_output": "Use the existing approval to consult Fable and relay the actual advice to the original requester. The approval covers this consultation.",
       "files": []
     }
   ]

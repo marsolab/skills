@@ -6,7 +6,7 @@ description: >-
   about difficult reasoning, or asked for an expert second opinion during
   development, debugging, design, planning, or analysis.
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
   tags: "advice, reasoning, subagents, escalation, model-routing"
 ---
 
@@ -37,6 +37,14 @@ its caller without consulting further subagents.
 
 ## Select a more capable model
 
+Before consulting Astra or Fable, ask the user for approval to use the specific
+model for that consultation and wait for an explicit yes. Apply this to model
+variants, direct requests that name the model, fallbacks, and further advisor
+assignments. A parent acting as a broker must confirm the same approval before
+sending the brief to either model. While approval is pending, continue work
+that does not depend on the consultation. If the user declines, continue
+independently or use a suitable advisor within the user's allowed alternatives.
+
 Inspect the runtime's exposed models, their capability descriptions, and its
 subagent tool schema. Identify the current model from trusted runtime context
 when available. Choose an available model with greater capability for the
@@ -50,8 +58,8 @@ In a Codex runtime exposing these models, typical choices are:
 
 | Requester | Advisor choice when available |
 | --- | --- |
-| GPT-6 Luna | GPT-6.1 Sol; GPT-6 Astra for especially hard reasoning |
-| GPT-6.1 Sol | GPT-6 Astra |
+| GPT-6 Luna | GPT-6.1 Sol |
+| GPT-6.1 Sol | A stronger model described by the runtime, subject to approval above |
 | Another model | A stronger model described by the runtime |
 
 These examples do not restrict the requester's model or provider. Use exact

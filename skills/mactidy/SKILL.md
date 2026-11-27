@@ -9,7 +9,7 @@ description: >-
   cleanup plan. Visualize audited usage and help the user choose what to remove.
   Do not use for general malware removal or indiscriminate system cleaning.
 metadata:
-  version: "1.3.1"
+  version: "1.3.2"
   tags: "macos, cleanup, disk-space, memory, worktrees, caches, processes, ai-agents"
 ---
 
@@ -171,9 +171,16 @@ Read [references/candidate-catalog.md](references/candidate-catalog.md) for the
 candidate type being investigated. Do not load or apply unrelated cleanup
 recipes.
 
-For Docker cleanup, read [references/docker.md](references/docker.md). It covers
-local-context checks, Compose and BuildKit ownership, volume classification,
-bounded prune operations, and host-space verification.
+For a storage screenshot or a large Library subtree, drill down by owner with
+a scoped `du -x -k -d 1` before proposing targets. Record inaccessible paths.
+Report allocated sizes separately from screenshot or sparse-file apparent
+sizes. Treat application state and macOS indexes as owned data. Route OrbStack
+storage to Docker inspection and CoreSimulator devices to the
+[simulator workflow](references/candidate-catalog.md#ios-simulator-devices).
+
+For Docker cleanup, read [references/docker.md](references/docker.md) for
+local-context checks, Compose and BuildKit ownership, `docker system prune`,
+exact `docker volume rm` and `docker image rm`, and host-space verification.
 
 For memory usage or stale processes, read
 [references/memory.md](references/memory.md). The disk CLI's detached-process
@@ -279,7 +286,14 @@ Refresh the visual with measured before/after free space and completed,
 retained, or skipped targets. Keep the original snapshot timestamp visible.
 
 Report logical candidate size, physical space reclaimed, memory released, and
-anything skipped as separate facts. A successful command alone is not proof
+anything skipped as separate facts. If a target disappeared or shrank between review and execution, report the
+observed state and attribute no recovery to that operation. Measure `df`
+immediately before and after each batch. Concurrent activity can change the
+volume delta independently of cleanup. Verify original and Trash paths after
+a move and report their size as staged for recovery. Wait for in-scope
+inventory or report the specific blocker and coverage gap.
+
+A successful command alone is not proof
 that cleanup helped or that the Mac remains healthy.
 
 For memory actions, compare pressure, compressor occupancy, swap activity, and

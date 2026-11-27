@@ -30,6 +30,13 @@ Run metadata pruning separately and only after the path state is understood.
 Do not remove a worktree directory directly or use `--force` to hide dirty or
 locked state.
 
+For a Codex-only cleanup, break down `~/.codex` by immediate child. Keep
+session history, archives, credentials, backups and generated user assets out
+of artifact cleanup. Count only worktrees actually checked. If relying on a
+cached remote ref for screening, refresh or verify it against the live remote
+before retirement. Check ignored files separately because ordinary
+`git status` can hide environment files, local databases and build outputs.
+
 ## Reproducible dependencies and build output
 
 Common candidates include `node_modules`, `.venv`, `target`, `.next`, `.nuxt`,
@@ -46,6 +53,38 @@ proof.
 Prefer deleting a dependency directory over changing a repository's package
 manager. Migration between npm, pnpm, Yarn, or Bun changes source and CI and is
 a separate engineering task.
+
+For a dependency-only batch in agent worktrees, list exact `node_modules`
+paths with a package manifest, the tracked lockfile governing each package or
+workspace, and evidence that the directory is ignored and contains no tracked
+files. Exclude live worktree slots based on process working directories and
+open files. Check canonical paths, links and mounts before moving each target.
+A dirty checkout can still contain reinstallable dependencies. Preserve its
+source and unique data. Verify the exact original and recovery paths when
+using Trash and leave unrelated Trash entries alone.
+
+## iOS simulator devices
+
+1. List devices using `xcrun simctl list devices -j`. Record each candidate's
+   UUID, runtime, availability, boot state, allocated size and last use when
+   available. Use device bundle IDs and data containers to map recent project
+   work to devices. Use installed-app queries on booted devices and read-only
+   metadata inspection for shutdown or unavailable devices.
+2. Protect booted devices, named QA devices, and every device used by the
+   requested projects, including alternate screen sizes and onboarding or
+   UI-test fixtures. For example, Lens may appear under a teleprompter bundle
+   ID on devices with generic iPhone names. Keep devices with unknown or
+   potentially unique test data. Missing runtimes and old timestamps alone
+   do not establish disposability.
+3. Present the exact UUIDs and explain that deletion removes the device and
+   its local data. For authorized empty or otherwise proven disposable
+   devices, recheck availability, shutdown status and data, then use
+   `xcrun simctl delete UUID ...`. Avoid bulk `delete unavailable` when
+   candidates and retained devices share that status.
+4. Compare device lists before and after. Verify that the exact targets are
+   gone, protected data paths still exist, and any previously booted
+   protected device remains booted. Report device sizes and the observed
+   host free-space change separately.
 
 ## Package stores and download caches
 

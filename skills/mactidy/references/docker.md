@@ -70,7 +70,15 @@ builder container can be stopped by its exact ID after proving no build uses it.
 Its `/var/lib/buildkit` volume is reproducible cache only after that ownership
 and lack of active builds are established.
 
-## Prune and volumes
+## Choose the requested operation
+
+Use `system prune` for daemon-wide cleanup, `volume rm` for exact volume
+names, and `image rm` for exact image IDs or references. A request for one
+operation does not authorize the others. Snapshot container IDs, network IDs,
+image IDs and references, volume names, and build-cache usage before a prune.
+Enforce the reviewed scope against the verified local context.
+
+## System prune
 
 Before `system prune`, review stopped containers: their writable layers may
 hold unique data. If an uncertain stopped container would be included, use
@@ -86,6 +94,15 @@ docker --context CONTEXT system prune --force
 This removes stopped containers, unused networks, dangling images, and eligible
 build cache. It does not remove volumes without `--volumes`. Do not silently
 add `--all`, `--volumes`, or `volume prune --all`; each broadens the batch.
+
+Docker provides no dry-run for `system prune`. The inventory is a review,
+and eligibility can change before execution. Check which resource types each
+filter covers. A filter that protects containers may leave other resource
+types eligible. If the reviewed scope requires exact targets, use exact
+removal commands. Run approved `--all` or `--volumes` variants only after
+reviewing the expanded resource set against the installed CLI help.
+
+## Remove exact volumes
 
 Classify unreferenced volumes separately:
 
@@ -113,9 +130,37 @@ docker --context CONTEXT volume rm EXACT_VOLUME_NAME
 Never force volume removal. If a resource becomes referenced, a new build
 appears, or any identity/evidence changes, stop and reclassify that target.
 
+For a reference check, enumerate all containers and inspect their
+`Mounts`, or use `docker --context CONTEXT ps -a --filter
+volume=EXACT_VOLUME_NAME` and confirm the matching mount's exact name.
+Check retained Compose definitions and external ownership even when the
+volume currently has no container references. Record the verified backup
+or recovery method before deleting any persistent data.
+
+## Remove exact images
+
+Inventory `docker --context CONTEXT image ls --no-trunc --digests`. Resolve
+each candidate with `docker image inspect` on the pinned context. Record
+the full image ID, tags, digests and rebuild or pull source. Check the
+`.Image` ID of every container, including stopped containers. Check retained
+Compose or deployment configurations for image references needed later.
+Recheck the resolved ID and references immediately before removal.
+
+```bash
+docker --context CONTEXT image rm --no-prune EXACT_IMAGE_ID_OR_REFERENCE
+```
+
+Use the exact tag when the requested action is to remove that tag. Removing
+one tag from a multiply tagged image may leave the image and its layers on
+disk. Review all aliases before deleting an image by ID. Use `--no-prune`
+to preserve untagged parents and leave conflicts for review instead of
+forcing removal. Shared layers can limit physical recovery.
+
 ## Verify
 
-Compare before/after container IDs and volume names. Confirm retained services
+Compare before/after container and network IDs, image IDs and references,
+and volume names as applicable. Verify the exact deleted resources and
+check that retained references still resolve. Confirm retained services
 and volumes remain, helpers have exited, and intended ports have closed. Re-run
 `docker compose ls --all`, `docker system df`, and a lightweight Docker health
 check. Measure `df -k /System/Volumes/Data` again.
@@ -125,3 +170,14 @@ free bytes: VM disks, sparse files, APFS sharing, and concurrent development can
 make them differ. Report stopped workloads, deleted caches/volumes, preserved
 uncertain databases, and any incomplete checks. Do not manually delete Docker
 or OrbStack VM disk files or shut down the VM while retained services run.
+
+## OrbStack storage accounting
+
+Measure allocated size of the sparse VM disk separately from its apparent
+length and Docker's resource accounting. Never clean up by deleting the VM
+disk. Use the verified local context and explicit builder to inspect build
+cache, including age and reclaimability where supported. Review cache-only
+pruning independently of images, containers and volumes. Unreferenced volume
+bytes remain review-only until the owning project and data retention are
+verified. Check host free space after the operation because Docker-reported
+reclaim and physical APFS recovery can differ.

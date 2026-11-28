@@ -112,6 +112,20 @@
       "prompt": "/mactidy tidy ~/Code. First show me what occupies space and ask which items I want removed.",
       "expected_output": "The agent verifies or installs the CLI, audits the explicit scope, and shows a visual review with exact identities and unchecked eligible targets. It honors the user's requested selection step and waits for an explicit submitted choice before cleanup, even though tidy normally authorizes verified in-scope batches. It protects uncertain and active resources.",
       "files": []
+    },
+    {
+      "id": 16,
+      "name": "preserve-recent-simulators",
+      "prompt": "Clean old iOS simulators but keep our recent Lens work.",
+      "expected_output": "The agent maps Lens bundle IDs and UI-test fixtures to exact device UUIDs, keeps active and unclear devices, deletes only verified disposable devices by UUID, and checks protected devices and disk space afterward.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "name": "remove-exact-docker-resources",
+      "prompt": "Remove Docker image example:test and volume old-build-cache.",
+      "expected_output": "The agent verifies the local context, image ID and aliases, references from all containers, and volume ownership and contents. It removes approved exact targets using image rm --no-prune and volume rm without force, then verifies the result.",
+      "files": []
     }
   ]
 }
